@@ -5,4 +5,8 @@ const getAllProducts = async () => {
     return await Product.find().populate('category_id');
 };
 
-module.exports = { getAllProducts };
+const getProductById = async (id) => {
+    return await Product.findById(id).populate('category_id');
+};
+
+module.exports = { getAllProducts, getProductById };
