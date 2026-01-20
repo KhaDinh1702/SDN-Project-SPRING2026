@@ -5,12 +5,13 @@ const userSchema = new mongoose.Schema({
   last_name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password_hash: { type: String, required: true },
-  phone: { type: String },
+  phone: String,
   is_active: { type: Boolean, default: true },
-  role_id: { type: mongoose.Schema.Types.ObjectId, ref: 'roles' }, // Link to roles collection
+  role_id: { type: mongoose.Schema.Types.ObjectId, ref: 'roles' },
   username: { type: String, required: true, unique: true }
 }, { 
-  timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } 
+  versionKey: false, // Tắt trường __v
+  timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } // Tự động tạo ngày
 });
 
 module.exports = mongoose.model('users', userSchema);

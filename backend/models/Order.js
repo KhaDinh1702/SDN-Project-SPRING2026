@@ -6,6 +6,7 @@ const orderSchema = new mongoose.Schema({
   order_status: { type: String, default: 'Pending' },
   payment_status: { type: String, default: 'Unpaid' }
 }, { 
+  versionKey: false,
   timestamps: { createdAt: 'created_at' } 
 });
 

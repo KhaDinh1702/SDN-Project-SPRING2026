@@ -8,6 +8,8 @@ const stockTransactionDetailSchema = new mongoose.Schema({
   unit_price: { type: Number, required: true },
   total_price: { type: Number, required: true },
   create_at: { type: Date, default: Date.now }
+}, {
+  versionKey: false
 });
 
 module.exports = mongoose.model('stock_transaction_details', stockTransactionDetailSchema);

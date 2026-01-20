@@ -7,6 +7,7 @@ const transactionSchema = new mongoose.Schema({
   payment_status: { type: String, default: 'Pending' },
   transaction_code: { type: String, unique: true }
 }, { 
+  versionKey: false,
   timestamps: { createdAt: 'created_at' } 
 });
 

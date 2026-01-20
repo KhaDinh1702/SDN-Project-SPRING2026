@@ -2,19 +2,24 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
+const routes = require('./routes/index'); // Imports your main router
 
 const app = express();
 
 // Middleware
-app.use(cors()); // Allows your React frontend to talk to this API
-app.use(express.json()); // Allows the server to read JSON data
+app.use(cors());
+app.use(express.json());
 
-// Connect to Database
+// 1. Health Check Route
+app.get('/', (req, res) => {
+    res.send('FreshMart Backend is LIVE ');
+});
+
+// 2. Mount Routes at the root level 
+app.use('/', routes); 
+
+// 3. Connect to Database
 connectDB();
 
-// Basic Test Route
-app.get('/', (req, res) => res.send('FreshMart API is running...'));
-
-// Start Server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001; 
 app.listen(PORT, () => console.log(` Server started on http://localhost:${PORT}`));

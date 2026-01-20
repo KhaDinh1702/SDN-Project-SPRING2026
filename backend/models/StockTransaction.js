@@ -5,6 +5,8 @@ const stockTransactionSchema = new mongoose.Schema({
   created_at: { type: Date, default: Date.now },
   total_price: { type: Number, required: true },
   note: { type: String }
+}, {
+  versionKey: false
 });
 
 module.exports = mongoose.model('stock_transactions', stockTransactionSchema);

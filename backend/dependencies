@@ -1,6 +1,0 @@
-npm install express mongoose dotenv cors bcryptjs jsonwebtoken
-
-chạy server: node server.js
-chạy file seed để hiện db: node seed.js
-
-lỗi github "backend/package-lock.json" chạy trên terminal: git config --global core.autocrlf true
