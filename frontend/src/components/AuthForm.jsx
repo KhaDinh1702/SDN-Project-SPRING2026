@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { GoogleLogin } from '@react-oauth/google'
 
 export default function AuthForm() {
   const [mode, setMode] = useState('login') 
@@ -39,6 +40,33 @@ export default function AuthForm() {
     }
   }
 
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setLoading(true)
+    setMessage(null)
+    try {
+      const res = await fetch(`${backend}/auth/google`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credential: credentialResponse.credential }),
+      })
+      const json = await res.json()
+      if (!res.ok) throw new Error(json.message || 'Google authentication failed')
+
+      if (json.token) {
+        localStorage.setItem('token', json.token)
+        setMessage({ type: 'success', text: 'Google login successful — token saved.' })
+      }
+    } catch (err) {
+      setMessage({ type: 'error', text: err.message })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleGoogleError = () => {
+    setMessage({ type: 'error', text: 'Google login failed' })
+  }
+
   return (
     <div className="auth-root">
       <div className="auth-card">
@@ -59,6 +87,22 @@ export default function AuthForm() {
 
           <button type="submit" disabled={loading}>{loading ? 'Please wait...' : mode === 'login' ? 'Sign In' : 'Register'}</button>
         </form>
+
+        {mode === 'login' && (
+          <div className="google-auth-section">
+            <div className="divider">
+              <span>OR</span>
+            </div>
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+              useOneTap
+              text="continue_with"
+              shape="rectangular"
+              width="100%"
+            />
+          </div>
+        )}
 
         <div className="auth-toggle">
           {mode === 'login' ? (

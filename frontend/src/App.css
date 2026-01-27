@@ -78,3 +78,27 @@
 .auth-msg { padding: 0.6rem; margin-bottom: 0.75rem; border-radius: 6px }
 .auth-msg.success { background: #e6f7ff; color: #065a8c }
 .auth-msg.error { background: #fff1f0; color: #8a1f1f }
+
+.google-auth-section {
+  margin-top: 1.5rem;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #ddd;
+}
+
+.divider span {
+  padding: 0 0.5rem;
+  color: #888;
+  font-size: 0.875rem;
+}

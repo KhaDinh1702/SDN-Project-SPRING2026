@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { register, login } = require('../controllers/authController');
+const { register, login, googleAuth } = require('../controllers/authController');
 
 
 // Test GET /auth
@@ -11,5 +11,7 @@ router.get('/', (req, res) => {
 router.post('/register', register);
 // POST /auth/login -> returns JWT on success
 router.post('/login', login);
+// POST /auth/google -> Google OAuth authentication
+router.post('/google', googleAuth);
 
 module.exports = router;
