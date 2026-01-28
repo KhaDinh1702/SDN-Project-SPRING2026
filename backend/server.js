@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
 });
 
 // 2. Mount Routes at the root level 
-app.use('/', routes); 
+app.use('/api', routes); 
 
 // 3. Connect to Database
 connectDB();

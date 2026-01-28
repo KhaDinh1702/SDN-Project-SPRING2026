@@ -108,5 +108,46 @@ const googleAuth = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+const crypto = require("crypto");
 
-module.exports = { register, login, googleAuth };
+async function forgotPassword(req, res) {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ message: "Email required" });
+
+  // Try to load a User model if your backend uses one (Mongoose example)
+  let User;
+  try {
+    User = require("../models/User");
+  } catch (e) {
+    User = null;
+  }
+
+  try {
+    if (User) {
+      const user = await User.findOne({ email: email.toLowerCase() });
+      if (user) {
+        // generate token + expiry
+        const token = crypto.randomBytes(32).toString("hex");
+        user.resetPasswordToken = token;
+        user.resetPasswordExpires = Date.now() + 60 * 60 * 1000; // 1 hour
+        await user.save();
+
+        // TODO: send email containing reset link to user
+        // Example reset link: `${process.env.CLIENT_URL}/reset-password?token=${token}&email=${encodeURIComponent(user.email)}`
+        // For now we log the token so you can verify flow during dev:
+        console.log("Password reset token for", user.email, token);
+      }
+      // SECURITY: always return 200 to avoid revealing whether email exists
+      return res.json({ message: "If that email exists, instructions were sent." });
+    } else {
+      // No User model detected — fallback behavior: don't reveal info
+      console.log("Forgot password requested for:", email);
+      return res.json({ message: "If that email exists, instructions were sent." });
+    }
+  } catch (err) {
+    console.error("forgotPassword error:", err);
+    return res.status(500).json({ message: "Server error" });
+  }
+}
+
+module.exports = { register, login, googleAuth, forgotPassword };

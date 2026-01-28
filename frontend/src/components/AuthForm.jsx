@@ -1,121 +1,119 @@
-import { useState } from 'react'
-import { GoogleLogin } from '@react-oauth/google'
-
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
+import { API_URL } from '../config';
 export default function AuthForm() {
-  const [mode, setMode] = useState('login') 
-  const [data, setData] = useState({ username: '', first_name: '', last_name: '', email: '', password: '' })
-  const [loading, setLoading] = useState(false)
-  const [message, setMessage] = useState(null)
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const backend = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001'
-
-  const handleChange = (e) => setData({ ...data, [e.target.name]: e.target.value })
-
-  const submit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setMessage(null)
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
     try {
-      const url = `${backend}/auth/${mode === 'login' ? 'login' : 'register'}`
-      const body = mode === 'login' ? { email: data.email, password: data.password } : data
-
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      })
-      const json = await res.json()
-      if (!res.ok) throw new Error(json.message || 'Request failed')
-
-      if (json.token) {
-        localStorage.setItem('token', json.token)
-        setMessage({ type: 'success', text: 'Login successful — token saved.' })
-      } else if (json.success) {
-        setMessage({ type: 'success', text: 'Registered successfully. You can now login.' })
+      const res = await fetch(`${API_URL}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      
+      const data = await res.json();
+      
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Đăng nhập thất bại");
+      }
+      
+      // Lưu token và user info
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.data));
+        navigate("/"); // redirect về home
       }
     } catch (err) {
-      setMessage({ type: 'error', text: err.message })
+      setError(err.message || "Lỗi đăng nhập");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
-  const handleGoogleSuccess = async (credentialResponse) => {
-    setLoading(true)
-    setMessage(null)
+  async function handleGoogleSuccess(credentialResponse) {
+    setLoading(true);
+    setError("");
     try {
-      const res = await fetch(`${backend}/auth/google`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch(`${API_URL}/api/auth/google`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ credential: credentialResponse.credential }),
-      })
-      const json = await res.json()
-      if (!res.ok) throw new Error(json.message || 'Google authentication failed')
-
-      if (json.token) {
-        localStorage.setItem('token', json.token)
-        setMessage({ type: 'success', text: 'Google login successful — token saved.' })
+      });
+      
+      const data = await res.json();
+      
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Google auth thất bại");
+      }
+      
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.data));
+        navigate("/");
       }
     } catch (err) {
-      setMessage({ type: 'error', text: err.message })
+      setError(err.message || "Lỗi Google auth");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
-  const handleGoogleError = () => {
-    setMessage({ type: 'error', text: 'Google login failed' })
+  function handleGoogleError() {
+    setError("Google sign-in bị lỗi");
   }
 
   return (
-    <div className="auth-root">
-      <div className="auth-card">
-        <h2>{mode === 'login' ? 'Sign In' : 'Create Account'}</h2>
-        {message && (
-          <div className={`auth-msg ${message.type}`}>{message.text}</div>
-        )}
-        <form onSubmit={submit} className="auth-form">
-          {mode === 'register' && (
-            <>
-              <input name="username" placeholder="Username" value={data.username} onChange={handleChange} required />
-              <input name="first_name" placeholder="First name" value={data.first_name} onChange={handleChange} required />
-              <input name="last_name" placeholder="Last name" value={data.last_name} onChange={handleChange} required />
-            </>
-          )}
-          <input name="email" type="email" placeholder="Email" value={data.email} onChange={handleChange} required />
-          <input name="password" type="password" placeholder="Password" value={data.password} onChange={handleChange} required />
-
-          <button type="submit" disabled={loading}>{loading ? 'Please wait...' : mode === 'login' ? 'Sign In' : 'Register'}</button>
-        </form>
-
-        {mode === 'login' && (
-          <div className="google-auth-section">
-            <div className="divider">
-              <span>OR</span>
-            </div>
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={handleGoogleError}
-              useOneTap
-              text="continue_with"
-              shape="rectangular"
-              width="100%"
-            />
-          </div>
-        )}
-
-        <div className="auth-toggle">
-          {mode === 'login' ? (
-            <p>
-              Don't have an account? <button className="link-btn" onClick={() => { setMode('register'); setMessage(null) }}>Register</button>
-            </p>
-          ) : (
-            <p>
-              Already have an account? <button className="link-btn" onClick={() => { setMode('login'); setMessage(null) }}>Sign in</button>
-            </p>
-          )}
+    <div style={{ maxWidth: 420, margin: "40px auto", padding: 20 }}>
+      <h2>Đăng nhập</h2>
+      <form onSubmit={handleSubmit}>
+        <div style={{ marginBottom: 12 }}>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            style={{ width: "100%", padding: 8 }}
+          />
         </div>
+        <div style={{ marginBottom: 12 }}>
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            style={{ width: "100%", padding: 8 }}
+          />
+        </div>
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <button type="submit" disabled={loading}>
+            {loading ? "Đang..." : "Đăng nhập"}
+          </button>
+          <Link to="/register" style={{ marginLeft: 8 }}>
+            Đăng ký
+          </Link>
+        </div>
+      </form>
+
+      <p style={{ marginTop: 12 }}>
+        <Link to="/forgot-password">Quên mật khẩu?</Link>
+      </p>
+
+      <div style={{ marginTop: 18 }}>
+        <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleError} />
       </div>
+
+      {error && <p style={{ color: "red", marginTop: 12 }}>{error}</p>}
     </div>
-  )
+  );
 }

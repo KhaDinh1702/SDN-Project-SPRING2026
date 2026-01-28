@@ -8,10 +8,13 @@ const userSchema = new mongoose.Schema({
   phone: String,
   is_active: { type: Boolean, default: true },
   role_id: { type: mongoose.Schema.Types.ObjectId, ref: 'roles' },
-  username: { type: String, required: true, unique: true }
+  username: { type: String, required: true, unique: true },
+  googleId: { type: String }, 
+  resetPasswordToken: String, 
+  resetPasswordExpires: Date  
 }, { 
-  versionKey: false, // Tắt trường __v
-  timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } // Tự động tạo ngày
+  versionKey: false,
+  timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 });
 
 module.exports = mongoose.model('users', userSchema);
