@@ -1,0 +1,15 @@
+1.npm install express mongoose dotenv cors bcryptjs jsonwebtoken
+2.tạo file .env:
+PORT=5001
+MONGO_URI=mongodb://localhost:27017/FreshMartDB
+JWT_SECRET=f3a8b2c9d1e5f7a4b2c8d0e1f3a5b7c9d1e2f4a6b8c0d2e4f6a8b0c2d4e6f8
+2.chạy server: node server.js
+3.chạy file seed để hiện db: node seed.js
+
+3.lỗi github "backend/package-lock.json" chạy trên terminal: git config --global core.autocrlf true
+npm install google-auth-library --save
+
+4. Để cập nhật package.json lên GitHub:
+	git add package.json package-lock.json
+	git commit -m "Update dependencies and scripts"
+	git push
