@@ -1,0 +1,9 @@
+# Ignore node_modules and lock files
+node_modules/
+package-lock.json
+frontend/node_modules/
+frontend/package-lock.json
+backend/node_modules/
+backend/package-lock.json
+mobile/node_modules/
+mobile/package-lock.json
