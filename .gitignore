@@ -1,0 +1,20 @@
+# Ignore nested repository directory with same name as repository
+SDN-Project-SPRING2026/
+
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+.env.local
+
+# Build outputs
+dist/
+build/
+
+# IDE
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
