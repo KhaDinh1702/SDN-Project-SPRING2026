@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const orderProductSchema = new mongoose.Schema({
   order_id: { type: mongoose.Schema.Types.ObjectId, ref: 'orders', required: true },
@@ -10,4 +10,4 @@ const orderProductSchema = new mongoose.Schema({
   versionKey: false
 });
 
-module.exports = mongoose.model('order_products', orderProductSchema);
+export default mongoose.model('order_products', orderProductSchema);

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const transactionSchema = new mongoose.Schema({
   order_id: { type: mongoose.Schema.Types.ObjectId, ref: 'orders', required: true },
@@ -11,4 +11,4 @@ const transactionSchema = new mongoose.Schema({
   timestamps: { createdAt: 'created_at' } 
 });
 
-module.exports = mongoose.model('payment_transactions', transactionSchema);
+export default mongoose.model('payment_transactions', transactionSchema);
