@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const roleSchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true }
@@ -6,4 +6,4 @@ const roleSchema = new mongoose.Schema({
   versionKey: false // Cấu hình này phải nằm ở đây
 });
 
-module.exports = mongoose.model('roles', roleSchema);
+export default mongoose.model('roles', roleSchema);

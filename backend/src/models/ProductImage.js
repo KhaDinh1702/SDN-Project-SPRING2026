@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const productImageSchema = new mongoose.Schema({
   product_id: { type: mongoose.Schema.Types.ObjectId, ref: 'products', required: true },
@@ -7,4 +7,4 @@ const productImageSchema = new mongoose.Schema({
   versionKey: false
 });
 
-module.exports = mongoose.model('product_images', productImageSchema);
+export default mongoose.model('product_images', productImageSchema);

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const stockTransactionDetailSchema = new mongoose.Schema({
   stock_transaction_id: { type: mongoose.Schema.Types.ObjectId, ref: 'stock_transactions', required: true },
@@ -12,4 +12,4 @@ const stockTransactionDetailSchema = new mongoose.Schema({
   versionKey: false
 });
 
-module.exports = mongoose.model('stock_transaction_details', stockTransactionDetailSchema);
+export default mongoose.model('stock_transaction_details', stockTransactionDetailSchema);
