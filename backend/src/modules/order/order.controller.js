@@ -1,8 +1,10 @@
-import { updateOrderStatusService,
-         createOrderService,
-         getAllOrdersService,
-         getOrdersByUserIdService } 
-from './order.service.js';
+import {
+  updateOrderStatusService,
+  createOrderService,
+  getAllOrdersService,
+  getOrdersByUserIdService
+}
+  from './order.service.js';
 
 /**
  * PATCH /api/orders/:orderId/status
@@ -31,8 +33,9 @@ export const updateOrderStatus = async (req, res) => {
  */
 export const createOrder = async (req, res) => {
   try {
-    const order = await createOrderService(req.body);
-    res.status(201).json({ success: true, data: order });
+    const ipAddr = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1';
+    const result = await createOrderService(req.body);
+    res.status(201).json({ success: true, data: result });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
