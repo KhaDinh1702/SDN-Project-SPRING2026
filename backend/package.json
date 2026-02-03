@@ -22,7 +22,8 @@
     "hono": "^4.11.6",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.1.5",
-    "nodemon": "^3.1.11"
+    "nodemon": "^3.1.11",
+    "vnpay": "^2.4.4"
   },
   "devDependencies": {
     "wrangler": "^4.60.0"
