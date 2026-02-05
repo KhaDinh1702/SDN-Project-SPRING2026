@@ -11,6 +11,11 @@ const transactionSchema = new mongoose.Schema(
     amount: { type: Number, required: true },
     payment_status: { type: String, default: 'Pending' },
     transaction_code: { type: String, unique: true },
+    // VNPay specific fields
+    vnpay_response_code: { type: String },
+    vnpay_transaction_no: { type: String },
+    bank_code: { type: String },
+    card_type: { type: String },
   },
   {
     versionKey: false,
@@ -18,5 +23,4 @@ const transactionSchema = new mongoose.Schema(
     collection: 'payment_transactions',
   },
 );
-
-export default mongoose.model('PaymentTransactions', transactionSchema);
+export default mongoose.model('PaymentTransaction', transactionSchema);

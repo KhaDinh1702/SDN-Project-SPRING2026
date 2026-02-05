@@ -10,6 +10,8 @@ const orderSchema = new mongoose.Schema(
     total_amount: { type: Number, required: true },
     order_status: { type: String, default: 'Pending' },
     payment_status: { type: String, default: 'Unpaid' },
+    payment_method: { type: String, required: true, default: 'COD' },
+    shipping_address: { type: String, required: true },
   },
   {
     versionKey: false,
@@ -17,4 +19,3 @@ const orderSchema = new mongoose.Schema(
   },
 );
 
-export default mongoose.model('Order', orderSchema);
