@@ -1,9 +1,5 @@
-import { getAllProducts, getProductById } from './product.service.js';
+import { createProduct, deleteProduct, getAllProducts, getProductById, updateProduct } from './product.service.js';
 
-/**
- * GET /api/v1/product
- * Get all products
- */
 export const getAllProductsController = async (req, res) => {
   try {
     const { categoryId, keyword } = req.query;
@@ -17,10 +13,6 @@ export const getAllProductsController = async (req, res) => {
   }
 };
 
-/**
- * GET /api/v1/product
- * Get product by ID
- */
 export const getProductByIdController = async (req, res) => {
   try {
     const product = await getProductById(req.params.id);
@@ -39,4 +31,19 @@ export const getProductByIdController = async (req, res) => {
       message: error.message,
     });
   }
+};
+
+export const createProductController = async (req, res) => {
+  const product = await createProduct(req.body);
+  res.status(201).json(product);
+};
+
+export const updateProductController = async (req, res) => {
+  const product = await updateProduct(req.params.id, req.body);
+  res.json(product);
+};
+
+export const deleteProductController = async (req, res) => {
+  const product = await deleteProduct(req.params.id);
+  res.json(product);
 };
