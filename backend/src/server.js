@@ -3,6 +3,7 @@ import express, { json } from 'express';
 import cors from 'cors';
 import connectDB from './config/db.js';
 import routes from './routes/index.js';
+import { errorHandler } from './middlewares/error.middleware.js';
 
 const app = express();
 
@@ -20,6 +21,8 @@ app.use('/api', routes);
 
 // 3. Connect to Database
 connectDB();
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () =>

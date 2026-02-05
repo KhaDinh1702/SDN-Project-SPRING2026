@@ -29,6 +29,7 @@ export const USERS_MESSAGES = {
   EMAIL_VERIFY_TOKEN_IS_REQUIRED: 'Email verify token is required',
 
   USER_NOT_FOUND: 'User not found',
+  ROLE_NOT_FOUND: 'Role not found',
 
   ACCOUNT_HAS_BEEN_BANNED: 'Account has been banned',
 
@@ -56,4 +57,14 @@ export const USERS_MESSAGES = {
   UPLOAD_VIDEO_SUCCESS: 'Upload video success',
 
   ACCOUNT_DISABLED: 'Account-disabled',
+
+  PERMISSION_DENIED: 'Only authorized users can perform this action',
+
+  REQUIRE: 'Product name and price are required',
+  EXPIRY_DATE: 'Expiry date must be in the future',
+  CATEGORY_NOT_FOUND: 'Category not found',
+  STOCK_QUANTITY: 'Stock quantity must be greater than or equal to 0',
+  PRICE: 'Price must be greater than or equal to 0',
+
+  PRODUCT_NOT_FOUND: 'Product not found',
 };
