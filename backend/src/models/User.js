@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema(
     avatar_url: { type: String },
     role_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Role' },
     username: { type: String, required: true, unique: true },
-    googleId: { type: String },
+    google_id: { type: String },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
   },

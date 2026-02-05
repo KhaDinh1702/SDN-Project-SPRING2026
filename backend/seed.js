@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import 'dotenv/config';
-
+import bcrypt from 'bcrypt';
 import Role from './src/models/Role.js';
 import User from './src/models/User.js';
 import Category from './src/models/Category.js';
@@ -33,22 +33,26 @@ const seedDatabase = async () => {
 
     // 2. Roles
     const roles = await Role.insertMany([
-      { name: 'Manager' },
-      { name: 'Staff' },
-      { name: 'Customer' },
+      { name: 'manager' },
+      { name: 'staff' },
+      { name: 'customer' },
+      { name: 'admin' },
     ]);
-    const managerRole = roles.find((r) => r.name === 'Manager');
-    const customerRole = roles.find((r) => r.name === 'Customer');
+    const adminRole = roles.find((r) => r.name === 'admin');
+    const customerRole = roles.find((r) => r.name === 'customer');
 
     // 3. Users
+
+    const hashedPassword = await bcrypt.hash('admin@123', 10);
+
     const admin = await User.create({
       first_name: 'Admin',
       last_name: 'User',
       email: 'admin@freshmart.com',
-      password_hash: 'secret',
+      password_hash: hashedPassword,
       phone: '0123456789',
       is_active: true,
-      role_id: managerRole._id,
+      role_id: adminRole._id,
       username: 'admin',
     });
 
