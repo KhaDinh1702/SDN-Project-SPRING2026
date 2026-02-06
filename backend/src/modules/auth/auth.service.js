@@ -43,7 +43,7 @@ class AuthService {
     return signToken({
       privateKey: secret.trim(),
       payload: { user_id },
-      option: { expiresIn: process.env.ACCESS_TOKEN_EXPIRE_IN },
+      options: { expiresIn: process.env.ACCESS_TOKEN_EXPIRE_IN },
     });
   }
 
@@ -72,7 +72,7 @@ class AuthService {
     return signToken({
       privateKey: secret.trim(),
       payload: { user_id },
-      option: { expiresIn: process.env.REFRESH_TOKEN_EXPIRE_IN },
+      options: { expiresIn: process.env.REFRESH_TOKEN_EXPIRE_IN },
     });
   }
 
