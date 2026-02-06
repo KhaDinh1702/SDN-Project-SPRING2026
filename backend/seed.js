@@ -96,6 +96,7 @@ const seedDatabase = async () => {
       total_amount: 7.0,
       order_status: 'Pending',
       payment_status: 'Unpaid',
+      shipping_address: '123 Main St, City, Country',
     });
 
     await OrderProduct.create({
