@@ -4,6 +4,7 @@ import { OAuth2Client } from 'google-auth-library';
 import HTTP_STATUS from '../../constants/httpStatus.js';
 import { USERS_MESSAGES } from '../../constants/messages.js';
 import { ErrorWithStatus } from '../../utils/error.js';
+import { wrapAsync } from '../../utils/handlers.js';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -37,10 +38,28 @@ export const accessTokenValidator = (req, res, next) => {
   }
 };
 
-export const requireRole =
-  (roles = []) =>
-  async (req, res, next) => {
-    const user = await User.findById(req.user.user_id).populate('role_id');
+export const requireRole = (roles = []) =>
+  wrapAsync(async (req, res, next) => {
+    let user = req.currentUser;
+
+    if (!user) {
+      user = await User.findById(req.user.user_id).populate('role_id');
+
+      if (!user) {
+        throw new ErrorWithStatus({
+          status: HTTP_STATUS.UNAUTHORIZED,
+          message: USERS_MESSAGES.USER_NOT_FOUND,
+        });
+      }
+
+      req.currentUser = user;
+    }
+    if (!user.is_active) {
+      throw new ErrorWithStatus({
+        status: HTTP_STATUS.FORBIDDEN,
+        message: USERS_MESSAGES.USER_DISABLED,
+      });
+    }
 
     if (!roles.includes(user.role_id.name)) {
       throw new ErrorWithStatus({
@@ -48,11 +67,29 @@ export const requireRole =
         message: USERS_MESSAGES.PERMISSION_DENIED,
       });
     }
+  });
 
-    next();
-  };
+export const loadUser = wrapAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.user_id).populate('role_id');
 
-export const verifyGoogleToken = async (req, res, next) => {
+  if (!user) {
+    throw new ErrorWithStatus({
+      status: HTTP_STATUS.UNAUTHORIZED,
+      message: USERS_MESSAGES.USER_NOT_FOUND,
+    });
+  }
+
+  if (!user.is_active) {
+    throw new ErrorWithStatus({
+      status: HTTP_STATUS.FORBIDDEN,
+      message: USERS_MESSAGES.USER_DISABLED,
+    });
+  }
+
+  req.currentUser = user;
+});
+
+export const verifyGoogleToken = wrapAsync(async (req, res, next) => {
   const { credential } = req.body;
 
   if (!credential) {
@@ -69,4 +106,6 @@ export const verifyGoogleToken = async (req, res, next) => {
 
   req.payload = ticket.getPayload();
   next();
-};
+});
+
+export const requireAuth = [accessTokenValidator, loadUser];

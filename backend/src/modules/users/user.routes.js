@@ -1,8 +1,17 @@
 import { Router } from 'express';
-import { accessTokenValidator, requireRole } from '../auth/auth.middlewares.js';
-import { createUser } from './user.controller.js';
+import {
+  accessTokenValidator,
+  requireAuth,
+  requireRole,
+} from '../auth/auth.middlewares.js';
+import {
+  createUserController,
+  setUserActiveStatusController,
+  updateMyProfileController,
+} from './user.controller.js';
 import { createUserSchema } from '../../validations/user.schema.js';
 import { validate } from '../../middlewares/validate.middlewares.js';
+import { wrapAsync } from '../../utils/handlers.js';
 
 const userRouter = Router();
 
@@ -16,7 +25,26 @@ userRouter.post(
   validate(createUserSchema),
   accessTokenValidator,
   requireRole(['admin']),
-  createUser,
+  createUserController,
 );
+
+/**
+ * @route PATCH /api/users/:id/ban
+ * @desc Ban User - ADMIN only
+ * @access Private (later)
+ */
+userRouter.patch(
+  '/:id/ban',
+  accessTokenValidator,
+  requireRole(['admin']),
+  wrapAsync(setUserActiveStatusController),
+);
+
+/**
+ * @route PUT /api/users/me
+ * @desc Update  MyProfile, 
+ * @access Private (later)
+ */
+userRouter.put('/me', requireAuth, wrapAsync(updateMyProfileController));
 
 export default userRouter;

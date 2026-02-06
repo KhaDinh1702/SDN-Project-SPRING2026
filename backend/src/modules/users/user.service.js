@@ -50,6 +50,80 @@ class UserService {
       role,
     };
   }
+
+  async updateMyProfile(userId, payload) {
+    const { email, username, first_name, last_name, password } = payload;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new ErrorWithStatus({
+        status: HTTP_STATUS.NOT_FOUND,
+        message: USERS_MESSAGES.USER_NOT_FOUND,
+      });
+    }
+
+    if (email && email !== user.email) {
+      const exists = await User.findOne({ email });
+      if (exists) {
+        throw new ErrorWithStatus({
+          status: HTTP_STATUS.BAD_REQUEST,
+          message: USERS_MESSAGES.EMAIL_ALREADY_EXISTS,
+        });
+      }
+      user.email = email;
+    }
+
+    if (username) user.username = username;
+    if (first_name) user.first_name = first_name;
+    if (last_name) user.last_name = last_name;
+
+    if (password) {
+      user.password_hash = await bcrypt.hash(password, 10);
+    }
+
+    await user.save();
+
+    return {
+      id: user._id,
+      email: user.email,
+      username: user.username,
+      first_name: user.first_name,
+      last_name: user.last_name,
+    };
+  }
+
+  async setUserActiveStatus(userId, isActive) {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new ErrorWithStatus({
+        status: HTTP_STATUS.NOT_FOUND,
+        message: USERS_MESSAGES.USER_NOT_FOUND,
+      });
+    }
+
+    if (!user.is_active && isActive === false) {
+      throw new ErrorWithStatus({
+        status: HTTP_STATUS.BAD_REQUEST,
+        message: 'User already banned',
+      });
+    }
+
+    if (user.is_active && isActive === true) {
+      throw new ErrorWithStatus({
+        status: HTTP_STATUS.BAD_REQUEST,
+        message: 'User already active',
+      });
+    }
+
+    user.is_active = isActive;
+    await user.save();
+
+    return {
+      id: user._id,
+      email: user.email,
+      is_active: user.is_active,
+    };
+  }
 }
 
 export default new UserService();

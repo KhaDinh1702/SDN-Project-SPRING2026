@@ -13,7 +13,10 @@ export const errorHandler = (err, req, res, next) => {
   // lỗi không kiểm soát
   console.error(err);
 
-  return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-    message: 'Internal Server Error',
+  return res.status(err.status || HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+    success: false,
+    name: err.name,
+    message: err.message,
+    ...(err.errors && { errors: err.errors }),
   });
 };
