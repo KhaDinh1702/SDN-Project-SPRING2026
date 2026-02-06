@@ -2,14 +2,8 @@ import 'dotenv/config';
 import express, { json } from 'express';
 import cors from 'cors';
 import connectDB from './config/db.js';
-
-// Import individual module routes
-import authRouter from './modules/auth/auth.routes.js';
-import productRouter from './modules/product/product.routes.js';
-import categoryRouter from './modules/category/category.routes.js';
-import stockRouter from './modules/stock/stock.routes.js';
-import orderRouter from './modules/order/order.routes.js';
-import paymentRouter from './modules/payment/payment.routes.js';
+import routes from './routes/index.js';
+import { errorHandler } from './middlewares/error.middleware.js';
 
 const app = express();
 
@@ -22,16 +16,13 @@ app.get('/', (req, res) => {
   res.send('FreshMart Backend is LIVE ');
 });
 
-// Mount Routes
-app.use('/api/auth', authRouter);
-app.use('/api/products', productRouter);
-app.use('/api/categories', categoryRouter);
-app.use('/api/orders', orderRouter);
-app.use('/api/stock', stockRouter);
-app.use('/api/payment', paymentRouter);
+// Mount Routes at the root level
+app.use('/api', routes);
 
 // Connect to Database
 connectDB();
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () =>

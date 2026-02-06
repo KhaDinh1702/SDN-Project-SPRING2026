@@ -12,7 +12,7 @@ const productSchema = new Schema(
     unit: { type: String },
     stock_quantity: { type: Number, default: 0 },
     is_active: { type: Boolean, default: true },
-    category_id: { type: Schema.Types.ObjectId, ref: 'Categories' },
+    category_id: { type: Schema.Types.ObjectId, ref: 'Category' },
   },
   {
     versionKey: false,
@@ -20,4 +20,4 @@ const productSchema = new Schema(
   },
 );
 
-export default model('products', productSchema);
+export default model('Product', productSchema);

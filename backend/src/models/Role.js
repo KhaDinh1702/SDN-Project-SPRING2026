@@ -6,4 +6,4 @@ const roleSchema = new mongoose.Schema({
   versionKey: false // Cấu hình này phải nằm ở đây
 });
 
-export default mongoose.model('roles', roleSchema);
+export default mongoose.model('Role', roleSchema);
