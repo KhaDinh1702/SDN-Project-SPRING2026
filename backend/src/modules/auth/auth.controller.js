@@ -49,7 +49,7 @@ export const googleAuthController = async (req, res) => {
 };
 
 export const refreshTokenController = async (req, res) => {
-  const { refreshToken } = req.body;
+  const { refresh_token: refreshToken } = req.body;
 
   const result = await authService.refreshAccessToken(refreshToken);
 

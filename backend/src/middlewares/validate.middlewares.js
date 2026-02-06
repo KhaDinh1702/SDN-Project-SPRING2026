@@ -1,4 +1,4 @@
-import z, { ZodError } from 'zod';
+import { ZodError } from 'zod';
 import { EntityError } from '../utils/error.js';
 
 export const validate = (schema) => (req, res, next) => {

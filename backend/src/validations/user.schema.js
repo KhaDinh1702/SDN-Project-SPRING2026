@@ -25,14 +25,16 @@ export const createUserSchema = z.object({
   first_name: z
     .string({
       required_error: 'First name is required',
+      invalid_type_error: 'First name must be a string',
     })
-    .min(1, 'First name is required'),
+    .min(1, 'First name cannot be empty'),
 
   last_name: z
     .string({
       required_error: 'Last name is required',
+      invalid_type_error: 'First name must be a string',
     })
-    .min(1, 'Last name is required'),
+    .min(1, 'Last name cannot be empty'),
 
   role: z.enum(['staff', 'manager'], {
     required_error: 'Role is required',

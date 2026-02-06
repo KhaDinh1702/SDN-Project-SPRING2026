@@ -13,7 +13,7 @@ export const signToken = ({
     typeof privateKey !== 'string' ||
     privateKey.trim() === ''
   ) {
-    const err = new Error('secretOrPrivateKey must have a value');
+    const err = new Error('JWT_PRIVATE_KEY is not configured');
     console.error('signToken error: privateKey is invalid');
     return Promise.reject(err);
   }

@@ -7,7 +7,7 @@ import { validate } from '../../middlewares/validate.middlewares.js';
 const userRouter = Router();
 
 /**
- * @route POST /api/products
+ * @route POST /api/users
  * @desc Create new account for employee - ADMIN only
  * @access Private (later)
  */

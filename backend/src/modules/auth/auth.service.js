@@ -6,11 +6,8 @@ import RefreshToken from '../../models/RefreshToken.js';
 import HTTP_STATUS from '../../constants/httpStatus.js';
 import { USERS_MESSAGES } from '../../constants/messages.js';
 import { signToken } from '../../utils/jwt.js';
-import { OAuth2Client } from 'google-auth-library';
 import { ErrorWithStatus } from '../../utils/error.js';
 import { sendEmail } from '../../utils/sendEmail.js';
-
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 class AuthService {
   async checkEmailExist(email) {
@@ -294,7 +291,7 @@ class AuthService {
 
     const normalizedEmail = email.toLowerCase();
 
-    const user = await this.checkEmailExist(normalizedEmail);
+    let user = await this.checkEmailExist(normalizedEmail);
 
     if (user && !user.google_id) {
       user.google_id = google_id;
