@@ -140,7 +140,8 @@ class AuthService {
 
   async login(payload) {
     const { email, password } = payload;
-    const user = await this.checkEmailExist(email);
+    const normalizedEmail = email.toLowerCase();
+    const user = await this.checkEmailExist(normalizedEmail);
 
     if (!user) {
       throw new ErrorWithStatus({
@@ -191,7 +192,7 @@ class AuthService {
         email: user.email,
         first_name: user.first_name,
         last_name: user.last_name,
-        role_id: user.role_id.name,
+        role: user.role_id.name,
       },
       accessToken,
       refreshToken,
@@ -330,7 +331,7 @@ class AuthService {
         email: user.email,
         first_name: user.first_name,
         last_name: user.last_name,
-        role_id: user.role_id,
+        role: user.role_id.name,
       },
       accessToken,
       refreshToken,
@@ -377,11 +378,10 @@ class AuthService {
     };
   }
 
-  async logout(user_id) {
-    await RefreshToken.deleteMany({ user_id });
-    return { message: USERS_MESSAGES.LOGOUT_SUCCESS };
+  async logout(refreshToken) {
+    await RefreshToken.deleteOne({ token: refreshToken });
+    return true;
   }
 }
 
-const authService = new AuthService();
 export default AuthService;

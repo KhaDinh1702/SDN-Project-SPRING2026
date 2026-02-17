@@ -4,11 +4,20 @@ import cors from 'cors';
 import connectDB from './config/db.js';
 import routes from './routes/index.js';
 import { errorHandler } from './middlewares/error.middleware.js';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
+app.use(cookieParser());
+
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  }),
+);
+
 app.use(json());
 
 // Health Check Route
