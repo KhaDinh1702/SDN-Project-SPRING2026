@@ -1,0 +1,134 @@
+.register-page {
+  min-height: calc(100vh - 128px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff7ee;
+  padding: 40px 16px;
+}
+
+.register-card {
+  width: 100%;
+  max-width: 460px;
+  background: #fff;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.register-card h1 {
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: #777;
+  margin-bottom: 24px;
+}
+
+label {
+  font-weight: 500;
+  display: block;
+  margin: 16px 0 6px;
+}
+
+/* NAME ROW */
+.row {
+  display: flex;
+  gap: 12px;
+}
+
+.row > div {
+  flex: 1;
+}
+
+/* INPUT */
+.input-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff7ee;
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: 1px solid #eee;
+}
+
+.input-box input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+}
+
+.input-box.error {
+  border-color: red;
+}
+
+/* TERMS */
+.terms {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0 24px;
+  font-size: 14px;
+}
+
+/* PRIMARY BTN */
+.ant-btn-primary {
+  background: #0f4d00;
+  border-radius: 12px;
+}
+
+/* DIVIDER */
+.divider {
+  text-align: center;
+  margin: 24px 0;
+  position: relative;
+}
+
+.divider::before {
+  content: "";
+  height: 1px;
+  width: 100%;
+  background: #eee;
+  position: absolute;
+  left: 0;
+  top: 50%;
+}
+
+.divider span {
+  background: #fff;
+  padding: 0 12px;
+  color: #999;
+  position: relative;
+}
+
+/* GOOGLE */
+.google-btn {
+  border-radius: 12px;
+}
+
+/* ===== SIGN IN TEXT (FIX) ===== */
+.signin-text {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 14px;
+  color: #555;
+}
+
+.signin-text strong {
+  color: #0f4d00;
+  font-weight: 700;      /* 👈 đậm hơn */
+  cursor: pointer;
+}
+
+.signin-text strong:hover {
+  text-decoration: underline; /* 👈 giống Login */
+}
+.signin-text {
+  pointer-events: none;   /* ❌ chặn toàn bộ */
+}
+
+.signin-link {
+  pointer-events: auto;   /* ✅ chỉ link được click */
+  cursor: pointer;
+}
