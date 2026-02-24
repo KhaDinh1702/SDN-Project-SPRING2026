@@ -1,0 +1,133 @@
+.login-page {
+  min-height: calc(100vh - 128px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff7ee;
+  padding: 40px 16px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  padding: 32px;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.login-card h1 {
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: #777;
+  margin-bottom: 24px;
+}
+
+.login-card label {
+  font-weight: 500;
+  display: block;
+  margin: 16px 0 6px;
+}
+
+/* ===== INPUT BOX ===== */
+.input-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff7ee;
+  border: 1px solid #e5dfd6;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.input-box input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  font-size: 14px;
+}
+
+.input-box.error {
+  border-color: #ff4d4f;
+}
+
+.error-text {
+  font-size: 12px;
+  color: #ff4d4f;
+  margin-top: 4px;
+  display: block;
+}
+
+/* ===== OPTIONS ===== */
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 16px 0 24px;
+  font-size: 14px;
+}
+
+.remember {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.forgot {
+  color: #0f4d00;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* ===== BUTTONS ===== */
+.login-btn {
+  background: #0f4d00;
+  border-radius: 14px;
+  height: 44px;
+  font-weight: 600;
+}
+
+.google-btn {
+  height: 44px;
+  border-radius: 14px;
+  font-weight: 500;
+}
+
+/* ===== DIVIDER ===== */
+.divider {
+  text-align: center;
+  margin: 24px 0;
+  position: relative;
+}
+
+.divider::before {
+  content: "";
+  height: 1px;
+  width: 100%;
+  background: #eee;
+  position: absolute;
+  left: 0;
+  top: 50%;
+}
+
+.divider span {
+  background: #fff;
+  padding: 0 12px;
+  color: #999;
+  position: relative;
+}
+
+/* ===== SIGN UP ===== */
+.signup-text {
+  text-align: center;
+  margin-top: 24px;
+}
+
+.signup-text span {
+  color: #0f4d00;
+  font-weight: 600;
+  cursor: pointer;
+}

@@ -1,0 +1,66 @@
+.fm-header {
+  height: 64px;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: #fff7ee;
+  border-bottom: 1px solid #eee;
+}
+
+/* LOGO */
+.fm-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.logo-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #0f4d00;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* MENU */
+.fm-menu {
+  display: flex;
+  gap: 32px;
+}
+
+.fm-menu a {
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* ACTIONS */
+.fm-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cart-icon {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* BUTTONS */
+.btn-signin {
+  border-radius: 20px;
+  padding: 4px 18px;
+}
+
+.btn-signup {
+  border-radius: 20px;
+  padding: 4px 18px;
+  background: #0f4d00;
+}

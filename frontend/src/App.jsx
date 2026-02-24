@@ -1,19 +1,24 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./components/Home";
-import AuthForm from "./components/AuthForm";
-import Register from "./components/Register";
-import ForgotPassword from "./components/ForgotPassword";
+
 import "./App.css";
+import HomePage from "./pages/User/Homepage/Homepage";
+import ProductDetail from "./pages/User/ProductDetail/ProductDetail";
+import Login from "./pages/User/Auth/Login";
+import Register from "./pages/User/Register/Register";
+// import ForgotPassword from "./pages/User/Auth/ForgotPassword";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<AuthForm />} />
+
+        <Route path="/" element={<HomePage />} />
+        <Route path="/products/:id" element={<ProductDetail />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
+        {/* <Route path="/forgot-password" element={<ForgotPassword />} /> */}
+
       </Routes>
     </BrowserRouter>
   );
