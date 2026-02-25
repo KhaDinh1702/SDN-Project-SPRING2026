@@ -1,19 +1,18 @@
 import { z } from 'zod';
-import { USERS_MESSAGES } from '../constants/messages.js';
 
 export const createProductSchema = z.object({
   name: z
     .string({
-      required_error: USERS_MESSAGES.PRODUCT_REQUIRE,
+      required_error: 'Product name is required',
     })
-    .min(1, USERS_MESSAGES.PRODUCT_REQUIRE),
+    .min(1, 'Product name cannot be empty'),
 
-  price: z
+  price: z.coerce
     .number({
-      required_error: USERS_MESSAGES.PRICE,
-      invalid_type_error: USERS_MESSAGES.PRICE,
+      required_error: 'Price is required',
+      invalid_type_error: 'Price must be a number',
     })
-    .min(0, USERS_MESSAGES.PRICE),
+    .min(0, 'Price must be greater than or equal to 0'),
 
   description: z.string().optional(),
 
@@ -21,11 +20,11 @@ export const createProductSchema = z.object({
 
   expiry_date: z.coerce
     .date({
-      invalid_type_error: USERS_MESSAGES.PRODUCT_EXPIRY_DATE_INVALID,
+      invalid_type_error: 'Expiry date is invalid',
     })
     .optional(),
 
-  weight: z
+  weight: z.coerce
     .number({
       invalid_type_error: 'Weight must be a number',
     })
@@ -34,26 +33,20 @@ export const createProductSchema = z.object({
 
   unit: z.string().optional(),
 
-  stock_quantity: z
+  stock_quantity: z.coerce
     .number({
-      invalid_type_error: USERS_MESSAGES.PRODUCT_STOCK_INVALID,
+      invalid_type_error: 'Stock quantity must be a number',
     })
-    .min(0, USERS_MESSAGES.PRODUCT_STOCK_INVALID)
+    .min(0, 'Stock quantity must be greater than or equal to 0')
     .optional(),
 
   category_id: z.string().optional(),
 
-  is_active: z
+  is_active: z.coerce
     .boolean({
       invalid_type_error: 'is_active must be boolean',
     })
     .optional(),
 });
-
-export const createProductsSchema = z
-  .array(createProductSchema, {
-    invalid_type_error: 'Body must be an array of products',
-  })
-  .min(1, 'Product list must not be empty');
 
 export const updateProductSchema = createProductSchema.partial();

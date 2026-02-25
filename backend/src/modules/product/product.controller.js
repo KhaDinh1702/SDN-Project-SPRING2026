@@ -1,4 +1,10 @@
-import { createProduct, deleteProduct, getAllProducts, getProductById, updateProduct } from './product.service.js';
+import {
+  createProduct,
+  deleteProduct,
+  getAllProducts,
+  getProductById,
+  updateProduct,
+} from './product.service.js';
 
 export const getAllProductsController = async (req, res) => {
   try {
@@ -34,12 +40,15 @@ export const getProductByIdController = async (req, res) => {
 };
 
 export const createProductController = async (req, res) => {
-  const product = await createProduct(req.body);
-  res.status(201).json(product);
+  const product = await createProduct(req.body, req.files);
+  res.status(201).json({
+    success: true,
+    data: product,
+  });
 };
 
 export const updateProductController = async (req, res) => {
-  const product = await updateProduct(req.params.id, req.body);
+  const product = await updateProduct(req.params.id, req.body, req.files);
   res.json(product);
 };
 

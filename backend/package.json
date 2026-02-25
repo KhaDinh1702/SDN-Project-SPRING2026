@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.997.0",
     "@react-oauth/google": "^0.13.4",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
@@ -24,6 +25,7 @@
     "hono": "^4.11.6",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.1.5",
+    "multer": "^2.0.2",
     "nodemailer": "^7.0.13",
     "nodemon": "^3.1.11",
     "vnpay": "^2.4.4",
