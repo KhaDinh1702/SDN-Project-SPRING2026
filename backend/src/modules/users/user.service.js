@@ -51,6 +51,17 @@ class UserService {
     };
   }
 
+  async getMyProfile(userId) {
+    const user = await User.findById(userId).populate('role_id');
+    if (!user) {
+      throw new ErrorWithStatus({
+        status: HTTP_STATUS.NOT_FOUND,
+        message: USERS_MESSAGES.USER_NOT_FOUND,
+      });
+    }
+    return user;
+  }
+
   async updateMyProfile(userId, payload) {
     const { email, username, first_name, last_name, password } = payload;
 
@@ -123,6 +134,18 @@ class UserService {
       email: user.email,
       is_active: user.is_active,
     };
+  }
+
+  async getAllUsers() {
+    const users = await User.find().populate('role_id');
+    return users.map((user) => ({
+      id: user._id,
+      email: user.email,
+      username: user.username,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      role: user.role_id.name,
+    }));
   }
 }
 

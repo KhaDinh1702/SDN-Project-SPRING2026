@@ -6,7 +6,11 @@ import {
   getProductByIdController,
   updateProductController,
 } from './product.controller.js';
-import { accessTokenValidator, requireRole } from '../auth/auth.middlewares.js';
+import {
+  accessTokenValidator,
+  requireAuth,
+  requireRole,
+} from '../auth/auth.middlewares.js';
 import { createProductsSchema } from '../../validations/product.schema.js';
 import { validate } from '../../middlewares/validate.middlewares.js';
 
@@ -34,7 +38,7 @@ productRouter.get('/:id', getProductByIdController);
 productRouter.post(
   '/',
   validate(createProductsSchema),
-  accessTokenValidator,
+  requireAuth,
   requireRole(['admin', 'manager']),
   createProductController,
 );
@@ -46,7 +50,7 @@ productRouter.post(
  */
 productRouter.put(
   '/:id',
-  accessTokenValidator,
+  requireAuth,
   requireRole(['admin', 'manager']),
   updateProductController,
 );
@@ -58,7 +62,7 @@ productRouter.put(
  */
 productRouter.delete(
   '/:id',
-  accessTokenValidator,
+  requireAuth,
   requireRole(['admin', 'manager']),
   deleteProductController,
 );

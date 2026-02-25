@@ -12,6 +12,17 @@ export const createUserController = async (req, res, next) => {
   }
 };
 
+export const getMyProfileController = async (req, res) => {
+  const userId = req.user.user_id;
+  const result = await userService.getMyProfile(userId);
+
+  return res.status(HTTP_STATUS.OK).json({
+    success: true,
+    message: USERS_MESSAGES.GET_ME_SUCCESS,
+    data: result,
+  });
+};
+
 export const updateMyProfileController = async (req, res) => {
   const userId = req.user.user_id;
   const payload = req.body;
@@ -40,6 +51,14 @@ export const setUserActiveStatusController = async (req, res) => {
     is_active,
   );
 
+  res.json({
+    success: true,
+    data: result,
+  });
+};
+
+export const getAllUsersController = async (req, res) => {
+  const result = await userService.getAllUsers();
   res.json({
     success: true,
     data: result,
