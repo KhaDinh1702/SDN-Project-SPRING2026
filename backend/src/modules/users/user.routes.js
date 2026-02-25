@@ -20,9 +20,9 @@ const userRouter = Router();
  */
 userRouter.post(
   '/',
-  validate(createUserSchema),
   requireAuth,
   requireRole(['admin']),
+  validate(createUserSchema),
   wrapAsync(createUserController),
 );
 
