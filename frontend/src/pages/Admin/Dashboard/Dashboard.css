@@ -1,0 +1,52 @@
+.dashboard-container {
+  padding: 24px;
+  background-color: #ffffff;
+  min-height: 100vh;
+}
+
+/* Card thống kê */
+.stat-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Số thống kê màu đen */
+.ant-statistic-title {
+  color: #000 !important;
+  font-weight: 500;
+}
+
+.ant-statistic-content {
+  color: #000 !important;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* Card bảng */
+.table-card {
+  margin-top: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Table */
+.ant-table {
+  background-color: #ffffff;
+}
+
+.ant-table-thead > tr > th {
+  background-color: #fafafa;
+  font-weight: 600;
+  color: #000;
+}
+
+.ant-table-tbody > tr > td {
+  color: #000;
+}
