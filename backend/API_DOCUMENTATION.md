@@ -5,9 +5,10 @@
 
 ---
 
-##  Authentication APIs
+## Authentication APIs
 
 ### Register
+
 ```
 POST /api/auth/register
 Content-Type: application/json
@@ -24,6 +25,7 @@ Body:
 ```
 
 ### Login
+
 ```
 POST /api/auth/login
 Content-Type: application/json
@@ -42,6 +44,7 @@ Response:
 ```
 
 ### Google OAuth
+
 ```
 POST /api/auth/google
 Content-Type: application/json
@@ -53,6 +56,7 @@ Body:
 ```
 
 ### Forgot Password
+
 ```
 POST /api/auth/forgot-password
 Content-Type: application/json
@@ -68,6 +72,7 @@ Body:
 ## 🛍️ Product APIs
 
 ### Get All Products
+
 ```
 GET /api/products
 
@@ -81,7 +86,7 @@ Response:
       "price": 25000,
       "description": "Fresh red apple",
       "stock_quantity": 100,
-      "category_id": "...",
+      "category": "...",
       "is_active": true
     }
   ]
@@ -89,6 +94,7 @@ Response:
 ```
 
 ### Get Product by ID
+
 ```
 GET /api/products/:id
 ```
@@ -98,6 +104,7 @@ GET /api/products/:id
 ## 📂 Category APIs
 
 ### Get All Categories
+
 ```
 GET /api/categories
 
@@ -119,6 +126,7 @@ Response:
 ## 📦 Order APIs
 
 ### Create Order
+
 ```
 POST /api/orders
 Content-Type: application/json
@@ -138,16 +146,19 @@ Body:
 ```
 
 ### Get All Orders
+
 ```
 GET /api/orders
 ```
 
 ### Get Orders by User ID
+
 ```
 GET /api/orders/user/:userId
 ```
 
 ### Update Order Status
+
 ```
 PATCH /api/orders/:orderId/status
 Content-Type: application/json
@@ -163,6 +174,7 @@ Body:
 ## 💳 Payment APIs (VNPay)
 
 ### 1. Create Payment URL
+
 ```
 POST /api/payment/vnpay/create
 Content-Type: application/json
@@ -185,29 +197,34 @@ Response:
 ```
 
 **Flow:**
+
 1. Frontend call API này để lấy `paymentUrl`
-2. Redirect user đến `paymentUrl` 
+2. Redirect user đến `paymentUrl`
 3. User thanh toán trên VNPay
 4. VNPay redirect về callback
 
 ---
 
 ### 2. Payment Callback (VNPay tự động gọi)
+
 ```
 GET /api/payment/vnpay/callback?vnp_ResponseCode=00&vnp_TxnRef=...
 ```
 
 **Backend sẽ redirect về Frontend:**
+
 - **Success**: `http://localhost:3000/payment/success?orderId=...&transactionCode=...`
 - **Failure**: `http://localhost:3000/payment/failure?orderId=...&message=...`
 
 **Frontend cần tạo 2 routes:**
+
 - `/payment/success` - Hiển thị thanh toán thành công
 - `/payment/failure` - Hiển thị thanh toán thất bại
 
 ---
 
 ### 3. Check Payment Status
+
 ```
 GET /api/payment/:orderId/status
 
@@ -232,6 +249,7 @@ Response:
 ---
 
 ### 4. IPN Endpoint (VNPay server gọi - không cần frontend handle)
+
 ```
 POST /api/payment/vnpay/ipn
 ```
@@ -263,6 +281,7 @@ POST /api/payment/vnpay/ipn
 ## 📦 Stock APIs
 
 ### Get Stock History
+
 ```
 GET /api/stock/history
 ```
@@ -282,16 +301,19 @@ GET /api/stock/history
 ## 📌 Payment Status Values
 
 ### Order Status
+
 - `Pending` - Đơn hàng mới tạo
 - `Processing` - Đang xử lý (sau khi thanh toán thành công)
 - `Completed` - Hoàn thành
 - `Cancelled` - Đã hủy
 
 ### Payment Status
+
 - `Unpaid` - Chưa thanh toán
 - `Paid` - Đã thanh toán
 
 ### Transaction Status
+
 - `Pending` - Đang chờ thanh toán
 - `Success` - Thanh toán thành công
 - `Failed` - Thanh toán thất bại

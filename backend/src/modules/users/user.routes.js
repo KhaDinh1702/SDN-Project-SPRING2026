@@ -1,11 +1,9 @@
 import { Router } from 'express';
-import {
-  accessTokenValidator,
-  requireAuth,
-  requireRole,
-} from '../auth/auth.middlewares.js';
+import { requireAuth, requireRole } from '../auth/auth.middlewares.js';
 import {
   createUserController,
+  getAllUsersController,
+  getMyProfileController,
   setUserActiveStatusController,
   updateMyProfileController,
 } from './user.controller.js';
@@ -22,10 +20,10 @@ const userRouter = Router();
  */
 userRouter.post(
   '/',
-  validate(createUserSchema),
-  accessTokenValidator,
+  requireAuth,
   requireRole(['admin']),
-  createUserController,
+  validate(createUserSchema),
+  wrapAsync(createUserController),
 );
 
 /**
@@ -35,16 +33,34 @@ userRouter.post(
  */
 userRouter.patch(
   '/:id/ban',
-  accessTokenValidator,
+  requireAuth,
   requireRole(['admin']),
   wrapAsync(setUserActiveStatusController),
 );
+/**
+ * @route GET /api/users/me
+ * @desc Get MyProfile,
+ * @access Private (later)
+ */
+userRouter.get('/me', requireAuth, wrapAsync(getMyProfileController));
 
 /**
  * @route PUT /api/users/me
- * @desc Update  MyProfile, 
+ * @desc Update MyProfile,
  * @access Private (later)
  */
 userRouter.put('/me', requireAuth, wrapAsync(updateMyProfileController));
+
+/**
+ * @route GET /api/users
+ * @desc Get all users - ADMIN only
+ * @access Private (later)
+ */
+userRouter.get(
+  '/',
+  requireAuth,
+  requireRole(['admin']),
+  wrapAsync(getAllUsersController),
+);
 
 export default userRouter;

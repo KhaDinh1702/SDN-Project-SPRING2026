@@ -16,7 +16,6 @@ import { validate } from '../../middlewares/validate.middlewares.js';
 import {
   forgotPasswordSchema,
   loginSchema,
-  refreshTokenSchema,
   registerSchema,
   resetPasswordSchema,
 } from '../../validations/auth.schema.js';
@@ -65,27 +64,23 @@ authRouter.post(
 
 /**
  * @route POST /api/auth/google
- * @desc Get product by ID
+ * @desc Authenticate user with Google OAuth
  * @access Private (later)
  */
 authRouter.post('/google', verifyGoogleToken, wrapAsync(googleAuthController));
 
 /**
  * @route POST /api/auth/refresh-token
- * @desc Get product by ID
+ * @desc Refresh access token
  * @access Private (later)
  */
-authRouter.post(
-  '/refresh-token',
-  validate(refreshTokenSchema),
-  wrapAsync(refreshTokenController),
-);
+authRouter.post('/refresh-token', wrapAsync(refreshTokenController));
 
 /**
  * @route POST /api/auth/logout
- * @desc Get product by ID
+ * @desc logout user by invalidate refresh token
  * @access Private (later)
  */
-authRouter.post('/logout', accessTokenValidator, wrapAsync(logoutController));
+authRouter.post('/logout', wrapAsync(logoutController));
 
 export default authRouter;

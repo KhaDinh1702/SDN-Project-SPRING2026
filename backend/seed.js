@@ -5,7 +5,6 @@ import Role from './src/models/Role.js';
 import User from './src/models/User.js';
 import Category from './src/models/Category.js';
 import Product from './src/models/Product.js';
-import ProductImage from './src/models/ProductImage.js';
 import Order from './src/models/Order.js';
 import OrderProduct from './src/models/OrderProduct.js';
 import PaymentTransaction from './src/models/PaymentTransaction.js';
@@ -23,7 +22,6 @@ const seedDatabase = async () => {
       User.deleteMany({}),
       Category.deleteMany({}),
       Product.deleteMany({}),
-      ProductImage.deleteMany({}),
       Order.deleteMany({}),
       OrderProduct.deleteMany({}),
       PaymentTransaction.deleteMany({}),
@@ -79,15 +77,7 @@ const seedDatabase = async () => {
       name: 'Organic Tomato',
       price: 3.5,
       unit: 'kg',
-      stock_quantity: 100,
-      is_active: true,
-      category_id: vegCat._id,
-    });
-
-    // 6. Product Images
-    await ProductImage.create({
-      product_id: tomato._id,
-      image_url: 'tomato.jpg',
+      category: vegCat._id,
     });
 
     // 7. Orders & Order Products
@@ -117,18 +107,24 @@ const seedDatabase = async () => {
 
     // 9. Stock Transactions
     const stockTx = await StockTransaction.create({
-      user_id: admin._id,
+      user: admin._id,
+      type: 'IN',
       total_price: 350.0,
       note: 'Initial Stock',
     });
 
+    // Tạo transaction detail
     await StockTransactionDetail.create({
-      stock_transaction_id: stockTx._id,
-      product_id: tomato._id,
-      type: 'In',
+      stock_transaction: stockTx._id,
+      product: tomato._id,
       quantity: 100,
       unit_price: 3.5,
       total_price: 350.0,
+    });
+
+    //Update stock product
+    await Product.findByIdAndUpdate(tomato._id, {
+      $inc: { stock_quantity: 100 },
     });
 
     console.log(' All 10 collections seeded successfully!');

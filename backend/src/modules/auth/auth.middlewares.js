@@ -49,21 +49,9 @@ export const requireRole = (roles = []) =>
     let user = req.currentUser;
 
     if (!user) {
-      user = await User.findById(req.user.user_id).populate('role_id');
-
-      if (!user) {
-        throw new ErrorWithStatus({
-          status: HTTP_STATUS.UNAUTHORIZED,
-          message: USERS_MESSAGES.USER_NOT_FOUND,
-        });
-      }
-
-      req.currentUser = user;
-    }
-    if (!user.is_active) {
       throw new ErrorWithStatus({
-        status: HTTP_STATUS.FORBIDDEN,
-        message: USERS_MESSAGES.USER_DISABLED,
+        status: HTTP_STATUS.UNAUTHORIZED,
+        message: USERS_MESSAGES.ACCESS_TOKEN_IS_INVALID,
       });
     }
 
