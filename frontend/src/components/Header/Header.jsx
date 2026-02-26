@@ -18,17 +18,18 @@ export default function Header() {
 
       {/* CENTER */}
       <nav className="fm-menu">
-        <a>Vegetables</a>
-        <a>Meat</a>
-        <a>Fish</a>
-        <a>Food</a>
-        <a>About</a>
+        <a onClick={() => navigate("/category")}>Categories</a>
+        <a onClick={() => navigate("/ingredients")}>Food</a>
+        <a onClick={() => navigate("/about")}>About</a>
       </nav>
 
       {/* RIGHT */}
       <div className="fm-actions">
         <Badge count={1} size="small">
-          <ShoppingCartOutlined className="cart-icon" />
+          <ShoppingCartOutlined
+            className="cart-icon"
+            onClick={() => navigate("/cart")}
+          />
         </Badge>
 
         <Button

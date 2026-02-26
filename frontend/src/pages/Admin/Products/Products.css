@@ -1,0 +1,48 @@
+.product-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.product-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.product-table .ant-table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ant-table-thead > tr > th {
+  background: #fafafa;
+  font-weight: 600;
+}
+
+.edit-btn {
+  background-color: #e6f7ff;
+  border: none;
+}
+
+.edit-btn:hover {
+  background-color: #bae7ff;
+}
+.product-card {
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+.product-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.ant-modal-content {
+  border-radius: 12px;
+}
+
+.ant-btn-primary {
+  border-radius: 8px;
+}
