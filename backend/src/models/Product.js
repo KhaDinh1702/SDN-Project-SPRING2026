@@ -21,7 +21,7 @@ const productSchema = new Schema(
     unit: { type: String },
     stock_quantity: { type: Number, default: 0 },
     is_active: { type: Boolean, default: true },
-    category_id: { type: Schema.Types.ObjectId, ref: 'Category' },
+    category: { type: Schema.Types.ObjectId, ref: 'Category' },
     images: [ImageSchema],
   },
   {

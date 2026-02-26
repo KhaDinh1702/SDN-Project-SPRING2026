@@ -1,28 +1,35 @@
 import { ZodError } from 'zod';
 import { EntityError } from '../utils/error.js';
 
-export const validate = (schema) => (req, res, next) => {
-  try {
-    req.body = schema.parse(req.body);
-    next();
-  } catch (error) {
-    if (error instanceof ZodError) {
-      const errors = {};
+export const validate =
+  (schema, source = 'body') =>
+  (req, res, next) => {
+    try {
+      const parsedData = schema.parse(req[source] || {});
 
-      for (const issue of error.issues) {
-        const path = issue.path.filter((p) => typeof p !== 'number');
-        const key = path.join('.') || 'form';
-
-        errors[key] = issue.message;
+      if (req[source] && typeof req[source] === 'object') {
+        Object.assign(req[source], parsedData);
       }
 
-      return next(
-        new EntityError({
-          errors,
-        }),
-      );
-    }
+      next();
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const errors = {};
 
-    next(error);
-  }
-};
+        for (const issue of error.issues) {
+          const path = issue.path.filter((p) => typeof p !== 'number');
+          const key = path.join('.') || 'form';
+
+          errors[key] = issue.message;
+        }
+
+        return next(
+          new EntityError({
+            errors,
+          }),
+        );
+      }
+
+      next(error);
+    }
+  };
