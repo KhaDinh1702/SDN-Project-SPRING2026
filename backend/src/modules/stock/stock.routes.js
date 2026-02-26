@@ -14,6 +14,10 @@ import { wrapAsync } from '../../utils/handlers.js';
 
 const stockRouter = express.Router();
 
+/**
+ * @route POST /api/stock
+ * @desc Create new stock transaction - ADMIN and MANAGER only
+ */
 stockRouter.post(
   '/',
   requireAuth,
@@ -22,6 +26,10 @@ stockRouter.post(
   wrapAsync(createStockTransactionController),
 );
 
+/**
+ * @route GET /api/stock/:id
+ * @desc Get stock transaction by ID - ADMIN and MANAGER only
+ */
 stockRouter.get(
   '/:id',
   requireAuth,
@@ -29,6 +37,10 @@ stockRouter.get(
   wrapAsync(getStockByIdController),
 );
 
+/**
+ * @route GET /api/stock
+ * @desc Get stock transaction history - ADMIN and MANAGER only
+ */
 stockRouter.get(
   '/',
   requireAuth,
