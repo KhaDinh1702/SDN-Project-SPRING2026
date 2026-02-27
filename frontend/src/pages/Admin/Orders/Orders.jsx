@@ -1,148 +1,150 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Table,
   Tag,
   Button,
   Modal,
-  Form,
-  Input,
-  InputNumber,
   Select,
   Space,
   Typography,
   Row,
   Col,
   Card,
+  Input,
+  message,
+  Spin,
 } from "antd";
-import {
-  SearchOutlined,
-  PlusOutlined,
-  EyeOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined, EyeOutlined } from "@ant-design/icons";
+import { API_URL } from "../../../config";
 import "./Orders.css";
 
 const { Title } = Typography;
 const { Option } = Select;
 
+const getAuthHeader = () => ({
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+});
+
+const getStatusColor = (status) => {
+  switch (status) {
+    case "Processing": return "orange";
+    case "Shipped": return "blue";
+    case "Delivered": return "green";
+    case "Cancelled": return "red";
+    default: return "default";
+  }
+};
+
 const Orders = () => {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const [form] = Form.useForm();
 
-  const [orders, setOrders] = useState([
-    {
-      key: "1",
-      id: "#ORD001",
-      user_id: "user_001",
-      total_amount: 245000,
-      order_status: "Delivered",
-      created_at: "2025-01-18",
-      items: [
-        { product_id: "prod_1", quantity: 5, price: 20000 },
-        { product_id: "prod_2", quantity: 3, price: 15000 },
-      ],
-    },
-    {
-      key: "2",
-      id: "#ORD002",
-      user_id: "user_002",
-      total_amount: 189000,
-      order_status: "Processing",
-      created_at: "2025-01-20",
-      items: [
-        { product_id: "prod_3", quantity: 10, price: 10000 },
-      ],
-    },
-  ]);
+  const fetchOrders = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/api/orders`, {
+        headers: getAuthHeader(),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.message);
+      const normalized = (json.data || json).map((o) => ({
+        ...o,
+        key: o._id,
+      }));
+      setOrders(normalized);
+    } catch (err) {
+      message.error("Không thể tải đơn hàng: " + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // ===== Summary
-  const summary = useMemo(() => {
-    return {
-      total: orders.length,
-      pending: orders.filter(o => o.order_status === "Processing").length,
-      shipped: orders.filter(o => o.order_status === "Shipped").length,
-      delivered: orders.filter(o => o.order_status === "Delivered").length,
-    };
-  }, [orders]);
+  useEffect(() => {
+    fetchOrders();
+  }, []);
 
-  // ===== Filter
+  // ===== UPDATE STATUS =====
+  const handleStatusChange = async (value, record) => {
+    try {
+      const res = await fetch(`${API_URL}/api/orders/${record._id}/status`, {
+        method: "PATCH",
+        headers: getAuthHeader(),
+        body: JSON.stringify({ order_status: value }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.message);
+      message.success("Cập nhật trạng thái thành công");
+      // Update local state
+      setOrders((prev) =>
+        prev.map((o) => (o._id === record._id ? { ...o, order_status: value } : o))
+      );
+    } catch (err) {
+      message.error("Cập nhật thất bại: " + err.message);
+    }
+  };
+
+  // ===== FILTER =====
   const filteredOrders = useMemo(() => {
     return orders.filter((o) => {
+      const id = o._id || "";
+      const userId =
+        typeof o.user_id === "object"
+          ? o.user_id?.name || o.user_id?.email || ""
+          : o.user_id || "";
       const matchSearch =
-        o.id.toLowerCase().includes(searchText.toLowerCase()) ||
-        o.user_id.toLowerCase().includes(searchText.toLowerCase());
-
+        id.toLowerCase().includes(searchText.toLowerCase()) ||
+        userId.toLowerCase().includes(searchText.toLowerCase());
       const matchStatus =
         filterStatus === "All" || o.order_status === filterStatus;
-
       return matchSearch && matchStatus;
     });
   }, [orders, searchText, filterStatus]);
 
-  // ===== Status Change
-  const handleStatusChange = (value, record) => {
-    const updated = orders.map((o) =>
-      o.key === record.key ? { ...o, order_status: value } : o
-    );
-    setOrders(updated);
-  };
-
-  // ===== Add Order
-  const handleAdd = (values) => {
-    const newOrder = {
-      key: Date.now().toString(),
-      id: `#ORD00${orders.length + 1}`,
-      created_at: new Date().toISOString().split("T")[0],
-      order_status: "Processing",
-      ...values,
-    };
-
-    setOrders([...orders, newOrder]);
-    setIsModalOpen(false);
-    form.resetFields();
-  };
-
-  // ===== Status Color
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Processing":
-        return "orange";
-      case "Shipped":
-        return "blue";
-      case "Delivered":
-        return "green";
-      case "Cancelled":
-        return "red";
-      default:
-        return "default";
-    }
-  };
+  // ===== SUMMARY =====
+  const summary = useMemo(() => ({
+    total: orders.length,
+    pending: orders.filter((o) => o.order_status === "Processing").length,
+    shipped: orders.filter((o) => o.order_status === "Shipped").length,
+    delivered: orders.filter((o) => o.order_status === "Delivered").length,
+  }), [orders]);
 
   const columns = [
     {
       title: "Order ID",
-      dataIndex: "id",
+      dataIndex: "_id",
+      render: (id) => `#${id?.slice(-6).toUpperCase()}`,
     },
     {
       title: "User",
-      dataIndex: "user_id",
+      render: (_, record) => {
+        const u = record.user_id;
+        return typeof u === "object" ? (u?.name || u?.email || "—") : (u || "—");
+      },
     },
     {
       title: "Items",
-      render: (_, record) =>
-        record.items.map(
-          (item) =>
-            `${item.product_id} x${item.quantity}`
-        ).join(", "),
+      render: (_, record) => {
+        const items = record.items || record.products || [];
+        return items
+          .map((item) => {
+            const name =
+              typeof item.product_id === "object"
+                ? item.product_id?.name
+                : item.product_id;
+            return `${name} x${item.quantity}`;
+          })
+          .join(", ") || "—";
+      },
     },
     {
       title: "Amount",
       dataIndex: "total_amount",
-      render: (value) =>
-        value.toLocaleString("vi-VN") + " đ",
+      render: (val) => (val || 0).toLocaleString("vi-VN") + " đ",
     },
     {
       title: "Status",
@@ -150,29 +152,21 @@ const Orders = () => {
         <Select
           value={record.order_status}
           bordered={false}
-          onChange={(value) =>
-            handleStatusChange(value, record)
-          }
+          onChange={(value) => handleStatusChange(value, record)}
           style={{ width: 130 }}
         >
-          <Option value="Processing">
-            <Tag color="orange">Processing</Tag>
-          </Option>
-          <Option value="Shipped">
-            <Tag color="blue">Shipped</Tag>
-          </Option>
-          <Option value="Delivered">
-            <Tag color="green">Delivered</Tag>
-          </Option>
-          <Option value="Cancelled">
-            <Tag color="red">Cancelled</Tag>
-          </Option>
+          {["Processing", "Shipped", "Delivered", "Cancelled"].map((s) => (
+            <Option key={s} value={s}>
+              <Tag color={getStatusColor(s)}>{s}</Tag>
+            </Option>
+          ))}
         </Select>
       ),
     },
     {
       title: "Date",
       dataIndex: "created_at",
+      render: (val) => val ? new Date(val).toLocaleDateString("vi-VN") : "—",
     },
     {
       title: "Actions",
@@ -180,10 +174,7 @@ const Orders = () => {
         <Button
           type="link"
           icon={<EyeOutlined />}
-          onClick={() => {
-            setSelectedOrder(record);
-            setIsViewOpen(true);
-          }}
+          onClick={() => { setSelectedOrder(record); setIsViewOpen(true); }}
         >
           View
         </Button>
@@ -193,32 +184,21 @@ const Orders = () => {
 
   return (
     <div className="orders-container">
-      <Title level={3}>Agricultural Store Management</Title>
+      <Title level={3}>Order Management</Title>
 
       {/* Summary */}
       <Row gutter={16} className="summary-row">
         <Col span={6}>
-          <Card className="summary-card">
-            Total Orders<br /><b>{summary.total}</b>
-          </Card>
+          <Card className="summary-card">Total Orders<br /><b>{summary.total}</b></Card>
         </Col>
-
         <Col span={6}>
-          <Card className="summary-card yellow">
-            Pending<br /><b>{summary.pending}</b>
-          </Card>
+          <Card className="summary-card yellow">Pending<br /><b>{summary.pending}</b></Card>
         </Col>
-
         <Col span={6}>
-          <Card className="summary-card blue">
-            Shipped<br /><b>{summary.shipped}</b>
-          </Card>
+          <Card className="summary-card blue">Shipped<br /><b>{summary.shipped}</b></Card>
         </Col>
-
         <Col span={6}>
-          <Card className="summary-card delivered">
-            Delivered<br /><b>{summary.delivered}</b>
-          </Card>
+          <Card className="summary-card delivered">Delivered<br /><b>{summary.delivered}</b></Card>
         </Col>
       </Row>
 
@@ -229,7 +209,6 @@ const Orders = () => {
           placeholder="Search by order ID or user..."
           onChange={(e) => setSearchText(e.target.value)}
         />
-
         <Select
           defaultValue="All"
           onChange={setFilterStatus}
@@ -239,63 +218,16 @@ const Orders = () => {
           <Option value="Processing">Processing</Option>
           <Option value="Shipped">Shipped</Option>
           <Option value="Delivered">Delivered</Option>
+          <Option value="Cancelled">Cancelled</Option>
         </Select>
-
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => setIsModalOpen(true)}
-        >
-          Add Order
-        </Button>
+        <Button onClick={fetchOrders}>Refresh</Button>
       </div>
 
-      <Table
-        columns={columns}
-        dataSource={filteredOrders}
-        pagination={{ pageSize: 5 }}
-      />
+      <Spin spinning={loading}>
+        <Table columns={columns} dataSource={filteredOrders} pagination={{ pageSize: 10 }} />
+      </Spin>
 
-      {/* Add Modal */}
-      <Modal
-        title="Create Order"
-        open={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
-        onOk={() => form.submit()}
-      >
-        <Form layout="vertical" form={form} onFinish={handleAdd}>
-          <Form.Item name="user_id" label="User ID" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
-
-          <Form.Item name="total_amount" label="Total Amount" rules={[{ required: true }]}>
-            <InputNumber style={{ width: "100%" }} />
-          </Form.Item>
-
-          <Form.List name="items">
-            {(fields, { add }) => (
-              <>
-                {fields.map(({ key, name }) => (
-                  <Space key={key}>
-                    <Form.Item name={[name, "product_id"]} rules={[{ required: true }]}>
-                      <Input placeholder="Product ID" />
-                    </Form.Item>
-                    <Form.Item name={[name, "quantity"]} rules={[{ required: true }]}>
-                      <InputNumber placeholder="Qty" />
-                    </Form.Item>
-                    <Form.Item name={[name, "price"]} rules={[{ required: true }]}>
-                      <InputNumber placeholder="Price" />
-                    </Form.Item>
-                  </Space>
-                ))}
-                <Button onClick={() => add()}>Add Item</Button>
-              </>
-            )}
-          </Form.List>
-        </Form>
-      </Modal>
-
-      {/* View Modal */}
+      {/* View Detail Modal */}
       <Modal
         open={isViewOpen}
         footer={null}
@@ -304,20 +236,42 @@ const Orders = () => {
       >
         {selectedOrder && (
           <>
-            <p><b>User:</b> {selectedOrder.user_id}</p>
-            <p><b>Status:</b> 
+            <p><b>Order ID:</b> {selectedOrder._id}</p>
+            <p>
+              <b>User:</b>{" "}
+              {typeof selectedOrder.user_id === "object"
+                ? selectedOrder.user_id?.name || selectedOrder.user_id?.email
+                : selectedOrder.user_id}
+            </p>
+            <p>
+              <b>Status:</b>{" "}
               <Tag color={getStatusColor(selectedOrder.order_status)}>
                 {selectedOrder.order_status}
               </Tag>
             </p>
-            <p><b>Date:</b> {selectedOrder.created_at}</p>
-            <p><b>Total:</b> {selectedOrder.total_amount.toLocaleString("vi-VN")} đ</p>
+            <p>
+              <b>Date:</b>{" "}
+              {selectedOrder.created_at
+                ? new Date(selectedOrder.created_at).toLocaleString("vi-VN")
+                : "—"}
+            </p>
+            <p>
+              <b>Total:</b> {(selectedOrder.total_amount || 0).toLocaleString("vi-VN")} đ
+            </p>
             <hr />
-            {selectedOrder.items.map((item, i) => (
-              <p key={i}>
-                {item.product_id} - {item.quantity} x {item.price}
-              </p>
-            ))}
+            <b>Items:</b>
+            {(selectedOrder.items || selectedOrder.products || []).map((item, i) => {
+              const name =
+                typeof item.product_id === "object"
+                  ? item.product_id?.name
+                  : item.product_id;
+              return (
+                <p key={i}>
+                  {name} — {item.quantity} x{" "}
+                  {(item.price || 0).toLocaleString("vi-VN")} đ
+                </p>
+              );
+            })}
           </>
         )}
       </Modal>
