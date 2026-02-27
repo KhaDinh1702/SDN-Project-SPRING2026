@@ -4,6 +4,7 @@ import {
   UserOutlined,
   MailOutlined,
   LockOutlined,
+  PhoneOutlined,
   EyeOutlined,
   EyeInvisibleOutlined,
 } from "@ant-design/icons";
@@ -21,6 +22,7 @@ export default function Register() {
     firstName: "",
     lastName: "",
     email: "",
+    phone: "",
     password: "",
     confirmPassword: "",
     agree: false,
@@ -64,6 +66,7 @@ export default function Register() {
           first_name: form.firstName,
           last_name: form.lastName,
           email: form.email,
+          phone: form.phone || undefined,
           password: form.password,
           username,
         }),
@@ -138,6 +141,19 @@ export default function Register() {
               value={form.email}
               onChange={(e) =>
                 handleChange("email", e.target.value)
+              }
+            />
+          </div>
+
+          {/* PHONE */}
+          <label>Phone Number <span style={{ color: '#999', fontWeight: 400 }}>(optional)</span></label>
+          <div className="input-box">
+            <PhoneOutlined />
+            <input
+              placeholder="0123 456 789"
+              value={form.phone}
+              onChange={(e) =>
+                handleChange("phone", e.target.value)
               }
             />
           </div>

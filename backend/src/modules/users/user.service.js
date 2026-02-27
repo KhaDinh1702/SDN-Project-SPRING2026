@@ -63,7 +63,7 @@ class UserService {
   }
 
   async updateMyProfile(userId, payload) {
-    const { email, username, first_name, last_name, password } = payload;
+    const { email, username, first_name, last_name, password, phone } = payload;
 
     const user = await User.findById(userId);
     if (!user) {
@@ -87,6 +87,7 @@ class UserService {
     if (username) user.username = username;
     if (first_name) user.first_name = first_name;
     if (last_name) user.last_name = last_name;
+    if (phone !== undefined) user.phone = phone;
 
     if (password) {
       user.password_hash = await bcrypt.hash(password, 10);
@@ -100,6 +101,7 @@ class UserService {
       username: user.username,
       first_name: user.first_name,
       last_name: user.last_name,
+      phone: user.phone,
     };
   }
 
