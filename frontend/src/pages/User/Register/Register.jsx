@@ -13,7 +13,7 @@ import "./Register.css";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 
-const API_URL = import.meta.env.VITE_BACKEND_URL;
+const API_URL = import.meta.env.VITE_BACKEND_URL; // prefer env var over config import
 
 export default function Register() {
   const navigate = useNavigate();
@@ -53,35 +53,7 @@ export default function Register() {
       return;
     }
 
-    setLoading(true);
-    try {
-      const response = await fetch(`${API_URL}/api/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          first_name: form.firstName,
-          last_name: form.lastName,
-          email: form.email,
-          password: form.password,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        message.success("Account created successfully 🎉");
-        setTimeout(() => navigate("/login"), 500);
-      } else {
-        message.error(result.message || "Registration failed");
-      }
-    } catch (error) {
-      message.error("Registration error. Please try again.");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+app.use(cors
   return (
     <>
       <Header />
@@ -127,9 +99,8 @@ export default function Register() {
           {/* EMAIL */}
           <label>Email Address</label>
           <div
-            className={`input-box ${
-              form.email && !isEmailValid ? "error" : ""
-            }`}
+            className={`input-box ${form.email && !isEmailValid ? "error" : ""
+              }`}
           >
             <MailOutlined />
             <input
@@ -169,11 +140,10 @@ export default function Register() {
           {/* CONFIRM PASSWORD */}
           <label>Confirm Password</label>
           <div
-            className={`input-box ${
-              form.confirmPassword && !isConfirmValid
-                ? "error"
-                : ""
-            }`}
+            className={`input-box ${form.confirmPassword && !isConfirmValid
+              ? "error"
+              : ""
+              }`}
           >
             <LockOutlined />
             <input
@@ -217,11 +187,15 @@ export default function Register() {
             type="primary"
             block
             className="register-btn"
+<<<<<<< HEAD
             disabled={!isFormValid}
+=======
+            disabled={!isFormValid || loading}
+>>>>>>> 5ba8bfe2bd2ae2d2f3f0e6c32b47740979641e57
             loading={loading}
             onClick={handleRegister}
           >
-            Create Account
+            {loading ? "Creating Account..." : "Create Account"}
           </Button>
 
           <div className="divider">
@@ -234,14 +208,14 @@ export default function Register() {
 
           {/* SIGN IN */}
           <p className="signin-text">
-  Already have an account?{" "}
-  <strong
-    className="signin-link"
-    onClick={() => navigate("/login")}
-  >
-    Sign in here
-  </strong>
-</p>
+            Already have an account?{" "}
+            <strong
+              className="signin-link"
+              onClick={() => navigate("/login")}
+            >
+              Sign in here
+            </strong>
+          </p>
 
         </div>
       </div>
