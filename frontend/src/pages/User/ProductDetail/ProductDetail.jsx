@@ -1,15 +1,11 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Rate, Button } from "antd";
+import { Rate, Button, message, Spin } from "antd";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import "./ProductDetail.css";
 
-// MOCK USER LOGIN
-const currentUser = {
-  name: "Nguyen Gia Trieu",
-  avatar: "https://i.pravatar.cc/100?img=12",
-};
+const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -17,34 +13,37 @@ export default function ProductDetail() {
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  // FEEDBACK STATE
   const [feedback, setFeedback] = useState("");
   const [userRating, setUserRating] = useState(0);
   const [reviews, setReviews] = useState([]);
 
-  useEffect(() => {
-    const mockProduct = {
-      id,
-      title: "Sample Product",
-      category: "Meat",
-      price: 18.99,
-      rate: 5,
-      image:
-        "https://images.unsplash.com/photo-1600891964599-f61ba0e24092",
-      stock: 32,
-      description: "This is a mock product used before API integration.",
-      nutrition: [
-        { name: "Protein", value: "26g" },
-        { name: "Iron", value: "2.8mg" },
-      ],
-    };
+  // load current user once
+  const currentUser = JSON.parse(
+    localStorage.getItem("user") ||
+      '{"name":"Guest","avatar":"https://i.pravatar.cc/100?img=1"}'
+  );
 
-    setTimeout(() => {
-      setProduct(mockProduct);
-      setLoading(false);
-    }, 300);
+  useEffect(() => {
+    fetchProduct();
   }, [id]);
+
+  const fetchProduct = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/api/products/${id}`);
+      const result = await response.json();
+      if (result.success) {
+        setProduct(result.data);
+      } else {
+        message.error(result.message || "Product not found");
+      }
+    } catch (error) {
+      message.error("Failed to load product");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // LOAD REVIEW FROM LOCALSTORAGE
   useEffect(() => {
@@ -55,11 +54,16 @@ export default function ProductDetail() {
   }, [id]);
 
   const handleSubmitReview = () => {
-    if (!feedback || userRating === 0) return;
+    if (!feedback || userRating === 0) {
+      message.warning("Please enter rating and review");
+      return;
+    }
+
+    const currentUser = JSON.parse(localStorage.getItem("user") || '{"name":"Guest","avatar":"https://i.pravatar.cc/100?img=1"}');
 
     const newReview = {
-      name: currentUser.name,
-      avatar: currentUser.avatar,
+      name: currentUser.first_name || currentUser.name || "Guest",
+      avatar: currentUser.avatar || "https://i.pravatar.cc/100?img=1",
       rating: userRating,
       comment: feedback,
       date: new Date().toLocaleDateString(),
@@ -71,9 +75,10 @@ export default function ProductDetail() {
 
     setFeedback("");
     setUserRating(0);
+    message.success("Review submitted!");
   };
 
-  if (loading) return <div style={{ padding: 40 }}>Loading...</div>;
+  if (loading) return <Spin size="large" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "400px" }} />;
   if (!product) return <div>Product not found</div>;
 
   return (
@@ -97,8 +102,8 @@ export default function ProductDetail() {
               <h3>Write a Review</h3>
 
               <div className="user-info">
-                <img src={currentUser.avatar} alt="avatar" />
-                <span>{currentUser.name}</span>
+                <img src={currentUser.avatar || "https://i.pravatar.cc/100?img=1"} alt="avatar" />
+                <span>{currentUser.first_name || currentUser.name || "Guest"}</span>
               </div>
 
               <Rate value={userRating} onChange={setUserRating} />
@@ -141,34 +146,29 @@ export default function ProductDetail() {
 
           {/* RIGHT */}
           <div className="detail-info">
-            <span className="category">{product.category}</span>
-            <h1>{product.title}</h1>
+            <span className="category">{product.category_id?.name || "N/A"}</span>
+            <h1>{product.name}</h1>
 
             <div className="rating">
-              <Rate disabled defaultValue={product.rate} />
-              <span className="review">4.9 (89 reviews)</span>
+              <Rate disabled defaultValue={product.rating || 0} />
+              <span className="review">{product.rating || 0} ({product.reviews_count || 0} reviews)</span>
             </div>
 
             <div className="price">
               ${product.price}
-              <span className="stock">{product.stock} in stock</span>
+              <span className="stock">{product.current_stock || 0} in stock</span>
             </div>
 
-            <p className="description">{product.description}</p>
+            <p className="description">{product.description || "No description available"}</p>
 
             <div className="info-box">
-              <strong>Origin</strong>
-              <p>USA – Grass-Fed Ranches</p>
+              <strong>SKU</strong>
+              <p>{product.sku || "N/A"}</p>
             </div>
 
-            <h3>Nutritional Content</h3>
-            <div className="nutrition">
-              {product.nutrition.map((n, i) => (
-                <div key={i}>
-                  <strong>{n.name}</strong>
-                  <span>{n.value}</span>
-                </div>
-              ))}
+            <div className="info-box">
+              <strong>Status</strong>
+              <p>{product.status || "Active"}</p>
             </div>
 
             <Button type="primary" size="large" block>

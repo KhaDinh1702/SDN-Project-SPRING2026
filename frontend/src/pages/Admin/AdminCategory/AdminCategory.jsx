@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   Button,
@@ -7,7 +7,9 @@ import {
   Form,
   Input,
   Typography,
-  Card
+  Card,
+  message,
+  Spin
 } from "antd";
 import {
   PlusOutlined,
@@ -16,48 +18,50 @@ import {
 } from "@ant-design/icons";
 
 import { GiFishCorpse, GiMeat, GiCarrot, GiChiliPepper } from "react-icons/gi";
+import { API_URL } from "../../../config";
 
 const { Title } = Typography;
 
-const AdminCategory = () => {
-  const [categories, setCategories] = useState([
-    {
-      key: "1",
-      name: "Seafood",
-      description: "Fresh ocean products",
-      products: 18,
-      color: "#0ea5e9",
-      icon: <GiFishCorpse />
-    },
-    {
-      key: "2",
-      name: "Meat",
-      description: "Premium meat selection",
-      products: 32,
-      color: "#ef4444",
-      icon: <GiMeat />
-    },
-    {
-      key: "3",
-      name: "Vegetables",
-      description: "Organic farm vegetables",
-      products: 45,
-      color: "#22c55e",
-      icon: <GiCarrot />
-    },
-    {
-      key: "4",
-      name: "Spices",
-      description: "Natural spice collection",
-      products: 25,
-      color: "#f59e0b",
-      icon: <GiChiliPepper />
-    }
-  ]);
+const categoryIcons = [GiFishCorpse, GiMeat, GiCarrot, GiChiliPepper];
+const categoryColors = ["#0ea5e9", "#ef4444", "#22c55e", "#f59e0b"];
 
+const AdminCategory = () => {
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [form] = Form.useForm();
+
+  // Fetch categories on mount
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/api/categories`);
+      const data = await response.json();
+      
+      if (data.success) {
+        const categoriesWithUI = data.data.map((cat, idx) => ({
+          key: cat._id,
+          _id: cat._id,
+          name: cat.name,
+          description: cat.description || "Category",
+          products: 0,
+          color: categoryColors[idx % categoryColors.length],
+          icon: categoryIcons[idx % categoryIcons.length]
+        }));
+        setCategories(categoriesWithUI);
+      }
+    } catch (error) {
+      message.error("Failed to load categories");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const openAddModal = () => {
     setEditingCategory(null);
@@ -71,32 +75,91 @@ const AdminCategory = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (key) => {
-    setCategories(categories.filter((item) => item.key !== key));
+  const handleDelete = async (key) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${API_URL}/api/categories/${key}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      
+      const data = await response.json();
+      if (data.success) {
+        setCategories(categories.filter((item) => item.key !== key));
+        message.success("Category deleted successfully");
+      } else {
+        message.error(data.message || "Failed to delete category");
+      }
+    } catch (error) {
+      message.error("Failed to delete category");
+      console.error(error);
+    }
   };
 
-  const handleSubmit = () => {
-    form.validateFields().then((values) => {
+  const handleSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+      const token = localStorage.getItem("token");
+
       if (editingCategory) {
-        setCategories(
-          categories.map((item) =>
-            item.key === editingCategory.key
-              ? { ...item, ...values }
-              : item
-          )
-        );
+        // Update category
+        const response = await fetch(`${API_URL}/api/categories/${editingCategory._id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(values)
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          setCategories(
+            categories.map((item) =>
+              item.key === editingCategory.key
+                ? { ...item, ...values, name: data.data.name }
+                : item
+            )
+          );
+          message.success("Category updated successfully");
+        } else {
+          message.error(data.message || "Failed to update category");
+        }
       } else {
-        const newCategory = {
-          key: Date.now().toString(),
-          products: 0,
-          color: "#6366f1",
-          icon: <GiCarrot />,
-          ...values
-        };
-        setCategories([...categories, newCategory]);
+        // Create category
+        const response = await fetch(`${API_URL}/api/categories`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(values)
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          const newCategory = {
+            key: data.data._id,
+            _id: data.data._id,
+            ...values,
+            products: 0,
+            color: categoryColors[categories.length % categoryColors.length],
+            icon: categoryIcons[categories.length % categoryIcons.length]
+          };
+          setCategories([...categories, newCategory]);
+          message.success("Category created successfully");
+        } else {
+          message.error(data.message || "Failed to create category");
+        }
       }
+
       setIsModalOpen(false);
-    });
+      form.resetFields();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const columns = [
@@ -196,11 +259,13 @@ const AdminCategory = () => {
           </Button>
         </Space>
 
-        <Table
-          columns={columns}
-          dataSource={categories}
-          pagination={false}
-        />
+        <Spin spinning={loading}>
+          <Table
+            columns={columns}
+            dataSource={categories}
+            pagination={false}
+          />
+        </Spin>
       </Card>
 
       <Modal
@@ -213,7 +278,7 @@ const AdminCategory = () => {
           <Form.Item
             name="name"
             label="Category Name"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: "Please enter category name" }]}
           >
             <Input />
           </Form.Item>
@@ -221,7 +286,7 @@ const AdminCategory = () => {
           <Form.Item
             name="description"
             label="Description"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: "Please enter description" }]}
           >
             <Input />
           </Form.Item>

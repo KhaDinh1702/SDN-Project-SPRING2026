@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   Table,
   Tag,
@@ -13,12 +13,15 @@ import {
   Row,
   Col,
   Card,
+  message,
+  Spin
 } from "antd";
 import {
   SearchOutlined,
   PlusOutlined,
   EyeOutlined,
 } from "@ant-design/icons";
+import { API_URL } from "../../../config";
 import "./Orders.css";
 
 const { Title } = Typography;
@@ -31,32 +34,45 @@ const Orders = () => {
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
 
-  const [orders, setOrders] = useState([
-    {
-      key: "1",
-      id: "#ORD001",
-      user_id: "user_001",
-      total_amount: 245000,
-      order_status: "Delivered",
-      created_at: "2025-01-18",
-      items: [
-        { product_id: "prod_1", quantity: 5, price: 20000 },
-        { product_id: "prod_2", quantity: 3, price: 15000 },
-      ],
-    },
-    {
-      key: "2",
-      id: "#ORD002",
-      user_id: "user_002",
-      total_amount: 189000,
-      order_status: "Processing",
-      created_at: "2025-01-20",
-      items: [
-        { product_id: "prod_3", quantity: 10, price: 10000 },
-      ],
-    },
-  ]);
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  const fetchOrders = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${API_URL}/api/orders`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        const ordersWithKey = result.data.map((order) => ({
+          key: order._id,
+          _id: order._id,
+          id: order._id,
+          user_id: order.user_id,
+          total_amount: order.total_amount,
+          order_status: order.order_status || "Processing",
+          created_at: new Date(order.created_at).toLocaleDateString(),
+          items: order.items || []
+        }));
+        setOrders(ordersWithKey);
+      }
+    } catch (error) {
+      message.error("Failed to load orders");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // ===== Summary
   const summary = useMemo(() => {
@@ -83,26 +99,70 @@ const Orders = () => {
   }, [orders, searchText, filterStatus]);
 
   // ===== Status Change
-  const handleStatusChange = (value, record) => {
-    const updated = orders.map((o) =>
-      o.key === record.key ? { ...o, order_status: value } : o
-    );
-    setOrders(updated);
+  const handleStatusChange = async (value, record) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${API_URL}/api/orders/${record._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ order_status: value })
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        const updated = orders.map((o) =>
+          o.key === record.key ? { ...o, order_status: value } : o
+        );
+        setOrders(updated);
+        message.success("Order status updated");
+      } else {
+        message.error(result.message || "Failed to update order");
+      }
+    } catch (error) {
+      message.error("Failed to update order");
+      console.error(error);
+    }
   };
 
   // ===== Add Order
-  const handleAdd = (values) => {
-    const newOrder = {
-      key: Date.now().toString(),
-      id: `#ORD00${orders.length + 1}`,
-      created_at: new Date().toISOString().split("T")[0],
-      order_status: "Processing",
-      ...values,
-    };
+  const handleAdd = async (values) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${API_URL}/api/orders`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(values)
+      });
 
-    setOrders([...orders, newOrder]);
-    setIsModalOpen(false);
-    form.resetFields();
+      const result = await response.json();
+      if (result.success) {
+        const newOrder = {
+          key: result.data._id,
+          _id: result.data._id,
+          id: result.data._id,
+          created_at: new Date().toLocaleDateString(),
+          order_status: "Processing",
+          items: values.items || [],
+          ...values,
+        };
+
+        setOrders([...orders, newOrder]);
+        message.success("Order created successfully");
+        setIsModalOpen(false);
+        form.resetFields();
+      } else {
+        message.error(result.message || "Failed to create order");
+      }
+    } catch (error) {
+      message.error("Failed to create order");
+      console.error(error);
+    }
   };
 
   // ===== Status Color
@@ -250,11 +310,13 @@ const Orders = () => {
         </Button>
       </div>
 
-      <Table
-        columns={columns}
-        dataSource={filteredOrders}
-        pagination={{ pageSize: 5 }}
-      />
+      <Spin spinning={loading}>
+        <Table
+          columns={columns}
+          dataSource={filteredOrders}
+          pagination={{ pageSize: 5 }}
+        />
+      </Spin>
 
       {/* Add Modal */}
       <Modal

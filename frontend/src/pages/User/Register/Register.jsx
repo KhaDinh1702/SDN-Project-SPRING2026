@@ -12,7 +12,8 @@ import { useNavigate } from "react-router-dom";
 import "./Register.css";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
-import { API_URL } from "../../../config";
+
+const API_URL = import.meta.env.VITE_BACKEND_URL; // prefer env var over config import
 
 export default function Register() {
   const navigate = useNavigate();
@@ -53,32 +54,26 @@ export default function Register() {
     }
 
     setLoading(true);
-    const username = form.email.split("@")[0];
-
     try {
-      const res = await fetch(`${API_URL}/api/auth/register`, {
+      const response = await fetch(`${API_URL}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify({
-          first_name: form.firstName,
-          last_name: form.lastName,
+          firstName: form.firstName,
+          lastName: form.lastName,
           email: form.email,
           password: form.password,
-          username,
         }),
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Registration failed");
+      if (response.ok) {
+        message.success("Registration successful! Redirecting to login...");
+        navigate("/login");
+      } else {
+        message.error("Registration failed. Please try again.");
       }
-
-      message.success("Account created successfully!");
-      navigate("/login");
-    } catch (err) {
-      message.error(err.message || "Registration failed");
+    } catch (error) {
+      message.error("An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }

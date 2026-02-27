@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   Button,
@@ -14,6 +14,7 @@ import {
   Form,
   Popconfirm,
   message,
+  Spin
 } from "antd";
 import {
   SearchOutlined,
@@ -21,46 +22,14 @@ import {
   DeleteOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
+import { API_URL } from "../../../config";
 import "./Users.css";
 
 const { Option } = Select;
 
 const Users = () => {
-  const [users, setUsers] = useState([
-    {
-      key: 1,
-      name: "John Smith",
-      email: "john@farm.com",
-      role: "Admin",
-      active: true,
-      lastLogin: "2024-01-22",
-    },
-    {
-      key: 2,
-      name: "Sarah Johnson",
-      email: "sarah@farm.com",
-      role: "Manager",
-      active: true,
-      lastLogin: "2024-01-22",
-    },
-    {
-      key: 3,
-      name: "Mike Wilson",
-      email: "mike@farm.com",
-      role: "Staff",
-      active: true,
-      lastLogin: "2024-01-21",
-    },
-    {
-      key: 4,
-      name: "Emma Davis",
-      email: "emma@farm.com",
-      role: "Staff",
-      active: false,
-      lastLogin: "2024-01-15",
-    },
-  ]);
-
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All");
@@ -68,6 +37,43 @@ const Users = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${API_URL}/api/users`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const result = await response.json();
+      
+      if (result.success) {
+        const usersWithKey = result.data.map((user) => ({
+          key: user.id,
+          _id: user.id,
+          name: `${user.first_name} ${user.last_name}`,
+          email: user.email,
+          role: user.role,
+          active: user.is_active !== false,
+          lastLogin: user.last_login || "N/A",
+          first_name: user.first_name,
+          last_name: user.last_name
+        }));
+        setUsers(usersWithKey);
+      }
+    } catch (error) {
+      message.error("Failed to load users");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const openAddModal = () => {
     setEditingUser(null);
@@ -77,40 +83,100 @@ const Users = () => {
 
   const openEditModal = (record) => {
     setEditingUser(record);
-    form.setFieldsValue(record);
+    form.setFieldsValue({
+      name: record.name,
+      email: record.email,
+      role: record.role,
+      active: record.active
+    });
     setIsModalOpen(true);
   };
 
-  const handleDelete = (key) => {
-    setUsers(users.filter((user) => user.key !== key));
-    message.success("User deleted");
+  const handleDelete = async (key) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${API_URL}/api/users/${key}/ban`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        setUsers(users.filter((user) => user.key !== key));
+        message.success("User banned successfully");
+      } else {
+        message.error(result.message || "Failed to ban user");
+      }
+    } catch (error) {
+      message.error("Failed to ban user");
+      console.error(error);
+    }
   };
 
-  const handleSubmit = () => {
-    form.validateFields().then((values) => {
+  const handleSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+      const token = localStorage.getItem("token");
+
       if (editingUser) {
-        setUsers(
-          users.map((user) =>
-            user.key === editingUser.key
-              ? { ...user, ...values }
-              : user
-          )
-        );
-        message.success("User updated");
+        // Update user
+        const response = await fetch(`${API_URL}/api/users/${editingUser._id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(values)
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          setUsers(
+            users.map((user) =>
+              user.key === editingUser.key
+                ? { ...user, ...values, name: `${values.first_name} ${values.last_name}` }
+                : user
+            )
+          );
+          message.success("User updated successfully");
+        } else {
+          message.error(result.message || "Failed to update user");
+        }
       } else {
-        const newUser = {
-          key: Date.now(),
-          ...values,
-          active: values.active ?? true,
-          lastLogin: new Date().toISOString().split("T")[0],
-        };
-        setUsers([...users, newUser]);
-        message.success("User added");
+        // Create user
+        const response = await fetch(`${API_URL}/api/users`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(values)
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          const newUser = {
+            key: result.data.id,
+            _id: result.data.id,
+            ...values,
+            name: `${values.first_name} ${values.last_name}`,
+            lastLogin: "Just now"
+          };
+          setUsers([...users, newUser]);
+          message.success("User created successfully");
+        } else {
+          message.error(result.message || "Failed to create user");
+        }
       }
 
       setIsModalOpen(false);
       form.resetFields();
-    });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const filteredUsers = users.filter((user) => {
@@ -242,11 +308,13 @@ const Users = () => {
           </Select>
         </div>
 
-        <Table
-          columns={columns}
-          dataSource={filteredUsers}
-          pagination={false}
-        />
+        <Spin spinning={loading}>
+          <Table
+            columns={columns}
+            dataSource={filteredUsers}
+            pagination={false}
+          />
+        </Spin>
       </Card>
 
       {/* MODAL FORM */}
@@ -257,13 +325,27 @@ const Users = () => {
         onCancel={() => setIsModalOpen(false)}
       >
         <Form layout="vertical" form={form}>
-          <Form.Item
-            name="name"
-            label="Name"
-            rules={[{ required: true }]}
-          >
-            <Input />
-          </Form.Item>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="first_name"
+                label="First Name"
+                rules={[{ required: true }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+
+            <Col span={12}>
+              <Form.Item
+                name="last_name"
+                label="Last Name"
+                rules={[{ required: true }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
 
           <Form.Item
             name="email"
@@ -272,6 +354,16 @@ const Users = () => {
           >
             <Input />
           </Form.Item>
+
+          {!editingUser && (
+            <Form.Item
+              name="password"
+              label="Password"
+              rules={[{ required: true }]}
+            >
+              <Input type="password" />
+            </Form.Item>
+          )}
 
           <Form.Item
             name="role"
@@ -282,13 +374,6 @@ const Users = () => {
               <Option value="Admin">Admin</Option>
               <Option value="Manager">Manager</Option>
               <Option value="Staff">Staff</Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item name="active" label="Status">
-            <Select>
-              <Option value={true}>Active</Option>
-              <Option value={false}>Inactive</Option>
             </Select>
           </Form.Item>
         </Form>

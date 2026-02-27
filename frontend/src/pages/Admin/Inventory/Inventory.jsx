@@ -1,42 +1,47 @@
-import React from "react";
-import { Table, Tag, Card, Progress, Row, Col, Button } from "antd";
+import React, { useEffect, useState } from "react";
+import { Table, Tag, Card, Progress, Row, Col, Button, message, Spin } from "antd";
 import {
   WarningOutlined,
   InboxOutlined,
   CheckCircleOutlined,
 } from "@ant-design/icons";
+import { API_URL } from "../../../config";
 import "./Inventory.css";
 
 const Inventory = () => {
-  const data = [
-    {
-      key: "1",
-      name: "Organic Tomatoes",
-      category: "Vegetables",
-      min: 200,
-      current: 450,
-      max: 1000,
-      lastRestocked: "2 days ago",
-    },
-    {
-      key: "2",
-      name: "Fresh Salmon",
-      category: "Fish",
-      min: 100,
-      current: 120,
-      max: 500,
-      lastRestocked: "5 days ago",
-    },
-    {
-      key: "3",
-      name: "Chicken Breast",
-      category: "Meat",
-      min: 150,
-      current: 5,
-      max: 500,
-      lastRestocked: "10 days ago",
-    },
-  ];
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchInventory();
+  }, []);
+
+  const fetchInventory = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/api/products`);
+      const result = await response.json();
+      
+      if (result.success) {
+        const inventoryData = result.data.map((product) => ({
+          key: product._id,
+          _id: product._id,
+          name: product.name,
+          category: product.category?.name || "Unknown",
+          min: 100, // default minimum
+          current: product.stock_quantity,
+          max: 1000, // default maximum
+          lastRestocked: "N/A",
+        }));
+        setProducts(inventoryData);
+      }
+    } catch (error) {
+      message.error("Failed to load inventory");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getStatus = (current, min) => {
     if (current <= min * 0.5)
@@ -83,6 +88,13 @@ const Inventory = () => {
     },
   ];
 
+  const totalItems = products.reduce((sum, p) => sum + p.current, 0);
+  const lowStockItems = products.filter(p => p.current <= p.min).length;
+  const outOfStockItems = products.filter(p => p.current === 0).length;
+  const avgEfficiency = products.length > 0 
+    ? Math.round((products.reduce((sum, p) => sum + (p.current / p.max) * 100, 0) / products.length))
+    : 0;
+
   return (
     <div className="inventory-page">
       <h1 className="page-title">Inventory Management</h1>
@@ -92,7 +104,7 @@ const Inventory = () => {
         <Col span={6}>
           <Card className="stat-card">
             <InboxOutlined className="stat-icon blue" />
-            <h3>248</h3>
+            <h3>{totalItems}</h3>
             <p>Total Items</p>
           </Card>
         </Col>
@@ -100,7 +112,7 @@ const Inventory = () => {
         <Col span={6}>
           <Card className="stat-card">
             <WarningOutlined className="stat-icon orange" />
-            <h3>8</h3>
+            <h3>{lowStockItems}</h3>
             <p>Low Stock</p>
           </Card>
         </Col>
@@ -108,7 +120,7 @@ const Inventory = () => {
         <Col span={6}>
           <Card className="stat-card">
             <WarningOutlined className="stat-icon red" />
-            <h3>2</h3>
+            <h3>{outOfStockItems}</h3>
             <p>Out of Stock</p>
           </Card>
         </Col>
@@ -116,7 +128,7 @@ const Inventory = () => {
         <Col span={6}>
           <Card className="stat-card">
             <CheckCircleOutlined className="stat-icon green" />
-            <h3>78%</h3>
+            <h3>{avgEfficiency}%</h3>
             <p>Stock Efficiency</p>
           </Card>
         </Col>
@@ -124,7 +136,9 @@ const Inventory = () => {
 
       {/* ====== TABLE ====== */}
       <Card className="table-card">
-        <Table columns={columns} dataSource={data} pagination={false} />
+        <Spin spinning={loading}>
+          <Table columns={columns} dataSource={products} pagination={false} />
+        </Spin>
       </Card>
 
      

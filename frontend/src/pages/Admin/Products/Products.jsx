@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   Button,
@@ -15,33 +15,74 @@ import {
   Switch,
   Row,
   Col,
+  Spin
 } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
+import { API_URL } from "../../../config";
 import "./Products.css";
 
 const { Search, TextArea } = Input;
 const { Option } = Select;
 
 const Products = () => {
-  const [data, setData] = useState([
-    {
-      key: "1",
-      name: "Apple",
-      price: 25000,
-      description: "Fresh red apple",
-      stock_quantity: 100,
-      category: "Fruits",
-      is_active: true,
-    },
-  ]);
-
+  const [data, setData] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [form] = Form.useForm();
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    fetchProducts();
+    fetchCategories();
+  }, []);
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/api/products`);
+      const result = await response.json();
+      
+      if (result.success) {
+        const productsWithKey = result.data.map((prod) => ({
+          key: prod._id,
+          _id: prod._id,
+          name: prod.name,
+          price: prod.price,
+          description: prod.description,
+          stock_quantity: prod.stock_quantity,
+          category: prod.category?._id || prod.category,
+          categoryName: prod.category?.name || "Unknown",
+          is_active: prod.is_active,
+          images: prod.images || []
+        }));
+        setData(productsWithKey);
+      }
+    } catch (error) {
+      message.error("Failed to load products");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/categories`);
+      const result = await response.json();
+      
+      if (result.success) {
+        setCategories(result.data);
+      }
+    } catch (error) {
+      console.error("Failed to load categories", error);
+    }
+  };
 
   // ===== OPEN ADD =====
   const handleAdd = () => {
@@ -58,35 +99,91 @@ const Products = () => {
   };
 
   // ===== DELETE =====
-  const handleDelete = (key) => {
-    setData(data.filter((item) => item.key !== key));
-    message.success("Product deleted successfully!");
+  const handleDelete = async (key) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${API_URL}/api/products/${key}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        setData(data.filter((item) => item.key !== key));
+        message.success("Product deleted successfully!");
+      } else {
+        message.error(result.message || "Failed to delete product");
+      }
+    } catch (error) {
+      message.error("Failed to delete product");
+      console.error(error);
+    }
   };
 
   // ===== SUBMIT =====
-  const handleSubmit = () => {
-    form.validateFields().then((values) => {
+  const handleSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+      const token = localStorage.getItem("token");
+
       if (editingProduct) {
-        const updated = data.map((item) =>
-          item.key === editingProduct.key
-            ? { ...item, ...values }
-            : item
-        );
-        setData(updated);
-        message.success("Product updated successfully!");
+        const response = await fetch(`${API_URL}/api/products/${editingProduct._id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(values)
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          const updated = data.map((item) =>
+            item.key === editingProduct.key
+              ? { ...item, ...values }
+              : item
+          );
+          setData(updated);
+          message.success("Product updated successfully!");
+        } else {
+          message.error(result.message || "Failed to update product");
+        }
       } else {
-        const newProduct = {
-          key: Date.now().toString(),
-          ...values,
-        };
-        setData([...data, newProduct]);
-        message.success("Product added successfully!");
+        const response = await fetch(`${API_URL}/api/products`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(values)
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          const newProduct = {
+            key: result.data._id,
+            _id: result.data._id,
+            ...values
+          };
+          setData([...data, newProduct]);
+          message.success("Product added successfully!");
+        } else {
+          message.error(result.message || "Failed to add product");
+        }
       }
 
       setIsModalOpen(false);
       form.resetFields();
-    });
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  const filteredData = data.filter(item =>
+    item.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   const columns = [
     { title: "Name", dataIndex: "name" },
@@ -149,13 +246,20 @@ const Products = () => {
   return (
     <Card className="product-card">
       <div className="product-header">
-        <Search placeholder="Search products..." style={{ width: 300 }} />
+        <Input.Search 
+          placeholder="Search products..." 
+          style={{ width: 300 }}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)} 
+        />
         <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
           Add Product
         </Button>
       </div>
 
-      <Table columns={columns} dataSource={data} />
+      <Spin spinning={loading}>
+        <Table columns={columns} dataSource={filteredData} />
+      </Spin>
 
       {/* ===== MODAL ===== */}
       <Modal
@@ -185,9 +289,9 @@ const Products = () => {
                 rules={[{ required: true, message: "Select category" }]}
               >
                 <Select placeholder="Select category">
-                  <Option value="Fruits">Fruits</Option>
-                  <Option value="Vegetables">Vegetables</Option>
-                  <Option value="Meat">Meat</Option>
+                  {categories.map(cat => (
+                    <Option key={cat._id} value={cat._id}>{cat.name}</Option>
+                  ))}
                 </Select>
               </Form.Item>
             </Col>
