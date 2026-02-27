@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
+import { API_URL } from "../../../config";
+import { GoogleLogin } from "@react-oauth/google";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -18,14 +20,41 @@ export default function Login() {
   const isPasswordValid = password.length >= 6;
   const isFormValid = isEmailValid && isPasswordValid;
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!isFormValid) return;
 
     setLoading(true);
-    setTimeout(() => {
+    try {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+
+      // Save token & user info
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      message.success("Login successful!");
+
+      // Redirect based on role
+      if (data.user.role === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/");
+      }
+    } catch (err) {
+      message.error(err.message || "Login failed");
+    } finally {
       setLoading(false);
-      message.success("Login successful 🎉");
-    }, 1000);
+    }
   };
 
   return (
@@ -57,9 +86,8 @@ export default function Login() {
           {/* PASSWORD */}
           <label>Password</label>
           <div
-            className={`input-box ${
-              password && !isPasswordValid ? "error" : ""
-            }`}
+            className={`input-box ${password && !isPasswordValid ? "error" : ""
+              }`}
           >
             <LockOutlined />
             <input
@@ -102,9 +130,39 @@ export default function Login() {
           </div>
 
           {/* GOOGLE */}
-          <Button block className="google-btn">
-            Continue with Google
-          </Button>
+          <GoogleLogin
+            onSuccess={async (credentialResponse) => {
+              try {
+                const res = await fetch(`${API_URL}/api/auth/google`, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  credentials: "include",
+                  body: JSON.stringify({
+                    credential: credentialResponse.credential,
+                  }),
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                  throw new Error(data.message || "Google login failed");
+                }
+
+                localStorage.setItem("accessToken", data.accessToken);
+                localStorage.setItem("user", JSON.stringify(data.user));
+                message.success("Login successful!");
+
+                if (data.user.role === "admin") {
+                  navigate("/admin/dashboard");
+                } else {
+                  navigate("/");
+                }
+              } catch (err) {
+                message.error(err.message || "Google login failed");
+              }
+            }}
+            onError={() => message.error("Google sign-in failed")}
+          />
 
           {/* 👉 FIX CHỖ NÀY */}
           <p className="signup-text">
