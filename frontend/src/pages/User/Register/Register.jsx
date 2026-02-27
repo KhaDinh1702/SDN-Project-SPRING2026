@@ -13,6 +13,8 @@ import "./Register.css";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 
+const API_URL = import.meta.env.VITE_BACKEND_URL;
+
 export default function Register() {
   const navigate = useNavigate();
 
@@ -27,6 +29,7 @@ export default function Register() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
   const isPasswordValid = form.password.length >= 6;
@@ -44,13 +47,39 @@ export default function Register() {
     setForm({ ...form, [key]: value });
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (!isFormValid) {
       message.error("Please fill all required fields");
       return;
     }
-    message.success("Create account successfully 🎉");
-    navigate("/login");
+
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/api/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          first_name: form.firstName,
+          last_name: form.lastName,
+          email: form.email,
+          password: form.password,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        message.success("Account created successfully 🎉");
+        setTimeout(() => navigate("/login"), 500);
+      } else {
+        message.error(result.message || "Registration failed");
+      }
+    } catch (error) {
+      message.error("Registration error. Please try again.");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -189,6 +218,7 @@ export default function Register() {
             block
             className="register-btn"
             disabled={!isFormValid}
+            loading={loading}
             onClick={handleRegister}
           >
             Create Account

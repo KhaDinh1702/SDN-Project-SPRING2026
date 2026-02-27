@@ -1,87 +1,54 @@
-import { Layout, Button, Rate } from "antd";
+import { Layout, Button, Rate, Spin, message } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import "./HomePage.css";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 
 const { Content } = Layout;
-
-/* ===== DATA ===== */
-const categories = [
-  {
-    name: "Vegetables",
-    image: "https://images.unsplash.com/photo-1540420773420-3366772f4999",
-  },
-  {
-    name: "Meat",
-    image: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d",
-  },
-  {
-    name: "Fish",
-    image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5",
-  },
-  {
-    name: "Fruits",
-    image: "https://images.unsplash.com/photo-1574226516831-e1dff420e43e",
-  },
-];
-
-/* ===== MOCK PRODUCTS (SAU NÀY ĐỔI API) ===== */
-const products = [
-  {
-    id: 1,
-    title: "Spinach Bundle",
-    category: "Vegetables",
-    price: 3.49,
-    rate: 4,
-    image: "https://images.unsplash.com/photo-1582515073490-39981397c445",
-  },
-  {
-    id: 2,
-    title: "Grass-Fed Ground Beef",
-    category: "Meat",
-    price: 8.99,
-    rate: 5,
-    image: "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f",
-  },
-  {
-    id: 3,
-    title: "Wild-Caught Shrimp",
-    category: "Fish",
-    price: 16.99,
-    rate: 4,
-    image: "https://images.unsplash.com/photo-1604908554027-3bcd8dce0a5c",
-  },
-  {
-    id: 4,
-    title: "Organic Tomatoes",
-    category: "Vegetables",
-    price: 4.99,
-    rate: 4,
-    image: "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce",
-  },
-  {
-    id: 5,
-    title: "Prime Ribeye Steak",
-    category: "Meat",
-    price: 18.99,
-    rate: 5,
-    image: "https://images.unsplash.com/photo-1600891964599-f61ba0e24092",
-  },
-  {
-    id: 6,
-    title: "Fresh Atlantic Salmon",
-    category: "Fish",
-    price: 14.99,
-    rate: 5,
-    image: "https://images.unsplash.com/photo-1580476262798-bddd9f4b7369",
-  },
-];
+const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 export default function HomePage() {
-  const navigate = useNavigate(); // ✅ SỬA: chỉ dùng navigate theo id
+  const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchCategories();
+    fetchProducts();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/categories`);
+      const result = await response.json();
+      if (result.success) {
+        setCategories(result.data);
+      }
+    } catch (error) {
+      message.error("Failed to load categories");
+      console.error(error);
+    }
+  };
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/api/products`);
+      const result = await response.json();
+      if (result.success) {
+        setProducts(result.data);
+      }
+    } catch (error) {
+      message.error("Failed to load products");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Layout className="layout">
@@ -130,46 +97,48 @@ export default function HomePage() {
             Our most popular items this week
           </p>
 
-          <div className="product-grid">
-            {products.map((p) => (
-              <div
-                className="product-card"
-                key={p.id}
-                style={{ cursor: "pointer" }}
-                onClick={() => navigate(`/products/${p.id}`)} // ✅ SỬA
-              >
-                <div className="product-image">
-                  <img src={p.image} alt={p.title} />
-                </div>
-
-                <div className="product-body">
-                  <span className="product-category">{p.category}</span>
-                  <h3>{p.title}</h3>
-
-                  <div className="product-rate">
-                    <Rate disabled defaultValue={p.rate} />
-                    <span className="rate-count">(124)</span>
+          <Spin spinning={loading} tip="Loading products...">
+            <div className="product-grid">
+              {products.slice(0, 6).map((p) => (
+                <div
+                  className="product-card"
+                  key={p._id}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => navigate(`/products/${p._id}`)}
+                >
+                  <div className="product-image">
+                    <img src={p.image || "https://via.placeholder.com/200"} alt={p.name} />
                   </div>
 
-                  <div className="product-footer">
-                    <span className="product-price">${p.price}</span>
+                  <div className="product-body">
+                    <span className="product-category">{p.category_id?.name || "N/A"}</span>
+                    <h3>{p.name}</h3>
 
-                    <Button
-                      className="btn-view"
-                      type="primary"
-                      icon={<ShoppingCartOutlined />}
-                      onClick={(e) => {
-                        e.stopPropagation(); // ✅ SỬA: tránh click lan
-                        navigate(`/products/${p.id}`); // ✅ SỬA
-                      }}
-                    >
-                      View
-                    </Button>
+                    <div className="product-rate">
+                      <Rate disabled defaultValue={p.rating || 0} />
+                      <span className="rate-count">({p.reviews_count || 0})</span>
+                    </div>
+
+                    <div className="product-footer">
+                      <span className="product-price">${p.price}</span>
+
+                      <Button
+                        className="btn-view"
+                        type="primary"
+                        icon={<ShoppingCartOutlined />}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/products/${p._id}`);
+                        }}
+                      >
+                        View
+                      </Button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </Spin>
         </section>
 
         {/* ===== WHY CHOOSE ===== */}

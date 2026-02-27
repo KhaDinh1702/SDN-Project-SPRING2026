@@ -7,6 +7,8 @@ import "./Login.css";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 
+const API_URL = import.meta.env.VITE_BACKEND_URL;
+
 export default function Login() {
   const navigate = useNavigate();
 
@@ -18,14 +20,33 @@ export default function Login() {
   const isPasswordValid = password.length >= 6;
   const isFormValid = isEmailValid && isPasswordValid;
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!isFormValid) return;
 
     setLoading(true);
-    setTimeout(() => {
+    try {
+      const response = await fetch(`${API_URL}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        localStorage.setItem("token", result.data.access_token);
+        localStorage.setItem("user", JSON.stringify(result.data.user));
+        message.success("Login successful 🎉");
+        setTimeout(() => navigate("/"), 500);
+      } else {
+        message.error(result.message || "Login failed");
+      }
+    } catch (error) {
+      message.error("Login error. Please try again.");
+      console.error(error);
+    } finally {
       setLoading(false);
-      message.success("Login successful 🎉");
-    }, 1000);
+    }
   };
 
   return (
