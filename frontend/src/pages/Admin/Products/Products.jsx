@@ -15,6 +15,7 @@ import {
   Switch,
   Row,
   Col,
+  Image,
 } from "antd";
 import {
   EditOutlined,
@@ -36,6 +37,7 @@ const Products = () => {
       stock_quantity: 100,
       category: "Fruits",
       is_active: true,
+      image: "https://upload.wikimedia.org/wikipedia/commons/1/15/Red_Apple.jpg",
     },
   ]);
 
@@ -43,27 +45,23 @@ const Products = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [form] = Form.useForm();
 
-  // ===== OPEN ADD =====
   const handleAdd = () => {
     setEditingProduct(null);
     form.resetFields();
     setIsModalOpen(true);
   };
 
-  // ===== OPEN EDIT =====
   const handleEdit = (record) => {
     setEditingProduct(record);
     form.setFieldsValue(record);
     setIsModalOpen(true);
   };
 
-  // ===== DELETE =====
   const handleDelete = (key) => {
     setData(data.filter((item) => item.key !== key));
     message.success("Product deleted successfully!");
   };
 
-  // ===== SUBMIT =====
   const handleSubmit = () => {
     form.validateFields().then((values) => {
       if (editingProduct) {
@@ -89,11 +87,23 @@ const Products = () => {
   };
 
   const columns = [
+    {
+      title: "Image",
+      dataIndex: "image",
+      render: (image) => (
+        <Image
+          src={image}
+          width={60}
+          height={60}
+          style={{ objectFit: "cover", borderRadius: 8 }}
+        />
+      ),
+    },
     { title: "Name", dataIndex: "name" },
     {
       title: "Price (VND)",
       dataIndex: "price",
-      render: (price) => price.toLocaleString(),
+      render: (price) => price?.toLocaleString(),
     },
     {
       title: "Stock",
@@ -155,9 +165,8 @@ const Products = () => {
         </Button>
       </div>
 
-      <Table columns={columns} dataSource={data} />
+      <Table columns={columns} dataSource={data} rowKey="key" />
 
-      {/* ===== MODAL ===== */}
       <Modal
         title={editingProduct ? "Edit Product" : "Add Product"}
         open={isModalOpen}
@@ -222,6 +231,14 @@ const Products = () => {
               </Form.Item>
             </Col>
           </Row>
+
+          <Form.Item
+            name="image"
+            label="Image URL"
+            rules={[{ required: true, message: "Enter image URL" }]}
+          >
+            <Input placeholder="Paste image URL here..." />
+          </Form.Item>
 
           <Form.Item
             name="description"

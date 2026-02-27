@@ -1,198 +1,150 @@
-import React, { useState } from "react";
-import { Layout, Select } from "antd";
+import React, { useState, useEffect, useMemo } from "react";
+import { Layout, Select, Spin, Input } from "antd";
 import { ArrowLeftOutlined, StarFilled } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom"; // 👈 thêm useParams
 import "./Category.css";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 
-
-
 const { Content } = Layout;
 const { Option } = Select;
-
-const allProducts = [
-  // VEGETABLES
-  {
-    name: "Organic Tomatoes",
-    category: "Vegetables",
-    price: 4.99,
-    rating: 4,
-    reviews: 124,
-    image: "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce",
-    badge: "New"
-  },
-  {
-    name: "Spinach Bundle",
-    category: "Vegetables",
-    price: 3.49,
-    rating: 4,
-    reviews: 92,
-    image: "https://images.unsplash.com/photo-1576045057995-568f588f82fb"
-  },
-  {
-    name: "Broccoli Florets",
-    category: "Vegetables",
-    price: 5.99,
-    rating: 4,
-    reviews: 78,
-    image: "https://images.unsplash.com/photo-1582515073490-dc5c3b77b1e1"
-  },
-  {
-    name: "Fresh Carrots",
-    category: "Vegetables",
-    price: 2.99,
-    rating: 4,
-    reviews: 66,
-    image: "https://images.unsplash.com/photo-1587049633312-d628ae50a8ae"
-  },
-
-  // MEAT
-  {
-    name: "Premium Beef Steak",
-    category: "Meat",
-    price: 18.99,
-    rating: 5,
-    reviews: 88,
-    image: "https://images.unsplash.com/photo-1600891964599-f61ba0e24092"
-  },
-  {
-    name: "Chicken Breast",
-    category: "Meat",
-    price: 12.49,
-    rating: 4,
-    reviews: 75,
-    image: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d"
-  },
-  {
-    name: "Pork Ribs",
-    category: "Meat",
-    price: 15.99,
-    rating: 5,
-    reviews: 54,
-    image: "https://images.unsplash.com/photo-1605478031425-1c2b7a4f06f4"
-  },
-  {
-    name: "Lamb Chops",
-    category: "Meat",
-    price: 21.99,
-    rating: 5,
-    reviews: 40,
-    image: "https://images.unsplash.com/photo-1615937657715-bc7b4b7962a3"
-  },
-
-  // FISH
-  {
-    name: "Fresh Salmon",
-    category: "Fish",
-    price: 16.49,
-    rating: 5,
-    reviews: 67,
-    image: "https://images.unsplash.com/photo-1580476262798-bddd9f4b7369",
-    badge: "Sale"
-  },
-  {
-    name: "Tuna Steak",
-    category: "Fish",
-    price: 14.99,
-    rating: 4,
-    reviews: 53,
-    image: "https://images.unsplash.com/photo-1589308078055-eb1b03c94f01"
-  },
-  {
-    name: "Shrimp Pack",
-    category: "Fish",
-    price: 11.49,
-    rating: 4,
-    reviews: 82,
-    image: "https://images.unsplash.com/photo-1601050690597-df0568f70950"
-  },
-  {
-    name: "Sea Bass",
-    category: "Fish",
-    price: 19.99,
-    rating: 5,
-    reviews: 36,
-    image: "https://images.unsplash.com/photo-1612874742237-6526221588e3"
-  },
-
-  // SPICES
-  {
-    name: "Black Pepper",
-    category: "Spices",
-    price: 2.99,
-    rating: 4,
-    reviews: 40,
-    image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d"
-  },
-  {
-    name: "Sea Salt",
-    category: "Spices",
-    price: 1.99,
-    rating: 4,
-    reviews: 34,
-    image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b"
-  },
-  {
-    name: "Turmeric Powder",
-    category: "Spices",
-    price: 3.49,
-    rating: 5,
-    reviews: 29,
-    image: "https://images.unsplash.com/photo-1615486363903-06e9b0c68f37"
-  },
-  {
-    name: "Paprika",
-    category: "Spices",
-    price: 3.99,
-    rating: 4,
-    reviews: 22,
-    image: "https://images.unsplash.com/photo-1604908177522-4020dbffa8b5"
-  }
-];
+const { Search } = Input;
 
 export default function Category() {
   const navigate = useNavigate();
-  const [activeCategory, setActiveCategory] = useState("Vegetables");
-  const [sort, setSort] = useState("default");
+  const { id } = useParams(); // 👈 lấy id từ URL
 
-  const filtered = allProducts
-    .filter(p => p.category === activeCategory)
-    .sort((a, b) => {
-      if (sort === "low") return a.price - b.price;
-      if (sort === "high") return b.price - a.price;
-      return 0;
-    });
+  const [categories, setCategories] = useState([]);
+  const [activeCategoryId, setActiveCategoryId] = useState("");
+  const [activeCategoryName, setActiveCategoryName] = useState("");
+  const [products, setProducts] = useState([]);
+  const [sort, setSort] = useState("default");
+  const [keyword, setKeyword] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  /* ================= FETCH CATEGORIES ================= */
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("http://localhost:5001/api/categories");
+        const data = await res.json();
+
+        if (data.success) {
+          setCategories(data.data);
+
+          // 👇 nếu có id trên URL thì chọn đúng category đó
+          if (id) {
+            const found = data.data.find((c) => c._id === id);
+            if (found) {
+              setActiveCategoryId(found._id);
+              setActiveCategoryName(found.name);
+            }
+          } else if (data.data.length > 0) {
+            setActiveCategoryId(data.data[0]._id);
+            setActiveCategoryName(data.data[0].name);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, [id]); // 👈 phụ thuộc id
+
+  /* ================= FETCH PRODUCTS ================= */
+  useEffect(() => {
+    if (!activeCategoryId) return;
+
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+
+        let url = `http://localhost:5001/api/products?categoryId=${activeCategoryId}`;
+
+        if (keyword) {
+          url += `&keyword=${keyword}`;
+        }
+
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data.success) {
+          setProducts(data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [activeCategoryId, keyword]);
+
+  const sortedProducts = useMemo(() => {
+    const copied = [...products];
+
+    if (sort === "low") return copied.sort((a, b) => a.price - b.price);
+    if (sort === "high") return copied.sort((a, b) => b.price - a.price);
+
+    return copied;
+  }, [products, sort]);
+
+  if (loading) {
+    return (
+      <div style={{ textAlign: "center", padding: 100 }}>
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <Layout>
       <Header />
-      <Content className="category-container">
 
+      <Content className="category-container">
         <div className="category-hero">
           <div className="back" onClick={() => navigate("/")}>
             <ArrowLeftOutlined /> Back to home
           </div>
-          <h1>{activeCategory}</h1>
-          <p>Fresh and premium {activeCategory.toLowerCase()} delivered daily</p>
+
+          <h1>{activeCategoryName}</h1>
+          <p>
+            Fresh and premium{" "}
+            {activeCategoryName?.toLowerCase()} delivered daily
+          </p>
         </div>
 
         <div className="category-top">
           <div className="filter-buttons">
-            {["Vegetables", "Meat", "Fish", "Spices"].map(cat => (
+            {categories.map((cat) => (
               <button
-                key={cat}
-                className={`filter-btn ${activeCategory === cat ? "active-btn" : ""}`}
-                onClick={() => setActiveCategory(cat)}
+                key={cat._id}
+                className={`filter-btn ${
+                  activeCategoryId === cat._id ? "active-btn" : ""
+                }`}
+                onClick={() => {
+                  setActiveCategoryId(cat._id);
+                  setActiveCategoryName(cat.name);
+                  navigate(`/category/${cat._id}`); // 👈 cập nhật URL
+                }}
               >
-                {cat}
+                {cat.name}
               </button>
             ))}
           </div>
 
+          <Search
+            placeholder="Search product..."
+            onSearch={(value) => setKeyword(value)}
+            allowClear
+            style={{ width: 200 }}
+          />
+
           <Select
-            defaultValue="default"
-            onChange={value => setSort(value)}
+            value={sort}
+            onChange={(value) => setSort(value)}
             className="sort-select"
           >
             <Option value="default">Default</Option>
@@ -202,31 +154,49 @@ export default function Category() {
         </div>
 
         <div className="product-grid">
-          {filtered.map((item, index) => (
-            <div key={index} className="product-card">
-              {item.badge && <span className="badge">{item.badge}</span>}
-              <img src={item.image} alt="" />
-              <div className="product-info">
-                <span className="category-label">{item.category}</span>
-                <h3>{item.name}</h3>
+          {sortedProducts.length === 0 ? (
+            <p style={{ textAlign: "center", marginTop: 50 }}>
+              No products found.
+            </p>
+          ) : (
+            sortedProducts.map((item) => (
+              <div key={item._id} className="product-card">
+                {item.images?.[0]?.isPrimary && (
+                  <span className="badge">New</span>
+                )}
 
-                <div className="rating">
-                  {[...Array(item.rating)].map((_, i) => (
-                    <StarFilled key={i} />
-                  ))}
-                  <span>({item.reviews})</span>
-                </div>
+                <img
+                  src={
+                    item.images?.[0]?.url ||
+                    "https://via.placeholder.com/300"
+                  }
+                  alt={item.name}
+                />
 
-                <div className="bottom">
-                  <span className="price">${item.price}</span>
-                  <button className="add-btn">Add</button>
+                <div className="product-info">
+                  <span className="category-label">
+                    {item.category?.name}
+                  </span>
+
+                  <h3>{item.name}</h3>
+
+                  <div className="rating">
+                    {[...Array(5)].map((_, i) => (
+                      <StarFilled key={i} />
+                    ))}
+                  </div>
+
+                  <div className="bottom">
+                    <span className="price">${item.price}</span>
+                    <button className="add-btn">Add</button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
-
       </Content>
+
       <Footer />
     </Layout>
   );

@@ -15,7 +15,7 @@ import Dashboard from "./pages/Admin/Dashboard/Dashboard";
 import Products from "./pages/Admin/Products/Products";
 import Orders from "./pages/Admin/Orders/Orders";
 import Users from "./pages/Admin/Users/Users";
-import Inventory from "./pages/Admin/Inventory/Inventory";
+
 import Ingredients from "./pages/User/Ingrediant/Ingredients";
 import Category from "./pages/User/Category/Category";
 import AdminCategory from "./pages/Admin/AdminCategory/AdminCategory";
@@ -32,6 +32,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/category" element={<Category />} />
+<Route path="/category/:id" element={<Category />} />
         <Route path="/ingredients" element={<Ingredients />} />
 
 
@@ -44,7 +45,7 @@ function App() {
           <Route path="orders" element={<Orders />} />
           <Route path="users" element={<Users />} />
            <Route path="categoryadmin" element={<AdminCategory />} />
-          <Route path="inventory" element={<Inventory />} />
+        
 
         </Route>
 
