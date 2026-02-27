@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Rate, Button } from "antd";
+import { CartContext } from "../../../context/CartContext";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import "./ProductDetail.css";
@@ -14,6 +15,7 @@ const currentUser = {
 export default function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { addToCart } = useContext(CartContext);
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -24,26 +26,23 @@ export default function ProductDetail() {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
-    const mockProduct = {
-      id,
-      title: "Sample Product",
-      category: "Meat",
-      price: 18.99,
-      rate: 5,
-      image:
-        "https://images.unsplash.com/photo-1600891964599-f61ba0e24092",
-      stock: 32,
-      description: "This is a mock product used before API integration.",
-      nutrition: [
-        { name: "Protein", value: "26g" },
-        { name: "Iron", value: "2.8mg" },
-      ],
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(`http://localhost:5001/api/products/${id}`);
+        const data = await res.json();
+        if (data.success) {
+          setProduct(data.data);
+        } else {
+          setProduct(null);
+        }
+      } catch (err) {
+        console.error("Failed to fetch product", err);
+        setProduct(null);
+      } finally {
+        setLoading(false);
+      }
     };
-
-    setTimeout(() => {
-      setProduct(mockProduct);
-      setLoading(false);
-    }, 300);
+    fetchProduct();
   }, [id]);
 
   // LOAD REVIEW FROM LOCALSTORAGE
@@ -89,7 +88,7 @@ export default function ProductDetail() {
           {/* LEFT */}
           <div>
             <div className="product-detail-image">
-              <img src={product.image} alt={product.title} />
+              <img src={product.images?.[0]?.url || "https://via.placeholder.com/600"} alt={product.name} />
             </div>
 
             {/* FEEDBACK */}
@@ -141,29 +140,32 @@ export default function ProductDetail() {
 
           {/* RIGHT */}
           <div className="detail-info">
-            <span className="category">{product.category}</span>
-            <h1>{product.title}</h1>
+            <span className="category">{product.category?.name || "Uncategorized"}</span>
+            <h1>{product.name}</h1>
 
             <div className="rating">
-              <Rate disabled defaultValue={product.rate} />
+              <Rate disabled defaultValue={5} />
               <span className="review">4.9 (89 reviews)</span>
             </div>
 
             <div className="price">
               ${product.price}
-              <span className="stock">{product.stock} in stock</span>
+              <span className="stock">{product.stock_quantity || 0} in stock</span>
             </div>
 
-            <p className="description">{product.description}</p>
+            <p className="description">{product.description || "No description available."}</p>
 
             <div className="info-box">
               <strong>Origin</strong>
-              <p>USA – Grass-Fed Ranches</p>
+              <p>{product.origin || "Unknown"}</p>
             </div>
 
             <h3>Nutritional Content</h3>
             <div className="nutrition">
-              {product.nutrition.map((n, i) => (
+              {(product.nutrition || [
+                { name: "Protein", value: "26g" },
+                { name: "Iron", value: "2.8mg" }
+              ]).map((n, i) => (
                 <div key={i}>
                   <strong>{n.name}</strong>
                   <span>{n.value}</span>
@@ -171,7 +173,7 @@ export default function ProductDetail() {
               ))}
             </div>
 
-            <Button type="primary" size="large" block>
+            <Button type="primary" size="large" block onClick={() => addToCart(product, 1)}>
               Add to Cart
             </Button>
           </div>

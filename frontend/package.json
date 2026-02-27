@@ -16,6 +16,7 @@
     "@ant-design/plots": "^2.6.8",
     "@react-oauth/google": "^0.13.4",
     "antd": "^6.3.0",
+    "js-cookie": "^3.0.5",
     "lucide-react": "^0.575.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

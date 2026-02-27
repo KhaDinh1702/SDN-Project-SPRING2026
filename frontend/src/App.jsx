@@ -11,6 +11,7 @@ const Register = lazy(() => import("./pages/User/Register/Register"));
 const Category = lazy(() => import("./pages/User/Category/Category"));
 const Ingredients = lazy(() => import("./pages/User/Ingrediant/Ingredients"));
 const Profile = lazy(() => import("./pages/User/Profile/Profile"));
+const Cart = lazy(() => import("./pages/User/Cart/Cart"));
 
 // Admin pages (lazy loaded)
 const AdminLayout = lazy(() => import("./pages/Admin/AdminLayout/AdminLayout"));
@@ -36,6 +37,7 @@ function App() {
           <Route path="/category/:id" element={<Category />} />
           <Route path="/ingredients" element={<Ingredients />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/cart" element={<Cart />} />
 
 
           {/* Admin Routes with Layout */}

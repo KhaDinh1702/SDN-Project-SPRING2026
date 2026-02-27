@@ -7,6 +7,7 @@ import {
   PhoneOutlined,
   EyeOutlined,
   EyeInvisibleOutlined,
+  ArrowLeftOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
@@ -89,9 +90,15 @@ export default function Register() {
 
   return (
     <>
-      <Header />
-
       <div className="register-page">
+        <Button
+          type="link"
+          icon={<ArrowLeftOutlined />}
+          onClick={() => navigate("/")}
+          style={{ position: 'absolute', top: 20, left: 20, fontSize: '16px', color: '#333' }}
+        >
+          Back to Home
+        </Button>
         <div className="register-card">
           <h1>Create Account</h1>
           <p className="subtitle">

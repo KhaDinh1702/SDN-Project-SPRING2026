@@ -7,10 +7,13 @@ import {
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../config";
+import { CartContext } from "../../context/CartContext";
+import { useContext } from "react";
 import "./Header.css";
 
 export default function Header() {
   const navigate = useNavigate();
+  const { totalItems, clearCart } = useContext(CartContext);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -36,6 +39,8 @@ export default function Header() {
 
     localStorage.removeItem("accessToken");
     localStorage.removeItem("user");
+    localStorage.removeItem("fm_cart"); // clear cart storage
+    clearCart(); // clear cart context
     setUser(null);
     message.success("Logged out successfully");
     navigate("/login");
@@ -77,7 +82,7 @@ export default function Header() {
 
       {/* RIGHT */}
       <div className="fm-actions">
-        <Badge count={1} size="small">
+        <Badge count={totalItems} size="small">
           <ShoppingCartOutlined
             className="cart-icon"
             onClick={() => navigate("/cart")}
