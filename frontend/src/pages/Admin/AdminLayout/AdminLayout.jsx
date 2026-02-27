@@ -18,18 +18,19 @@ const AdminLayout = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Xoá token nếu có
-    localStorage.removeItem("token");
-    navigate("/login");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("user");
+    navigate("/");
   };
 
-  const userMenu = (
-    <Menu>
-      <Menu.Item key="logout" icon={<LogoutOutlined />} onClick={handleLogout}>
-        Logout
-      </Menu.Item>
-    </Menu>
-  );
+  const userMenuItems = [
+    {
+      key: "logout",
+      icon: <LogoutOutlined />,
+      label: "Logout",
+      onClick: handleLogout,
+    }
+  ];
 
   return (
     <Layout className="admin-layout">
@@ -50,12 +51,12 @@ const AdminLayout = () => {
           <Menu.Item key="/admin/products" icon={<ShoppingOutlined />}>
             <Link to="/admin/products">Products</Link>
           </Menu.Item>
-          
+
           <Menu.Item key="/admin/categoryadmin" icon={<UserOutlined />}>
             <Link to="/admin/categoryadmin">Category</Link>
           </Menu.Item>
-          
-         <Menu.Item key="/admin/orders" icon={<ShoppingCartOutlined />}>
+
+          <Menu.Item key="/admin/orders" icon={<ShoppingCartOutlined />}>
             <Link to="/admin/orders">Orders</Link>
           </Menu.Item>
 
@@ -70,7 +71,7 @@ const AdminLayout = () => {
         <Header className="admin-header">
           <h2>Admin Dashboard</h2>
 
-          <Dropdown overlay={userMenu} placement="bottomRight">
+          <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
             <Space className="user-dropdown">
               <Avatar icon={<UserOutlined />} />
               <span>Admin</span>
