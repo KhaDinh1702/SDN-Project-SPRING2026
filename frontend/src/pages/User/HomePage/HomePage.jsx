@@ -107,7 +107,7 @@ export default function HomePage() {
                   onClick={() => navigate(`/products/${p._id}`)}
                 >
                   <div className="product-image">
-                    <img src={p.image || "https://via.placeholder.com/200"} alt={p.name} />
+                    <img src={p.image || "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNlZWVlZWUiIC8+PHRleHQgeD0iMTAwIiB5PSIxMDAiIGZvbnQtc2l6ZT0iMTYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM3Nzc3NzciPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg=="} alt={p.name} />
                   </div>
 
                   <div className="product-body">

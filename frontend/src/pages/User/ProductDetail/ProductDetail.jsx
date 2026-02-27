@@ -17,6 +17,12 @@ export default function ProductDetail() {
   const [userRating, setUserRating] = useState(0);
   const [reviews, setReviews] = useState([]);
 
+  // load current user once
+  const currentUser = JSON.parse(
+    localStorage.getItem("user") ||
+      '{"name":"Guest","avatar":"https://i.pravatar.cc/100?img=1"}'
+  );
+
   useEffect(() => {
     fetchProduct();
   }, [id]);
@@ -96,8 +102,8 @@ export default function ProductDetail() {
               <h3>Write a Review</h3>
 
               <div className="user-info">
-                <img src={currentUser.avatar} alt="avatar" />
-                <span>{currentUser.name}</span>
+                <img src={currentUser.avatar || "https://i.pravatar.cc/100?img=1"} alt="avatar" />
+                <span>{currentUser.first_name || currentUser.name || "Guest"}</span>
               </div>
 
               <Rate value={userRating} onChange={setUserRating} />
