@@ -53,7 +53,6 @@ export default function Register() {
       return;
     }
 
-app.use(cors
   return (
     <>
       <Header />
@@ -187,11 +186,7 @@ app.use(cors
             type="primary"
             block
             className="register-btn"
-<<<<<<< HEAD
-            disabled={!isFormValid}
-=======
             disabled={!isFormValid || loading}
->>>>>>> 5ba8bfe2bd2ae2d2f3f0e6c32b47740979641e57
             loading={loading}
             onClick={handleRegister}
           >
