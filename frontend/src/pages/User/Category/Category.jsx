@@ -117,7 +117,7 @@ export default function Category() {
           </Select>
         </div>
 
-        <Spin spinning={loading} tip="Loading products...">
+        <Spin spinning={loading} description="Loading products...">
           {filtered.length === 0 ? (
             <Empty description="No products found" style={{ marginTop: 50 }} />
           ) : (

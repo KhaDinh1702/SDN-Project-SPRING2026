@@ -97,7 +97,7 @@ export default function HomePage() {
             Our most popular items this week
           </p>
 
-          <Spin spinning={loading} tip="Loading products...">
+          <Spin spinning={loading} description="Loading products...">
             <div className="product-grid">
               {products.slice(0, 6).map((p) => (
                 <div

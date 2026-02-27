@@ -27,7 +27,7 @@ import AdminCategory from "./pages/Admin/AdminCategory/AdminCategory";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
 
         {/* User Routes */}
