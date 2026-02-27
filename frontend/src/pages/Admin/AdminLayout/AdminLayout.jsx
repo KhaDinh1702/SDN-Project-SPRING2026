@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, Menu, Avatar, Dropdown, Space } from "antd";
+import { Layout, Menu, Avatar, Dropdown, Space, message } from "antd";
 import {
   DashboardOutlined,
   ShoppingOutlined,
@@ -9,6 +9,7 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { API_URL } from "../../../config";
 import "./AdminLayout.css";
 
 const { Header, Sider, Content } = Layout;
@@ -17,10 +18,25 @@ const AdminLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  // Get user info from localStorage
+  const storedUser = localStorage.getItem("user");
+  const user = storedUser ? JSON.parse(storedUser) : null;
+  const adminName = user?.fullName || user?.email || "Admin";
+
+  const handleLogout = async () => {
+    try {
+      await fetch(`${API_URL}/api/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (err) {
+      // Even if API fails, still clear local state
+    }
+
     localStorage.removeItem("accessToken");
     localStorage.removeItem("user");
-    navigate("/");
+    message.success("Logged out successfully");
+    navigate("/login");
   };
 
   const userMenuItems = [
@@ -28,6 +44,7 @@ const AdminLayout = () => {
       key: "logout",
       icon: <LogoutOutlined />,
       label: "Logout",
+      danger: true,
       onClick: handleLogout,
     }
   ];
@@ -74,7 +91,7 @@ const AdminLayout = () => {
           <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
             <Space className="user-dropdown">
               <Avatar icon={<UserOutlined />} />
-              <span>Admin</span>
+              <span>{adminName}</span>
             </Space>
           </Dropdown>
         </Header>

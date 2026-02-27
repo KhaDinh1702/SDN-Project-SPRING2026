@@ -64,3 +64,32 @@
   padding: 4px 18px;
   background: #0f4d00;
 }
+
+/* USER GREETING */
+.user-greeting {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 4px 14px;
+  border-radius: 24px;
+  transition: background 0.2s;
+}
+
+.user-greeting:hover {
+  background: rgba(15, 77, 0, 0.08);
+}
+
+.user-avatar {
+  background: #0f4d00 !important;
+}
+
+.user-name {
+  font-size: 14px;
+  color: #333;
+  white-space: nowrap;
+}
+
+.user-name strong {
+  color: #0f4d00;
+}

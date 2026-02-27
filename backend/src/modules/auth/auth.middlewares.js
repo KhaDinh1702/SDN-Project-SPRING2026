@@ -86,24 +86,28 @@ export const loadUser = wrapAsync(async (req, res, next) => {
 });
 
 export const verifyGoogleToken = wrapAsync(async (req, res, next) => {
+  const { credential } = req.body;
+
+  if (!credential) {
+    throw new ErrorWithStatus({
+      status: HTTP_STATUS.BAD_REQUEST,
+      message: USERS_MESSAGES.GOOGLE_TOKEN_REQUIRED,
+    });
+  }
+
   try {
-    const { credential } = req.body;
-
-    if (!credential) {
-      throw new ErrorWithStatus({
-        status: HTTP_STATUS.BAD_REQUEST,
-        message: USERS_MESSAGES.GOOGLE_TOKEN_REQUIRED,
-      });
-    }
-
     const ticket = await client.verifyIdToken({
       idToken: credential,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
     req.payload = ticket.getPayload();
-  } catch (error) {
     next();
+  } catch (error) {
+    throw new ErrorWithStatus({
+      status: HTTP_STATUS.UNAUTHORIZED,
+      message: 'Invalid Google token',
+    });
   }
 });
 

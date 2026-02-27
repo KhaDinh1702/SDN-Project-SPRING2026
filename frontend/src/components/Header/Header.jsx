@@ -1,12 +1,64 @@
-import { Badge, Button } from "antd";
+import { useState, useEffect } from "react";
+import { Badge, Button, Dropdown, Avatar, message } from "antd";
 import {
   ShoppingCartOutlined,
+  UserOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../config";
 import "./Header.css";
 
 export default function Header() {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("user");
+    if (stored) {
+      try {
+        setUser(JSON.parse(stored));
+      } catch {
+        setUser(null);
+      }
+    }
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await fetch(`${API_URL}/api/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (err) {
+      // Even if API fails, still clear local state
+    }
+
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("user");
+    setUser(null);
+    message.success("Logged out successfully");
+    navigate("/login");
+  };
+
+  const userMenuItems = [
+    {
+      key: "profile",
+      icon: <UserOutlined />,
+      label: "My Profile",
+      onClick: () => navigate("/profile"),
+    },
+    {
+      type: "divider",
+    },
+    {
+      key: "logout",
+      icon: <LogoutOutlined />,
+      label: "Logout",
+      danger: true,
+      onClick: handleLogout,
+    },
+  ];
 
   return (
     <header className="fm-header">
@@ -32,20 +84,41 @@ export default function Header() {
           />
         </Badge>
 
-        <Button
-          className="btn-signin"
-          onClick={() => navigate("/login")}
-        >
-          Sign In
-        </Button>
+        {user ? (
+          <Dropdown
+            menu={{ items: userMenuItems }}
+            placement="bottomRight"
+            trigger={["click"]}
+          >
+            <div className="user-greeting">
+              <Avatar
+                className="user-avatar"
+                icon={<UserOutlined />}
+                src={user.avatar}
+              />
+              <span className="user-name">
+                Hello, <strong>{user.fullName || user.email}</strong>
+              </span>
+            </div>
+          </Dropdown>
+        ) : (
+          <>
+            <Button
+              className="btn-signin"
+              onClick={() => navigate("/login")}
+            >
+              Sign In
+            </Button>
 
-        <Button
-          type="primary"
-          className="btn-signup"
-          onClick={() => navigate("/register")}
-        >
-          Sign Up
-        </Button>
+            <Button
+              type="primary"
+              className="btn-signup"
+              onClick={() => navigate("/register")}
+            >
+              Sign Up
+            </Button>
+          </>
+        )}
       </div>
     </header>
   );
