@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Layout, Select, Spin, Input } from "antd";
 import { ArrowLeftOutlined, StarFilled } from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom"; // 👈 thêm useParams
+import { useContext } from "react";
+import { CartContext } from "../../../context/CartContext";
 import "./Category.css";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
@@ -13,6 +15,7 @@ const { Search } = Input;
 export default function Category() {
   const navigate = useNavigate();
   const { id } = useParams(); // 👈 lấy id từ URL
+  const { addToCart } = useContext(CartContext);
 
   const [categories, setCategories] = useState([]);
   const [activeCategoryId, setActiveCategoryId] = useState("");
@@ -121,9 +124,8 @@ export default function Category() {
             {categories.map((cat) => (
               <button
                 key={cat._id}
-                className={`filter-btn ${
-                  activeCategoryId === cat._id ? "active-btn" : ""
-                }`}
+                className={`filter-btn ${activeCategoryId === cat._id ? "active-btn" : ""
+                  }`}
                 onClick={() => {
                   setActiveCategoryId(cat._id);
                   setActiveCategoryName(cat.name);
@@ -188,7 +190,7 @@ export default function Category() {
 
                   <div className="bottom">
                     <span className="price">${item.price}</span>
-                    <button className="add-btn">Add</button>
+                    <button className="add-btn" onClick={() => addToCart(item)}>Add</button>
                   </div>
                 </div>
               </div>

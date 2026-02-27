@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, message } from "antd";
-import { MailOutlined, LockOutlined } from "@ant-design/icons";
+import { MailOutlined, LockOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
 import "./Login.css";
@@ -8,9 +8,12 @@ import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import { API_URL } from "../../../config";
 import { GoogleLogin } from "@react-oauth/google";
+import { useContext } from "react";
+import { CartContext } from "../../../context/CartContext";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { reloadCart } = useContext(CartContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,6 +44,7 @@ export default function Login() {
       // Save token & user info
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("user", JSON.stringify(data.user));
+      reloadCart();
 
       message.success("Login successful!");
 
@@ -59,9 +63,15 @@ export default function Login() {
 
   return (
     <>
-      <Header />
-
       <div className="login-page">
+        <Button
+          type="link"
+          icon={<ArrowLeftOutlined />}
+          onClick={() => navigate("/")}
+          style={{ position: 'absolute', top: 20, left: 20, fontSize: '16px', color: '#333' }}
+        >
+          Back to Home
+        </Button>
         <div className="login-card">
           <h1>Welcome Back</h1>
           <p className="subtitle">

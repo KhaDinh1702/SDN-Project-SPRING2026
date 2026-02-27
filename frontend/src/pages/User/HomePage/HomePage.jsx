@@ -1,7 +1,8 @@
 import { Layout, Button, Rate } from "antd";
-import {ShoppingCartOutlined} from "@ant-design/icons";
+import { ShoppingCartOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { CartContext } from "../../../context/CartContext";
 
 import "./HomePage.css";
 import Header from "../../../components/Header/Header";
@@ -11,6 +12,7 @@ const { Content } = Layout;
 
 export default function HomePage() {
   const navigate = useNavigate();
+  const { addToCart } = useContext(CartContext);
 
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
@@ -65,7 +67,7 @@ export default function HomePage() {
               doorstep.
             </p>
             <div className="hero-actions">
-              <Button type="primary">Shop Now</Button>
+              <Button type="primary" onClick={() => navigate('/category')}>Shop Now</Button>
               <Button>Learn More</Button>
             </div>
           </div>
@@ -75,37 +77,37 @@ export default function HomePage() {
             alt="hero"
           />
         </section>
-<section className="section-category">
-  <div className="category-container">
-    <h2 className="section-title">Shop by Category</h2>
-    <p className="section-subtitle">Browse our premium selection</p>
+        <section className="section-category">
+          <div className="category-container">
+            <h2 className="section-title">Shop by Category</h2>
+            <p className="section-subtitle">Browse our premium selection</p>
 
-    <div className="category-grid">
-      {categories.map((c) => {
-        let imagePath = "";
+            <div className="category-grid">
+              {categories.map((c) => {
+                let imagePath = "";
 
-        if (c.name === "Fish") imagePath = "/images/categories/ca.jpg";
-        else if (c.name === "Meat") imagePath = "/images/categories/thit.webp";
-        else if (c.name === "Vegetables") imagePath = "/images/categories/rau.jpg";
-        else if (c.name === "Spices") imagePath = "/images/categories/giavi.jpg";
-        else if (c.name === "Fruits") imagePath = "/images/categories/traicay.webp";
+                if (c.name === "Fish") imagePath = "/images/categories/ca.jpg";
+                else if (c.name === "Meat") imagePath = "/images/categories/thit.webp";
+                else if (c.name === "Vegetables") imagePath = "/images/categories/rau.jpg";
+                else if (c.name === "Spices") imagePath = "/images/categories/giavi.jpg";
+                else if (c.name === "Fruits") imagePath = "/images/categories/traicay.webp";
 
-        return (
-          <div
-            className="category-card"
-            key={c._id || c.id}
-            onClick={() => navigate(`/category/${c._id || c.id}`)}
-          >
-            <div className="category-image">
-              <img src={imagePath} alt={c.name} />
+                return (
+                  <div
+                    className="category-card"
+                    key={c._id || c.id}
+                    onClick={() => navigate(`/category/${c._id || c.id}`)}
+                  >
+                    <div className="category-image">
+                      <img src={imagePath} alt={c.name} />
+                    </div>
+                    <h4>{c.name}</h4>
+                  </div>
+                );
+              })}
             </div>
-            <h4>{c.name}</h4>
           </div>
-        );
-      })}
-    </div>
-  </div>
-</section>
+        </section>
 
         {/* ===== FEATURED PRODUCTS (SỬA ẢNH + TITLE) ===== */}
         <section className="section section-featured">
@@ -152,10 +154,10 @@ export default function HomePage() {
                       icon={<ShoppingCartOutlined />}
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate(`/products/${p._id || p.id}`);
+                        addToCart(p);
                       }}
                     >
-                      View
+                      Add
                     </Button>
                   </div>
                 </div>
