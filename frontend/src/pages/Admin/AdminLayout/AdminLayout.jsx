@@ -55,11 +55,7 @@ const AdminLayout = () => {
             <Link to="/admin/categoryadmin">Category</Link>
           </Menu.Item>
           
-          <Menu.Item key="/admin/inventory" icon={<AppstoreOutlined />}>
-            <Link to="/admin/inventory">Inventory</Link>
-          </Menu.Item>
-
-          <Menu.Item key="/admin/orders" icon={<ShoppingCartOutlined />}>
+         <Menu.Item key="/admin/orders" icon={<ShoppingCartOutlined />}>
             <Link to="/admin/orders">Orders</Link>
           </Menu.Item>
 

@@ -3,15 +3,10 @@ import {
   Table,
   Button,
   Space,
-  Modal,
-  Form,
-  Input,
   Typography,
   Card
 } from "antd";
 import {
-  PlusOutlined,
-  EditOutlined,
   DeleteOutlined
 } from "@ant-design/icons";
 
@@ -55,48 +50,8 @@ const AdminCategory = () => {
     }
   ]);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingCategory, setEditingCategory] = useState(null);
-  const [form] = Form.useForm();
-
-  const openAddModal = () => {
-    setEditingCategory(null);
-    form.resetFields();
-    setIsModalOpen(true);
-  };
-
-  const openEditModal = (record) => {
-    setEditingCategory(record);
-    form.setFieldsValue(record);
-    setIsModalOpen(true);
-  };
-
   const handleDelete = (key) => {
     setCategories(categories.filter((item) => item.key !== key));
-  };
-
-  const handleSubmit = () => {
-    form.validateFields().then((values) => {
-      if (editingCategory) {
-        setCategories(
-          categories.map((item) =>
-            item.key === editingCategory.key
-              ? { ...item, ...values }
-              : item
-          )
-        );
-      } else {
-        const newCategory = {
-          key: Date.now().toString(),
-          products: 0,
-          color: "#6366f1",
-          icon: <GiCarrot />,
-          ...values
-        };
-        setCategories([...categories, newCategory]);
-      }
-      setIsModalOpen(false);
-    });
   };
 
   const columns = [
@@ -129,40 +84,34 @@ const AdminCategory = () => {
         </Space>
       )
     },
-   {
-  title: "Products",
-  dataIndex: "products",
-  render: (value) => (
-    <div
-      style={{
-        background: "#eef2ff",
-        color: "#4338ca",
-        padding: "6px 14px",
-        borderRadius: 999,
-        fontWeight: 600,
-        display: "inline-block",
-        minWidth: 60,
-        textAlign: "center"
-      }}
-    >
-      {value} items
-    </div>
-  )
-},
+    {
+      title: "Products",
+      dataIndex: "products",
+      render: (value) => (
+        <div
+          style={{
+            background: "#eef2ff",
+            color: "#4338ca",
+            padding: "6px 14px",
+            borderRadius: 999,
+            fontWeight: 600,
+            display: "inline-block",
+            minWidth: 60,
+            textAlign: "center"
+          }}
+        >
+          {value} items
+        </div>
+      )
+    },
     {
       title: "Actions",
       render: (_, record) => (
-        <Space>
-          <Button
-            icon={<EditOutlined />}
-            onClick={() => openEditModal(record)}
-          />
-          <Button
-            danger
-            icon={<DeleteOutlined />}
-            onClick={() => handleDelete(record.key)}
-          />
-        </Space>
+        <Button
+          danger
+          icon={<DeleteOutlined />}
+          onClick={() => handleDelete(record.key)}
+        />
       )
     }
   ];
@@ -175,26 +124,9 @@ const AdminCategory = () => {
           boxShadow: "0 10px 40px rgba(0,0,0,0.05)"
         }}
       >
-        <Space
-          style={{
-            width: "100%",
-            justifyContent: "space-between",
-            marginBottom: 20
-          }}
-        >
-          <Title level={3} style={{ margin: 0 }}>
-            Category Management
-          </Title>
-
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            size="large"
-            onClick={openAddModal}
-          >
-            Add Category
-          </Button>
-        </Space>
+        <Title level={3} style={{ marginBottom: 20 }}>
+          Category Management
+        </Title>
 
         <Table
           columns={columns}
@@ -202,31 +134,6 @@ const AdminCategory = () => {
           pagination={false}
         />
       </Card>
-
-      <Modal
-        title={editingCategory ? "Edit Category" : "Add Category"}
-        open={isModalOpen}
-        onOk={handleSubmit}
-        onCancel={() => setIsModalOpen(false)}
-      >
-        <Form form={form} layout="vertical">
-          <Form.Item
-            name="name"
-            label="Category Name"
-            rules={[{ required: true }]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            name="description"
-            label="Description"
-            rules={[{ required: true }]}
-          >
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
     </div>
   );
 };

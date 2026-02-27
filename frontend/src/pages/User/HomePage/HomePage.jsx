@@ -1,6 +1,7 @@
 import { Layout, Button, Rate } from "antd";
-import { ShoppingCartOutlined } from "@ant-design/icons";
+import {ShoppingCartOutlined} from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import "./HomePage.css";
 import Header from "../../../components/Header/Header";
@@ -8,87 +9,54 @@ import Footer from "../../../components/Footer/Footer";
 
 const { Content } = Layout;
 
-/* ===== DATA ===== */
-const categories = [
-  {
-    name: "Vegetables",
-    image: "https://images.unsplash.com/photo-1540420773420-3366772f4999",
-  },
-  {
-    name: "Meat",
-    image: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d",
-  },
-  {
-    name: "Fish",
-    image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5",
-  },
-  {
-    name: "Fruits",
-    image: "https://images.unsplash.com/photo-1574226516831-e1dff420e43e",
-  },
-];
-
-/* ===== MOCK PRODUCTS (SAU NÀY ĐỔI API) ===== */
-const products = [
-  {
-    id: 1,
-    title: "Spinach Bundle",
-    category: "Vegetables",
-    price: 3.49,
-    rate: 4,
-    image: "https://images.unsplash.com/photo-1582515073490-39981397c445",
-  },
-  {
-    id: 2,
-    title: "Grass-Fed Ground Beef",
-    category: "Meat",
-    price: 8.99,
-    rate: 5,
-    image: "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f",
-  },
-  {
-    id: 3,
-    title: "Wild-Caught Shrimp",
-    category: "Fish",
-    price: 16.99,
-    rate: 4,
-    image: "https://images.unsplash.com/photo-1604908554027-3bcd8dce0a5c",
-  },
-  {
-    id: 4,
-    title: "Organic Tomatoes",
-    category: "Vegetables",
-    price: 4.99,
-    rate: 4,
-    image: "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce",
-  },
-  {
-    id: 5,
-    title: "Prime Ribeye Steak",
-    category: "Meat",
-    price: 18.99,
-    rate: 5,
-    image: "https://images.unsplash.com/photo-1600891964599-f61ba0e24092",
-  },
-  {
-    id: 6,
-    title: "Fresh Atlantic Salmon",
-    category: "Fish",
-    price: 14.99,
-    rate: 5,
-    image: "https://images.unsplash.com/photo-1580476262798-bddd9f4b7369",
-  },
-];
-
 export default function HomePage() {
-  const navigate = useNavigate(); // ✅ SỬA: chỉ dùng navigate theo id
+  const navigate = useNavigate();
+
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+
+  /* ================= FETCH API ================= */
+  useEffect(() => {
+    fetchCategories();
+    fetchProducts();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch("http://localhost:5001/api/categories");
+      const data = await res.json();
+
+      setCategories(
+        Array.isArray(data)
+          ? data
+          : data.data || data.categories || []
+      );
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch("http://localhost:5001/api/products");
+      const data = await res.json();
+
+      setProducts(
+        Array.isArray(data)
+          ? data
+          : data.data || data.products || []
+      );
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
 
   return (
     <Layout className="layout">
       <Header />
 
       <Content>
-        {/* ===== HERO ===== */}
+        {/* ===== HERO (GIỮ NGUYÊN) ===== */}
         <section className="hero">
           <div className="hero-text">
             <h1>Fresh from Farm to Your Table</h1>
@@ -107,23 +75,39 @@ export default function HomePage() {
             alt="hero"
           />
         </section>
+<section className="section-category">
+  <div className="category-container">
+    <h2 className="section-title">Shop by Category</h2>
+    <p className="section-subtitle">Browse our premium selection</p>
 
-        {/* ===== CATEGORY ===== */}
-        <section className="section">
-          <h2>Shop by Category</h2>
-          <p className="subtitle">Browse our premium selection</p>
+    <div className="category-grid">
+      {categories.map((c) => {
+        let imagePath = "";
 
-          <div className="category-grid">
-            {categories.map((c, i) => (
-              <div className="category-card" key={i}>
-                <img src={c.image} alt={c.name} />
-                <h4>{c.name}</h4>
-              </div>
-            ))}
+        if (c.name === "Fish") imagePath = "/images/categories/ca.jpg";
+        else if (c.name === "Meat") imagePath = "/images/categories/thit.webp";
+        else if (c.name === "Vegetables") imagePath = "/images/categories/rau.jpg";
+        else if (c.name === "Spices") imagePath = "/images/categories/giavi.jpg";
+        else if (c.name === "Fruits") imagePath = "/images/categories/traicay.webp";
+
+        return (
+          <div
+            className="category-card"
+            key={c._id || c.id}
+            onClick={() => navigate(`/category/${c._id || c.id}`)}
+          >
+            <div className="category-image">
+              <img src={imagePath} alt={c.name} />
+            </div>
+            <h4>{c.name}</h4>
           </div>
-        </section>
+        );
+      })}
+    </div>
+  </div>
+</section>
 
-        {/* ===== FEATURED PRODUCTS ===== */}
+        {/* ===== FEATURED PRODUCTS (SỬA ẢNH + TITLE) ===== */}
         <section className="section section-featured">
           <h2 className="section-title">Featured Products</h2>
           <p className="section-subtitle">
@@ -131,23 +115,32 @@ export default function HomePage() {
           </p>
 
           <div className="product-grid">
-            {products.map((p) => (
+            {products.slice(0, 8).map((p) => (
               <div
                 className="product-card"
-                key={p.id}
+                key={p._id || p.id}
                 style={{ cursor: "pointer" }}
-                onClick={() => navigate(`/products/${p.id}`)} // ✅ SỬA
+                onClick={() => navigate(`/products/${p._id || p.id}`)}
               >
                 <div className="product-image">
-                  <img src={p.image} alt={p.title} />
+                  <img
+                    src={
+                      p.images?.[0]?.url ||
+                      "https://via.placeholder.com/300"
+                    }
+                    alt={p.name}
+                  />
                 </div>
 
                 <div className="product-body">
-                  <span className="product-category">{p.category}</span>
-                  <h3>{p.title}</h3>
+                  <span className="product-category">
+                    {p.category?.name || p.category}
+                  </span>
+
+                  <h3>{p.name}</h3>
 
                   <div className="product-rate">
-                    <Rate disabled defaultValue={p.rate} />
+                    <Rate disabled defaultValue={p.rate || 5} />
                     <span className="rate-count">(124)</span>
                   </div>
 
@@ -155,12 +148,11 @@ export default function HomePage() {
                     <span className="product-price">${p.price}</span>
 
                     <Button
-                      className="btn-view"
                       type="primary"
                       icon={<ShoppingCartOutlined />}
                       onClick={(e) => {
-                        e.stopPropagation(); // ✅ SỬA: tránh click lan
-                        navigate(`/products/${p.id}`); // ✅ SỬA
+                        e.stopPropagation();
+                        navigate(`/products/${p._id || p.id}`);
                       }}
                     >
                       View
@@ -172,50 +164,114 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ===== WHY CHOOSE ===== */}
-        <section className="why-section">
-          <h2 className="why-title">Why Choose FreshMart?</h2>
-          <p className="why-subtitle">
+        {/* ===== WHY CHOOSE (GIỮ NGUYÊN) ===== */}
+        <section
+          style={{
+            padding: "100px 10%",
+            background: "#f9fafc",
+            textAlign: "center",
+          }}
+        >
+          <h2 style={{ fontSize: 34, fontWeight: 700 }}>
+            Why Choose FreshMart?
+          </h2>
+          <p style={{ color: "#666", marginBottom: 60 }}>
             Quality, freshness, and sustainability in every order
           </p>
 
-          <div className="why-grid">
-            <div className="why-item">
-              <div className="why-icon">🌿</div>
-              <h3>Farm Fresh</h3>
-              <p>Sourced directly from local farms</p>
-            </div>
-
-            <div className="why-item">
-              <div className="why-icon">🚚</div>
-              <h3>Fast Delivery</h3>
-              <p>Same-day delivery available</p>
-            </div>
-
-            <div className="why-item">
-              <div className="why-icon">🛡️</div>
-              <h3>Quality Guaranteed</h3>
-              <p>Handpicked for premium quality</p>
-            </div>
-
-            <div className="why-item">
-              <div className="why-icon">🏅</div>
-              <h3>Certified Organic</h3>
-              <p>90% of products are organic</p>
-            </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+              gap: 30,
+            }}
+          >
+            {[
+              { icon: "🌿", title: "Farm Fresh", desc: "Sourced directly from trusted farms daily." },
+              { icon: "🚚", title: "Fast Delivery", desc: "Same-day delivery for maximum freshness." },
+              { icon: "🛡️", title: "Quality Guaranteed", desc: "Strict inspection before shipping." },
+              { icon: "🏅", title: "Certified Organic", desc: "90% of products are organic certified." },
+            ].map((item, index) => (
+              <div
+                key={index}
+                style={{
+                  background: "#fff",
+                  padding: 35,
+                  borderRadius: 20,
+                  boxShadow: "0 10px 25px rgba(0,0,0,0.05)",
+                }}
+              >
+                <div style={{ fontSize: 40, marginBottom: 15 }}>
+                  {item.icon}
+                </div>
+                <h3 style={{ fontWeight: 600 }}>{item.title}</h3>
+                <p style={{ color: "#666" }}>{item.desc}</p>
+              </div>
+            ))}
           </div>
         </section>
 
-        {/* ===== NEWSLETTER ===== */}
-        <section className="newsletter-section">
-          <h2 className="newsletter-title">Stay Updated</h2>
-          <p className="newsletter-subtitle">
-            Subscribe for exclusive deals & tips
-          </p>
+        {/* ===== NEWSLETTER (GIỮ NGUYÊN) ===== */}
+        <section
+          style={{
+            padding: "120px 10%",
+            background: "linear-gradient(135deg, #00c853, #00bfa5)",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <div
+            style={{
+              background: "rgba(255,255,255,0.1)",
+              backdropFilter: "blur(15px)",
+              padding: 60,
+              borderRadius: 25,
+              textAlign: "center",
+              color: "white",
+              width: "100%",
+              maxWidth: 700,
+            }}
+          >
+            <h2 style={{ fontSize: 32, fontWeight: 700 }}>
+              Stay Updated
+            </h2>
+            <p style={{ margin: "20px 0 40px" }}>
+              Subscribe to get exclusive deals & fresh market updates
+            </p>
 
-          <div className="newsletter-form">
-            <input type="email" placeholder="Enter your email" />
-            <button>Subscribe</button>
+            <div
+              style={{
+                display: "flex",
+                gap: 12,
+                justifyContent: "center",
+              }}
+            >
+              <input
+                type="email"
+                placeholder="Enter your email"
+                style={{
+                  padding: "14px 18px",
+                  borderRadius: 12,
+                  border: "none",
+                  width: "60%",
+                  outline: "none",
+                }}
+              />
+
+              <button
+                style={{
+                  padding: "14px 26px",
+                  borderRadius: 12,
+                  border: "none",
+                  background: "white",
+                  color: "#00bfa5",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                }}
+              >
+                Subscribe
+              </button>
+            </div>
           </div>
         </section>
       </Content>

@@ -1,12 +1,11 @@
 import React from "react";
-import { Card, Row, Col, Statistic, Table, Tag } from "antd";
+import { Card, Row, Col, Statistic, Table, Tag, Image } from "antd";
 import { Line, Pie } from "@ant-design/plots";
 import { DollarOutlined, RiseOutlined } from "@ant-design/icons";
 import "./Dashboard.css";
 
 const Dashboard = () => {
 
-  // 🔹 Revenue Data
   const revenueData = [
     { month: "Jan", revenue: 4000 },
     { month: "Feb", revenue: 3000 },
@@ -23,7 +22,6 @@ const Dashboard = () => {
     height: 280,
   };
 
-  // 🔹 Category Data
   const categoryData = [
     { type: "Shoes", value: 27 },
     { type: "Clothes", value: 25 },
@@ -46,6 +44,18 @@ const Dashboard = () => {
 
   // 🔹 Product Table
   const productColumns = [
+    {
+      title: "Image",
+      dataIndex: "image",
+      render: (image) => (
+        <Image
+          src={image}
+          width={50}
+          height={50}
+          style={{ objectFit: "cover", borderRadius: 8 }}
+        />
+      ),
+    },
     {
       title: "Product",
       dataIndex: "name",
@@ -80,6 +90,7 @@ const Dashboard = () => {
       category: "Shoes",
       price: "$120",
       stock: 20,
+      image: "https://static.nike.com/a/images/t_default/air-max-270.jpg",
     },
     {
       key: 2,
@@ -87,6 +98,7 @@ const Dashboard = () => {
       category: "Shoes",
       price: "$150",
       stock: 5,
+      image: "https://assets.adidas.com/images/w_600,f_auto,q_auto/ultraboost.jpg",
     },
     {
       key: 3,
@@ -94,13 +106,13 @@ const Dashboard = () => {
       category: "Shoes",
       price: "$110",
       stock: 18,
+      image: "https://images.puma.com/image/upload/rs-x.jpg",
     },
   ];
 
   return (
     <div className="dashboard-container">
 
-      {/* Stats */}
       <Row gutter={16}>
         <Col span={8}>
           <Card className="stat-card">
@@ -130,7 +142,6 @@ const Dashboard = () => {
         </Col>
       </Row>
 
-      {/* Charts */}
       <Row gutter={16} style={{ marginTop: 30 }}>
         <Col span={12}>
           <Card title="Monthly Revenue" className="chart-card">
@@ -145,7 +156,6 @@ const Dashboard = () => {
         </Col>
       </Row>
 
-      {/* Product Table */}
       <Card
         title="Recent Products"
         className="table-card"
