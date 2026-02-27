@@ -53,6 +53,32 @@ export default function Register() {
       return;
     }
 
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/api/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: form.firstName,
+          lastName: form.lastName,
+          email: form.email,
+          password: form.password,
+        }),
+      });
+
+      if (response.ok) {
+        message.success("Registration successful! Redirecting to login...");
+        navigate("/login");
+      } else {
+        message.error("Registration failed. Please try again.");
+      }
+    } catch (error) {
+      message.error("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <Header />
