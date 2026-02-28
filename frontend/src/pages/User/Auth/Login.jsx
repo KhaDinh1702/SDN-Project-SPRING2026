@@ -1,22 +1,29 @@
-import { useState } from "react";
-import { Button, message } from "antd";
-import { MailOutlined, LockOutlined, ArrowLeftOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { Button, message } from 'antd';
+import {
+  MailOutlined,
+  LockOutlined,
+  ArrowLeftOutlined,
+  EyeOutlined,
+  EyeInvisibleOutlined,
+} from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 
-import "./Login.css";
-import Header from "../../../components/Header/Header";
-import Footer from "../../../components/Footer/Footer";
-import { API_URL } from "../../../config";
-import { GoogleLogin } from "@react-oauth/google";
-import { useContext } from "react";
-import { CartContext } from "../../../context/CartContext";
+import './Login.css';
+import Header from '../../../components/Header/Header';
+import Footer from '../../../components/Footer/Footer';
+import { API_URL } from '../../../config';
+import { GoogleLogin } from '@react-oauth/google';
+import { useContext } from 'react';
+import { CartContext } from '../../../context/CartContext';
 
 export default function Login() {
   const navigate = useNavigate();
   const { reloadCart } = useContext(CartContext);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -29,33 +36,33 @@ export default function Login() {
     setLoading(true);
     try {
       const res = await fetch(`${API_URL}/api/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.message || "Login failed");
+        throw new Error(data.message || 'Login failed');
       }
 
       // Save token & user info
-      localStorage.setItem("accessToken", data.accessToken);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem('accessToken', data.accessToken);
+      localStorage.setItem('user', JSON.stringify(data.user));
       reloadCart();
 
-      message.success("Login successful!");
+      message.success('Login successful!');
 
       // Redirect based on role
-      if (data.user.role === "admin") {
-        navigate("/admin/dashboard");
+      if (data.user.role === 'admin') {
+        navigate('/admin/dashboard');
       } else {
-        navigate("/");
+        navigate('/');
       }
     } catch (err) {
-      message.error(err.message || "Login failed");
+      message.error(err.message || 'Login failed');
     } finally {
       setLoading(false);
     }
@@ -63,79 +70,101 @@ export default function Login() {
 
   return (
     <>
-      <div className="login-page">
+      <div className='login-page'>
         <Button
-          type="link"
+          type='link'
           icon={<ArrowLeftOutlined />}
-          onClick={() => navigate("/")}
-          style={{ position: 'absolute', top: 20, left: 20, fontSize: '16px', color: '#333' }}
+          onClick={() => navigate('/')}
+          style={{
+            position: 'absolute',
+            top: 20,
+            left: 20,
+            fontSize: '16px',
+            color: '#333',
+          }}
         >
           Back to Home
         </Button>
-        <div className="login-card">
+        <div className='login-card'>
           <h1>Welcome Back</h1>
-          <p className="subtitle">
-            Sign in to your Fresh Market account
-          </p>
+          <p className='subtitle'>Sign in to your Fresh Market account</p>
 
           {/* EMAIL */}
           <label>Email Address</label>
-          <div className={`input-box ${email && !isEmailValid ? "error" : ""}`}>
+          <div className={`input-box ${email && !isEmailValid ? 'error' : ''}`}>
             <MailOutlined />
             <input
-              type="email"
-              placeholder="you@example.com"
+              type='email'
+              placeholder='you@example.com'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           {email && !isEmailValid && (
-            <span className="error-text">Invalid email address</span>
+            <span className='error-text'>Invalid email address</span>
           )}
 
           {/* PASSWORD */}
           <label>Password</label>
           <div
-            className={`input-box ${password && !isPasswordValid ? "error" : ""
-              }`}
+            className={`input-box ${
+              password && !isPasswordValid ? 'error' : ''
+            }`}
           >
             <LockOutlined />
             <input
-              type="password"
-              placeholder="Enter your password"
+              type={showPassword ? 'text' : 'password'}
+              placeholder='Enter your password'
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            {showPassword ? (
+              <EyeOutlined
+                className='eye-icon'
+                onClick={() => setShowPassword(false)}
+              />
+            ) : (
+              <EyeInvisibleOutlined
+                className='eye-icon'
+                onClick={() => setShowPassword(true)}
+              />
+            )}
           </div>
           {password && !isPasswordValid && (
-            <span className="error-text">
+            <span className='error-text'>
               Password must be at least 6 characters
             </span>
           )}
 
           {/* OPTIONS */}
-          <div className="login-options">
-            <label className="remember">
-              <input type="checkbox" />
+          <div className='login-options'>
+            <label className='remember'>
+              <input type='checkbox' />
               Remember me
             </label>
-            <span className="forgot">Forgot Password?</span>
+            <span
+              className='forgot'
+              onClick={() => navigate('/forgot-password')}
+              style={{ cursor: 'pointer', color: '#1890ff' }}
+            >
+              Forgot Password?
+            </span>
           </div>
 
           {/* SIGN IN */}
           <Button
-            type="primary"
+            type='primary'
             block
             loading={loading}
             disabled={!isFormValid}
             onClick={handleLogin}
-            className="login-btn"
+            className='login-btn'
           >
             Sign In
           </Button>
 
           {/* DIVIDER */}
-          <div className="divider">
+          <div className='divider'>
             <span>or</span>
           </div>
 
@@ -144,9 +173,9 @@ export default function Login() {
             onSuccess={async (credentialResponse) => {
               try {
                 const res = await fetch(`${API_URL}/api/auth/google`, {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  credentials: "include",
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  credentials: 'include',
                   body: JSON.stringify({
                     credential: credentialResponse.credential,
                   }),
@@ -155,31 +184,29 @@ export default function Login() {
                 const data = await res.json();
 
                 if (!res.ok) {
-                  throw new Error(data.message || "Google login failed");
+                  throw new Error(data.message || 'Google login failed');
                 }
 
-                localStorage.setItem("accessToken", data.accessToken);
-                localStorage.setItem("user", JSON.stringify(data.user));
-                message.success("Login successful!");
+                localStorage.setItem('accessToken', data.accessToken);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                message.success('Login successful!');
 
-                if (data.user.role === "admin") {
-                  navigate("/admin/dashboard");
+                if (data.user.role === 'admin') {
+                  navigate('/admin/dashboard');
                 } else {
-                  navigate("/");
+                  navigate('/');
                 }
               } catch (err) {
-                message.error(err.message || "Google login failed");
+                message.error(err.message || 'Google login failed');
               }
             }}
-            onError={() => message.error("Google sign-in failed")}
+            onError={() => message.error('Google sign-in failed')}
           />
 
           {/* 👉 FIX CHỖ NÀY */}
-          <p className="signup-text">
-            Don't have an account?{" "}
-            <span onClick={() => navigate("/register")}>
-              Sign up here
-            </span>
+          <p className='signup-text'>
+            Don't have an account?{' '}
+            <span onClick={() => navigate('/register')}>Sign up here</span>
           </p>
         </div>
       </div>

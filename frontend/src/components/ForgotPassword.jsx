@@ -1,60 +1,89 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Button, message } from 'antd';
+import { MailOutlined } from '@ant-design/icons';
+import Header from './Header/Header';
+import Footer from './Footer/Footer';
 import { API_URL } from '../config';
+import './ForgotPassword.css';
+
 export default function ForgotPassword() {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState("");
+  const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
-    setStatus("");
     try {
       const res = await fetch(`${API_URL}/api/auth/forgot-password`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
-      
+
       const data = await res.json();
-      
+
       if (res.ok) {
-        setStatus(data.message || "Nếu email tồn tại, bạn sẽ nhận được hướng dẫn qua email.");
+        const msg =
+          data.message ||
+          'If the email exists, you will receive instructions by email.';
+        message.success(msg);
       } else {
-        setStatus(data.message || "Có lỗi, thử lại.");
+        const msg = data.message || 'Something went wrong. Please try again.';
+        message.error(msg);
       }
     } catch (err) {
-      setStatus("Lỗi kết nối.");
+      message.error('Connection error.');
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div style={{ maxWidth: 420, margin: "40px auto", padding: 20 }}>
-      <h2>Quên mật khẩu</h2>
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: 12 }}>
-          <input 
-            type="email"
-            placeholder="Email" 
-            value={email} 
-            onChange={e => setEmail(e.target.value)} 
-            required
-            style={{ width: "100%", padding: 8 }}
-          />
+    <>
+      <Header />
+      <div className='login-page'>
+        <div className='login-card'>
+          <h1>Forgot Password</h1>
+          <p className='subtitle'>
+            Enter your email and we'll send instructions to reset your password.
+          </p>
+
+          <label>Email Address</label>
+          <div
+            className={`input-box ${email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? 'error' : ''}`}
+          >
+            <MailOutlined />
+            <input
+              type='email'
+              placeholder='you@example.com'
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <div style={{ marginTop: 18 }}>
+            <Button
+              type='primary'
+              block
+              className='login-btn'
+              onClick={handleSubmit}
+              loading={loading}
+              disabled={!email}
+            >
+              Send Reset Link
+            </Button>
+          </div>
+
+          {status && <p style={{ marginTop: 12, color: '#666' }}>{status}</p>}
+
+          <p className='signup-text'>
+            <Link to='/login'>Back to login</Link>
+          </p>
         </div>
-        <button type="submit" disabled={loading}>
-          {loading ? "Đang gửi..." : "Gửi yêu cầu"}
-        </button>
-      </form>
-      
-      {status && <p style={{ marginTop: 12, color: "#666" }}>{status}</p>}
-      
-      <p style={{ marginTop: 12 }}>
-        <Link to="/login">Quay lại đăng nhập</Link>
-      </p>
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 }
