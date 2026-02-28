@@ -189,7 +189,7 @@ export default function Category() {
                   </div>
 
                   <div className="bottom">
-                    <span className="price">${item.price}</span>
+                    <span className="price">{(item.price * 25000).toLocaleString("vi-VN")} VND</span>
                     <button className="add-btn" onClick={() => addToCart(item)}>Add</button>
                   </div>
                 </div>

@@ -16,6 +16,8 @@ const Profile = lazy(() => import('./pages/User/Profile/Profile'));
 const Cart = lazy(() => import('./pages/User/Cart/Cart'));
 const ForgotPassword = lazy(() => import('./components/ForgotPassword'));
 const ResetPassword = lazy(() => import('./pages/User/Auth/ResetPassword'));
+const PaymentResult = lazy(() => import("./pages/User/Payment/PaymentResult"));
+const PurchaseHistory = lazy(() => import("./pages/User/PurchaseHistory/PurchaseHistory"));
 
 // Admin pages (lazy loaded)
 const AdminLayout = lazy(() => import('./pages/Admin/AdminLayout/AdminLayout'));
@@ -46,50 +48,16 @@ function App() {
       >
         <Routes>
           {/* User Routes */}
-          <Route
-            path='/'
-            element={<HomePage />}
-          />
-          <Route
-            path='/products/:id'
-            element={<ProductDetail />}
-          />
-          <Route
-            path='/login'
-            element={<Login />}
-          />
-          <Route
-            path='/forgot-password'
-            element={<ForgotPassword />}
-          />
-          <Route
-            path='/reset-password'
-            element={<ResetPassword />}
-          />
-          <Route
-            path='/register'
-            element={<Register />}
-          />
-          <Route
-            path='/category'
-            element={<Category />}
-          />
-          <Route
-            path='/category/:id'
-            element={<Category />}
-          />
-          <Route
-            path='/ingredients'
-            element={<Ingredients />}
-          />
-          <Route
-            path='/profile'
-            element={<Profile />}
-          />
-          <Route
-            path='/cart'
-            element={<Cart />}
-          />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/products/:id" element={<ProductDetail />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/category" element={<Category />} />
+          <Route path="/category/:id" element={<Category />} />
+          <Route path="/ingredients" element={<Ingredients />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/cart" element={<Cart />} />
+
 
           {/* Admin Routes with Layout */}
           <Route

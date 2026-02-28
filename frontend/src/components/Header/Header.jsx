@@ -54,6 +54,12 @@ export default function Header() {
       onClick: () => navigate("/profile"),
     },
     {
+      key: "history",
+      icon: <ShoppingCartOutlined />,
+      label: "Purchase History",
+      onClick: () => navigate("/history"),
+    },
+    {
       type: "divider",
     },
     {

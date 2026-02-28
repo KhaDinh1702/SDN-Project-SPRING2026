@@ -92,7 +92,7 @@ const Products = () => {
     setEditingProduct(record);
     form.setFieldsValue({
       name: record.name,
-      price: record.price,
+      price: record.price * 25000,
       description: record.description,
       category: record.category?._id || record.category,
       is_active: record.is_active !== false,
@@ -126,11 +126,17 @@ const Products = () => {
       // Append text/number fields — skip undefined/null
       Object.entries(values).forEach(([key, val]) => {
         if (val === undefined || val === null) return;
+
+        let finalVal = val;
+        if (key === "price") {
+          finalVal = val / 25000;
+        }
+
         // Convert boolean to string explicitly for FormData
-        if (typeof val === "boolean") {
-          formData.append(key, val.toString());
+        if (typeof finalVal === "boolean") {
+          formData.append(key, finalVal.toString());
         } else {
-          formData.append(key, val);
+          formData.append(key, finalVal);
         }
       });
 
@@ -190,7 +196,7 @@ const Products = () => {
     {
       title: "Price (VND)",
       dataIndex: "price",
-      render: (price) => (price || 0).toLocaleString(),
+      render: (price) => (price * 25000 || 0).toLocaleString("vi-VN"),
     },
     {
       title: "Stock",

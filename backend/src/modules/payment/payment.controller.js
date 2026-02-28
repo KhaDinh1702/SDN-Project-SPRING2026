@@ -146,6 +146,10 @@ export const vnpayIPN = async (req, res) => {
 
 
         if (expectedAmount !== paidAmount) {
+            return res.status(200).json({
+                RspCode: '04',
+                Message: 'Invalid amount',
+            });
         }
         await updateTransactionStatusService(vnp_TxnRef, vnp_ResponseCode);
         return res.status(200).json({
