@@ -238,12 +238,25 @@ class AuthService {
       to: user.email,
       subject: 'Reset Your Password',
       html: `
-      <h3>Password Reset Request</h3>
-      <p>You requested to reset your password.</p>
-      <p>Click the link below (valid for 1 hour):</p>
-      <a href="${resetLink}">${resetLink}</a>
-      <p>If you did not request this, please ignore this email.</p>
-    `,
+    <h3>Password Reset Request</h3>
+    <p>You requested to reset your password.</p>
+    <p>Click the button below (valid for 1 hour):</p>
+
+    <a href="${resetLink}"
+       style="
+         display:inline-block;
+         padding:10px 20px;
+         background-color:#0f4d00;
+         color:#ffffff;
+         text-decoration:none;
+         border-radius:6px;
+         font-weight:600;
+       ">
+       Reset Password
+    </a>
+
+    <p>If you did not request this, please ignore this email.</p>
+  `,
     });
 
     // DEV ONLY (để test Postman)
@@ -253,8 +266,9 @@ class AuthService {
     return null;
   }
 
-  async resetPassword(payload) {
-    const { token, password } = payload;
+  async resetPassword(body, query) {
+    const { token } = query;
+    const { password } = body;
 
     if (!token || !password) {
       throw new ErrorWithStatus({

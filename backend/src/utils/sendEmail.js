@@ -1,23 +1,24 @@
-import nodemailer from 'nodemailer';
+import SibApiV3Sdk from 'sib-api-v3-sdk';
 import 'dotenv/config';
 
-const transporter = nodemailer.createTransport({
-  host: 'sandbox.smtp.mailtrap.io',
-  port: 2525,
-  auth: {
-    user: process.env.MAILTRAP_USER,
-    pass: process.env.MAILTRAP_PASS,
-  },
-});
+const defaultClient = SibApiV3Sdk.ApiClient.instance;
+
+const apiKey = defaultClient.authentications['api-key'];
+apiKey.apiKey = process.env.BREVO_API_KEY;
+
+const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
 export const sendEmail = async ({ to, subject, html }) => {
-  console.log('MAILTRAP_USER:', process.env.MAILTRAP_USER);
-  console.log('MAILTRAP_PASS:', process.env.MAILTRAP_PASS ? 'OK' : 'MISSING');
+  try {
+    await apiInstance.sendTransacEmail({
+      sender: { email: 'nmchau263@gmail.com' }, // phải verify trong Brevo
+      to: [{ email: to }],
+      subject,
+      htmlContent: html,
+    });
 
-  await transporter.sendMail({
-    from: '"FreshMart Support" <support@freshmart.test>',
-    to,
-    subject,
-    html,
-  });
+    console.log('Email sent successfully');
+  } catch (error) {
+    console.error(error.response?.body || error.message);
+  }
 };
