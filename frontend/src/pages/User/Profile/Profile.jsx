@@ -15,6 +15,7 @@ import { API_URL } from "../../../config";
 export default function Profile() {
     const navigate = useNavigate();
     const [profile, setProfile] = useState(null);
+    const [purchaseSummary, setPurchaseSummary] = useState(null);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [editing, setEditing] = useState(false);
@@ -57,6 +58,18 @@ export default function Profile() {
                 username: data.data.username || "",
                 phone: data.data.phone || "",
             });
+
+            try {
+                const summaryRes = await fetch(`${API_URL}/api/orders/user/${data.data._id}/summary`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const summaryData = await summaryRes.json();
+                if (summaryData.success) {
+                    setPurchaseSummary(summaryData.data);
+                }
+            } catch (summaryErr) {
+                console.error("Failed to fetch purchase summary", summaryErr);
+            }
         } catch (err) {
             message.error(err.message || "Failed to load profile");
             if (err.message?.includes("Unauthorized") || err.message?.includes("token")) {
@@ -183,6 +196,24 @@ export default function Profile() {
                             </span>
                         </div>
                     </div>
+
+                    {/* PURCHASE HISTORY SUMMARY */}
+                    {purchaseSummary && (
+                        <div className="purchase-summary">
+                            <div className="summary-item">
+                                <strong>{(purchaseSummary.total_spent || 0).toLocaleString("vi-VN")} VND</strong>
+                                <span>Total Spent</span>
+                            </div>
+                            <div className="summary-item">
+                                <strong>{purchaseSummary.total_items}</strong>
+                                <span>Items Bought</span>
+                            </div>
+                            <div className="summary-item">
+                                <strong>{purchaseSummary.total_orders}</strong>
+                                <span>Orders</span>
+                            </div>
+                        </div>
+                    )}
 
                     {/* FORM */}
                     <div className="profile-row">

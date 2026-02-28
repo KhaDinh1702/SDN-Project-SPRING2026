@@ -149,7 +149,7 @@ export default function ProductDetail() {
             </div>
 
             <div className="price">
-              ${product.price}
+              {(product.price * 25000).toLocaleString("vi-VN")} VND
               <span className="stock">{product.stock_quantity || 0} in stock</span>
             </div>
 

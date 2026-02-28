@@ -2,7 +2,9 @@ import {
   updateOrderStatusService,
   createOrderService,
   getAllOrdersService,
-  getOrdersByUserIdService
+  getOrdersByUserIdService,
+  getUserPurchaseSummaryService,
+  getUserPurchaseHistoryService
 }
   from './order.service.js';
 
@@ -63,6 +65,34 @@ export const getOrdersByUserId = async (req, res) => {
     const userId = req.params.userId;
     const orders = await getOrdersByUserIdService(userId);
     res.json({ success: true, data: orders });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+/**
+ * GET /api/orders/user/:userId/summary
+ * Get purchase summary (total spent and total items) for a user
+ */
+export const getUserPurchaseSummary = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const summary = await getUserPurchaseSummaryService(userId);
+    res.json({ success: true, data: summary });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+/**
+ * GET /api/orders/user/:userId/history
+ * Get detailed purchase history (with products) for a user
+ */
+export const getUserPurchaseHistory = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const history = await getUserPurchaseHistoryService(userId);
+    res.json({ success: true, data: history });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

@@ -134,3 +134,33 @@
     font-size: 12px;
     color: #999;
 }
+
+/* PURCHASE SUMMARY */
+.purchase-summary {
+    display: flex;
+    justify-content: space-around;
+    background: #fdfdfd;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 24px;
+}
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.summary-item strong {
+    font-size: 16px;
+    color: #0f4d00;
+    margin-bottom: 4px;
+}
+
+.summary-item span {
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+    font-weight: 600;
+}
