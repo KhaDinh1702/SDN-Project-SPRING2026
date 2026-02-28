@@ -50,7 +50,7 @@ export const forgotPasswordController = async (req, res) => {
 };
 
 export const resetPasswordController = async (req, res) => {
-  const result = await authService.resetPassword(req.body);
+  await authService.resetPassword(req.body, req.query);
 
   return res.status(200).json({
     message: 'Password has been reset successfully',
