@@ -33,7 +33,7 @@ export default function ForgotPassword() {
         message.error(msg);
       }
     } catch (err) {
-      message.error('Connection error.');
+      message.error(err.message || 'Network error. Please try again.');
     } finally {
       setLoading(false);
     }
