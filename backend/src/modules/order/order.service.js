@@ -70,7 +70,26 @@ export const createOrderService = async (orderData) => {
  * @returns {Promise<Array>} List of all orders
  */
 export const getAllOrdersService = async () => {
-	return await Order.find({});
+	const orders = await Order.find({})
+		.populate('user_id', 'name email fullName')
+		.sort({ created_at: -1 })
+		.lean();
+
+	// Attach populated products to each order for admin view
+	const history = await Promise.all(
+		orders.map(async (order) => {
+			const items = await OrderProduct.find({ order_id: order._id })
+				.populate('product_id', 'name images price')
+				.lean();
+
+			return {
+				...order,
+				items,
+			};
+		})
+	);
+
+	return history;
 };
 
 /**

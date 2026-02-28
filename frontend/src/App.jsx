@@ -31,6 +31,17 @@ const AdminCategory = lazy(
   () => import('./pages/Admin/AdminCategory/AdminCategory'),
 );
 
+// Manager pages (lazy loaded)
+const ManagerLayout = lazy(() => import('./pages/Manager/ManagerLayout/ManagerLayout'));
+const ManagerDashboard = lazy(() => import('./pages/Manager/Dashboard/Dashboard'));
+const ManagerProducts = lazy(() => import('./pages/Manager/Products/Products'));
+const ManagerInventory = lazy(() => import('./pages/Manager/Inventory/Inventory'));
+
+// Staff pages (lazy loaded)
+const StaffLayout = lazy(() => import('./pages/Staff/StaffLayout/StaffLayout'));
+const StaffDashboard = lazy(() => import('./pages/Staff/Dashboard/Dashboard'));
+const StaffOrders = lazy(() => import('./pages/Staff/Orders/Orders'));
+
 function App() {
   return (
     <BrowserRouter>
@@ -123,6 +134,48 @@ function App() {
             <Route
               path='categoryadmin'
               element={<AdminCategory />}
+            />
+          </Route>
+
+          {/* Manager Routes with Layout */}
+          <Route
+            path='/manager'
+            element={<ManagerLayout />}
+          >
+            <Route
+              index
+              element={<ManagerDashboard />}
+            />
+            <Route
+              path='dashboard'
+              element={<ManagerDashboard />}
+            />
+            <Route
+              path='products'
+              element={<ManagerProducts />}
+            />
+            <Route
+              path='inventory'
+              element={<ManagerInventory />}
+            />
+          </Route>
+
+          {/* Staff Routes with Layout */}
+          <Route
+            path='/staff'
+            element={<StaffLayout />}
+          >
+            <Route
+              index
+              element={<StaffDashboard />}
+            />
+            <Route
+              path='dashboard'
+              element={<StaffDashboard />}
+            />
+            <Route
+              path='orders'
+              element={<StaffOrders />}
             />
           </Route>
         </Routes>

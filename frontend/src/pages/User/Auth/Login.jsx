@@ -58,6 +58,10 @@ export default function Login() {
       // Redirect based on role
       if (data.user.role === 'admin') {
         navigate('/admin/dashboard');
+      } else if (data.user.role === 'manager') {
+        navigate('/manager/dashboard');
+      } else if (data.user.role === 'staff') {
+        navigate('/staff/dashboard');
       } else {
         navigate('/');
       }
@@ -107,9 +111,8 @@ export default function Login() {
           {/* PASSWORD */}
           <label>Password</label>
           <div
-            className={`input-box ${
-              password && !isPasswordValid ? 'error' : ''
-            }`}
+            className={`input-box ${password && !isPasswordValid ? 'error' : ''
+              }`}
           >
             <LockOutlined />
             <input
@@ -193,6 +196,10 @@ export default function Login() {
 
                 if (data.user.role === 'admin') {
                   navigate('/admin/dashboard');
+                } else if (data.user.role === 'manager') {
+                  navigate('/manager/dashboard');
+                } else if (data.user.role === 'staff') {
+                  navigate('/staff/dashboard');
                 } else {
                   navigate('/');
                 }
