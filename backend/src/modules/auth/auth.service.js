@@ -307,7 +307,6 @@ class AuthService {
         username,
         first_name: given_name || '',
         last_name: family_name || '',
-        password_hash: null,
         role_id: customerRole?._id,
         google_id,
         avatar_url: picture || null,
