@@ -81,3 +81,81 @@ export const getAllOrdersService = async () => {
 export const getOrdersByUserIdService = async (userId) => {
 	return await Order.find({ user_id: userId });
 };
+
+/**
+ * Get purchase summary for a specific user (total amount spent, total items bought, total valid orders)
+ * Only considers successfully paid/completed orders depending on your business logic.
+ * For now, excluding "Cancelled" orders from the total history.
+ * @param {string} userId - The user's ObjectId
+ * @returns {Promise<Object>} Purchase summary
+ */
+export const getUserPurchaseSummaryService = async (userId) => {
+	const mongoose = (await import('mongoose')).default;
+	const userObjectId = new mongoose.Types.ObjectId(String(userId));
+
+	// 1. Find all non-cancelled orders for user
+	const validOrders = await Order.find({
+		user_id: userObjectId,
+		order_status: { $ne: 'Cancelled' }
+	});
+
+	if (!validOrders.length) {
+		return { total_spent: 0, total_items: 0, total_orders: 0 };
+	}
+
+	const orderIds = validOrders.map(order => order._id);
+
+	// 2. Aggregate total spent directly from valid orders
+	const totalSpent = validOrders.reduce((sum, order) => sum + (order.total_amount || 0), 0);
+
+	// 3. Aggregate total items from OrderProduct
+	const itemsAggregation = await OrderProduct.aggregate([
+		{ $match: { order_id: { $in: orderIds } } },
+		{
+			$group: {
+				_id: null,
+				totalQuantity: { $sum: "$quantity" }
+			}
+		}
+	]);
+
+	const totalItems = itemsAggregation.length > 0 ? itemsAggregation[0].totalQuantity : 0;
+
+	return {
+		total_spent: totalSpent,
+		total_items: totalItems,
+		total_orders: validOrders.length
+	};
+};
+
+/**
+ * Get detailed purchase history for a specific user.
+ * Returns order details along with populated order items (product details).
+ * @param {string} userId - The user's ObjectId
+ * @returns {Promise<Array>} List of user orders with products attached
+ */
+export const getUserPurchaseHistoryService = async (userId) => {
+	const mongoose = (await import('mongoose')).default;
+	const userObjectId = new mongoose.Types.ObjectId(String(userId));
+
+	// Fetch all orders for this user, sorted by most recent
+	const orders = await Order.find({ user_id: userObjectId })
+		.sort({ created_at: -1 })
+		.lean();
+
+	// Attach populated products to each order
+	const history = await Promise.all(
+		orders.map(async (order) => {
+			const items = await OrderProduct.find({ order_id: order._id })
+				.populate('product_id', 'name images price') // Load product details
+				.lean();
+
+			return {
+				...order,
+				items,
+			};
+		})
+	);
+
+	return history;
+};

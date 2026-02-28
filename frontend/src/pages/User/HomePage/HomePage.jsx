@@ -147,7 +147,7 @@ export default function HomePage() {
                   </div>
 
                   <div className="product-footer">
-                    <span className="product-price">${p.price}</span>
+                    <span className="product-price">{(p.price * 25000).toLocaleString("vi-VN")} VND</span>
 
                     <Button
                       type="primary"

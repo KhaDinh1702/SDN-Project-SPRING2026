@@ -3,7 +3,9 @@ import {
     createOrder,
     getAllOrders,
     getOrdersByUserId,
-    updateOrderStatus
+    updateOrderStatus,
+    getUserPurchaseSummary,
+    getUserPurchaseHistory
 }
     from './order.controller.js';
 
@@ -36,5 +38,19 @@ orderRouter.get('/', getAllOrders);
  * @access Private (later)
  */
 orderRouter.get('/user/:userId', getOrdersByUserId);
+
+/**
+ * @route GET /api/orders/user/:userId/summary
+ * @desc Get purchase summary (total spent, items) for a customer
+ * @access Private (later)
+ */
+orderRouter.get('/user/:userId/summary', getUserPurchaseSummary);
+
+/**
+ * @route GET /api/orders/user/:userId/history
+ * @desc Get detailed purchase history for a customer
+ * @access Private (later)
+ */
+orderRouter.get('/user/:userId/history', getUserPurchaseHistory);
 
 export default orderRouter;

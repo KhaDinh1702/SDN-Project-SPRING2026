@@ -147,6 +147,14 @@ const Orders = () => {
       render: (val) => (val || 0).toLocaleString("vi-VN") + " đ",
     },
     {
+      title: "Payment",
+      dataIndex: "payment_status",
+      render: (status) => {
+        let color = status === "Paid" ? "green" : "volcano";
+        return <Tag color={color}>{status || "Unpaid"}</Tag>;
+      },
+    },
+    {
       title: "Status",
       render: (_, record) => (
         <Select
@@ -247,6 +255,12 @@ const Orders = () => {
               <b>Status:</b>{" "}
               <Tag color={getStatusColor(selectedOrder.order_status)}>
                 {selectedOrder.order_status}
+              </Tag>
+            </p>
+            <p>
+              <b>Payment:</b>{" "}
+              <Tag color={selectedOrder.payment_status === "Paid" ? "green" : "volcano"}>
+                {selectedOrder.payment_status || "Unpaid"}
               </Tag>
             </p>
             <p>
