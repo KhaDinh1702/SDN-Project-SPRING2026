@@ -1,0 +1,118 @@
+/* Blog Layout CSS */
+.blog-page {
+    font-family: 'Inter', sans-serif;
+    background-color: #f9fdfa;
+    min-height: 100vh;
+}
+
+/* BLOG HEADER */
+.blog-header {
+    background: linear-gradient(rgba(39, 174, 96, 0.8), rgba(39, 174, 96, 0.8)),
+        url('https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&q=80&w=2000') no-repeat center center / cover;
+    padding: 80px 20px;
+    text-align: center;
+    color: white;
+}
+
+.blog-header-content h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.blog-header-content p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+.blog-search {
+    display: flex;
+    justify-content: center;
+}
+
+.blog-search .ant-input-affix-wrapper {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+/* BLOG GRID */
+.blog-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px;
+}
+
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 40px;
+}
+
+.blog-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05) !important;
+    border: none !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.blog-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+.blog-card-img {
+    height: 220px;
+    object-fit: cover;
+}
+
+.blog-meta {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+}
+
+.blog-meta .dot {
+    margin: 0 8px;
+}
+
+.blog-card .ant-card-meta-title {
+    font-size: 1.25rem;
+    color: #2c3e50;
+    white-space: normal;
+    line-height: 1.4;
+    margin-bottom: 10px;
+}
+
+.blog-excerpt {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.read-more-btn {
+    padding: 0;
+    color: var(--primary-color, #27ae60);
+    font-weight: 600;
+}
+
+.read-more-btn:hover {
+    color: #1e8449;
+}
+
+/* PAGINATION */
+.blog-pagination {
+    text-align: center;
+    margin-top: 60px;
+}
+
+@media (max-width: 768px) {
+    .blog-header-content h1 {
+        font-size: 2.2rem;
+    }
+}

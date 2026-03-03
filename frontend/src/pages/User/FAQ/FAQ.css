@@ -1,0 +1,113 @@
+/* FAQ Layout CSS */
+.faq-page {
+    font-family: 'Inter', sans-serif;
+    background-color: #f9fdfa;
+    min-height: 100vh;
+}
+
+/* HEADER */
+.faq-header {
+    background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.8)),
+        url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=2000') no-repeat center center / cover;
+    padding: 80px 20px;
+    text-align: center;
+    color: white;
+}
+
+.faq-header h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.faq-header p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+/* CONTAINER */
+.faq-container {
+    max-width: 900px;
+    margin: -40px auto 60px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    padding: 40px;
+    position: relative;
+    z-index: 10;
+}
+
+.faq-intro {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.faq-icon {
+    font-size: 3.5rem;
+    color: #27ae60;
+    margin-bottom: 15px;
+}
+
+.faq-intro h2 {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.faq-intro p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+/* COLLAPSE STYLES */
+.faq-category-section {
+    margin-bottom: 40px;
+}
+
+.category-title {
+    font-size: 1.5rem;
+    color: #27ae60;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #eef2f5;
+}
+
+.faq-collapse {
+    background: transparent;
+}
+
+.faq-collapse .ant-collapse-item {
+    border-bottom: 1px solid #f0f0f0 !important;
+    margin-bottom: 10px;
+}
+
+.faq-question {
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.faq-answer {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+    padding: 0 10px 10px 10px;
+}
+
+.ant-collapse-expand-icon {
+    color: #27ae60;
+}
+
+@media (max-width: 768px) {
+    .faq-container {
+        margin: 0;
+        border-radius: 0;
+        padding: 30px 20px;
+        box-shadow: none;
+    }
+
+    .faq-header h1 {
+        font-size: 2.2rem;
+    }
+}
