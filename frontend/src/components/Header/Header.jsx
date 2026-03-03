@@ -84,6 +84,8 @@ export default function Header() {
         <a onClick={() => navigate("/category")}>Categories</a>
         <a onClick={() => navigate("/ingredients")}>Food</a>
         <a onClick={() => navigate("/about")}>About</a>
+        <a onClick={() => navigate("/blog")}>Blog</a>
+        <a onClick={() => navigate("/contact")}>Contact</a>
       </nav>
 
       {/* RIGHT */}
