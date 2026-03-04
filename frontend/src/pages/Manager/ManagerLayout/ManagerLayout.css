@@ -1,0 +1,63 @@
+/* Layout tổng */
+.manager-layout {
+  min-height: 100vh;
+  width: 100%;
+}
+
+.ant-layout {
+  min-height: 100vh;
+}
+
+/* Sidebar xanh đậm */
+.sidebar {
+  background: #0b3d2e !important;
+  /* xanh đậm */
+}
+
+/* Logo */
+.logo {
+  color: white;
+  font-size: 20px;
+  padding: 20px;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+/* Menu */
+.menu {
+  background: #0b3d2e !important;
+}
+
+.menu .ant-menu-item {
+  margin: 4px 8px;
+  border-radius: 8px;
+}
+
+.menu .ant-menu-item-selected {
+  background-color: #1f7a5c !important;
+}
+
+/* Header trắng */
+.manager-header {
+  background: white !important;
+  color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Content nền trắng */
+.manager-content {
+  padding: 24px;
+  background: #f5f7fa;
+  min-height: calc(100vh - 64px);
+}
+
+/* User dropdown */
+.user-dropdown {
+  cursor: pointer;
+  font-weight: 500;
+}

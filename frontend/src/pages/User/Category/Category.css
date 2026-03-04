@@ -1,0 +1,163 @@
+.category-container {
+  padding: 60px 120px;
+  background: #f5efe7;
+  min-height: 100vh;
+}
+
+/* HERO */
+
+.category-hero {
+  background: linear-gradient(135deg, #e7efe9, #d9e6df);
+  padding: 60px;
+  border-radius: 24px;
+  margin-bottom: 50px;
+}
+
+.category-hero h1 {
+  font-size: 48px;
+  font-weight: 700;
+  margin: 10px 0;
+}
+
+.category-hero p {
+  color: #555;
+}
+
+.back {
+  cursor: pointer;
+  color: #14532d;
+  font-weight: 500;
+}
+
+/* FILTER AREA */
+
+.category-top {
+  display: flex;
+  justify-content: center;   /* đổi từ space-between thành center */
+  align-items: center;
+  gap: 40px;                 /* tạo khoảng cách giữa filter và sort */
+  margin-bottom: 40px;
+  flex-wrap: wrap;           /* tránh bể layout khi màn hình nhỏ */
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.filter-btn {
+  padding: 10px 26px;
+  border-radius: 999px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.filter-btn:hover {
+  background: #14532d;
+  color: white;
+  border-color: #14532d;
+}
+
+.active-btn {
+  background: #14532d;
+  color: white;
+  border-color: #14532d;
+}
+
+.sort-select {
+  width: 220px;
+}
+
+
+/* PRODUCT GRID */
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+
+.product-card {
+  background: white;
+  border-radius: 22px;
+  overflow: hidden;
+  position: relative;
+  transition: 0.35s ease;
+  border: 1px solid #eee;
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
+}
+
+.product-card img {
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+}
+
+.product-info {
+  padding: 22px;
+}
+
+.category-label {
+  font-size: 12px;
+  color: #14532d;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.rating {
+  color: #f59e0b;
+  font-size: 14px;
+  margin: 6px 0;
+}
+
+.rating span {
+  color: #777;
+  margin-left: 6px;
+}
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #14532d;
+}
+
+.add-btn {
+  padding: 8px 20px;
+  border-radius: 999px;
+  border: none;
+  background: #14532d;
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.add-btn:hover {
+  background: #0f3e22;
+}
+
+.badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: crimson;
+  color: white;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}

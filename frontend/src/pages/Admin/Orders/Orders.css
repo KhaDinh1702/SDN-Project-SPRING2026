@@ -1,0 +1,105 @@
+.orders-page {
+  padding: 24px;
+  background: #f5f7fa;
+  min-height: 100vh;
+}
+
+/* ===== Title ===== */
+.page-title {
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #111;
+}
+
+/* ===== Stats ===== */
+.stats-row {
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  border-radius: 12px;
+  text-align: center;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eee;
+}
+
+.stat-card h3 {
+  font-size: 22px;
+  margin-bottom: 4px;
+  color: #111;
+}
+
+.stat-card p {
+  color: #666;
+}
+
+/* ===== Filter Bar ===== */
+.filter-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 16px;
+  border: 1px solid #eee;
+}
+
+/* ===== Table Card ===== */
+.table-card {
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #eee;
+}
+
+/* ===== Email text ===== */
+.email {
+  color: #888;
+  font-size: 13px;
+}
+
+/* ===== Status ===== */
+.status-tag {
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* ===== View Link ===== */
+.view-link {
+  color: #1677ff;
+  font-weight: 500;
+}
+
+/* ===== Remove dark theme completely ===== */
+.orders-container {
+  background: #ffffff;
+  color: #111;
+  padding: 24px;
+  min-height: 100vh;
+}
+
+/* ===== Summary Cards ===== */
+.summary-card {
+  background: #ffffff;
+  border: 1px solid #eee;
+  color: #111;
+  font-size: 16px;
+  border-radius: 12px;
+  text-align: center;
+  padding: 20px;
+}
+
+.summary-card.yellow b { color: #f59e0b; }
+.summary-card.blue b { color: #3b82f6; }
+.summary-card.delivered b {
+  color: #22c55e;
+}
+
+/* ===== Top bar ===== */
+.top-bar {
+  display: flex;
+  gap: 16px;
+  margin: 20px 0;
+}

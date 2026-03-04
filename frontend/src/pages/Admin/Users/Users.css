@@ -1,0 +1,66 @@
+.users-container {
+  padding: 30px;
+  background: #f5f6fa;
+  min-height: 100vh;
+}
+
+.stats-row {
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.stat-card h4 {
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.stat-card h2 {
+  margin: 0;
+}
+
+.table-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.user-avatar {
+  background: #d9f7be;
+  color: #389e0d;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.green {
+  background: #52c41a;
+}
+
+.gray {
+  background: #999;
+}

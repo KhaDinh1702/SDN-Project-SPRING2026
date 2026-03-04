@@ -1,0 +1,30 @@
+import { z } from 'zod';
+import { USERS_MESSAGES } from '../constants/messages.js';
+
+export const registerSchema = z.object({
+  email: z.email(USERS_MESSAGES.EMAIL_IS_REQUIRED),
+
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+
+  username: z.string().min(3, 'Username must be at least 3 characters'),
+
+  first_name: z.string().min(1, 'First name is required'),
+
+  last_name: z.string().min(1, 'Last name is required'),
+
+  phone: z.string().optional(),
+});
+
+export const loginSchema = z.object({
+  email: z.email(USERS_MESSAGES.EMAIL_IS_REQUIRED),
+
+  password: z.string().min(1, 'Password is required'),
+});
+
+export const forgotPasswordSchema = z.object({
+  email: z.email(USERS_MESSAGES.EMAIL_IS_REQUIRED),
+});
+
+export const resetPasswordSchema = z.object({
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+});

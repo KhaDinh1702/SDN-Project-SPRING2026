@@ -1,0 +1,271 @@
+/* ================= PRODUCT DETAIL ================= */
+
+.product-detail {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 120px 80px;
+}
+
+/* ================= BACK BUTTON ================= */
+
+.back-btn {
+  background: none;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  color: #333;
+  margin-bottom: 32px;
+  margin-left: 4px;
+}
+
+/* ================= GRID ================= */
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr; /* trái: ảnh + review | phải: info */
+  gap: 64px;
+  align-items: flex-start;
+}
+
+/* ================= LEFT COLUMN ================= */
+
+.left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 48px; /* cách ảnh với review */
+}
+
+/* ================= IMAGE ================= */
+
+.product-detail-image img {
+  width: 100%;
+  height: 660px;
+  object-fit: cover;
+  border-radius: 22px;
+}
+
+/* ================= FEEDBACK SECTION ================= */
+.feedback-section {
+  background: #f8f6ef;
+  padding: 24px;
+  border-radius: 18px;
+  margin-top: 36px; /* cách ảnh trên ra */
+}
+
+.feedback-section h3 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+/* USER INFO (avatar + name) */
+.user-info {
+  display: flex;
+  align-items: center; /* căn giữa avatar với tên */
+  gap: 14px;           /* cách avatar và tên */
+  margin-bottom: 12px;
+}
+
+.user-info img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%; /* avatar tròn */
+  object-fit: cover;
+}
+
+.user-info span {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* STAR INPUT */
+.feedback-section .ant-rate {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+/* FIX textarea tràn khung */
+.feedback-section textarea {
+  box-sizing: border-box;   /* 🔥 QUAN TRỌNG */
+  width: 100%;
+  max-width: 100%;
+  height: 110px;
+
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+
+  font-size: 14px;
+  resize: none;
+  display: block;
+  margin-bottom: 16px;
+}
+
+
+.feedback-section textarea:focus {
+  outline: none;
+  border-color: #1677ff;
+}
+
+/* SUBMIT BUTTON */
+.feedback-section .ant-btn {
+  height: 46px;
+  border-radius: 14px;
+  font-weight: 600;
+}
+
+/* ================= REVIEW LIST ================= */
+.review-list {
+  margin-top: 40px;
+}
+
+.review-list h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.no-review {
+  color: #888;
+  font-size: 14px;
+}
+
+/* REVIEW ITEM */
+.review-item {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+/* REVIEW HEADER */
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 6px;
+}
+
+.review-header img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.review-header strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* STAR DISPLAY */
+.review-header .ant-rate {
+  font-size: 14px;
+}
+
+/* REVIEW COMMENT */
+.review-item p {
+  font-size: 14px;
+  color: #444;
+  margin: 8px 0;
+}
+
+/* REVIEW DATE */
+.review-date {
+  font-size: 12px;
+  color: #999;
+}
+
+/* ================= RIGHT INFO ================= */
+
+.detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: 16px;
+}
+
+/* CATEGORY */
+.detail-info .category {
+  color: #2e7d32;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+/* TITLE */
+.product-detail h1 {
+  font-family: "Playfair Display", serif;
+  font-size: 42px;
+  font-weight: 700;
+  margin: 4px 0 8px;
+}
+
+/* RATING */
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rating .review {
+  font-size: 14px;
+  color: #777;
+}
+
+/* PRICE */
+.price {
+  font-size: 36px;
+  font-weight: 700;
+  margin: 12px 0;
+}
+
+.price .stock {
+  font-size: 14px;
+  color: #2e7d32;
+  margin-left: 12px;
+  font-weight: 500;
+}
+
+/* DESCRIPTION */
+.description {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #555;
+}
+
+/* INFO BOX */
+.info-box {
+  background: #f3efe6;
+  padding: 16px 20px;
+  border-radius: 14px;
+  margin: 20px 0;
+}
+
+/* NUTRITION */
+.nutrition {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nutrition div {
+  background: #faf7f1;
+  padding: 14px 18px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+/* ADD TO CART */
+.product-detail .ant-btn-primary {
+  background: #0a3d00;
+  border-color: #0a3d00;
+  height: 52px;
+  border-radius: 14px;
+  font-weight: 600;
+  width: 100%;
+}

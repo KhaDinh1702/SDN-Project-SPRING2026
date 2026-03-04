@@ -1,0 +1,73 @@
+.admin-category {
+  padding: 40px;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.header p {
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* Table */
+
+.ant-table {
+  border-radius: 16px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+}
+
+.ant-table-thead > tr > th {
+  background: #f1f5f9 !important;
+  font-weight: 600;
+}
+
+.ant-table-row:hover {
+  background: #f9fafb !important;
+}
+
+/* Category cell */
+
+.category-cell {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.category-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+}
+
+.category-name {
+  font-weight: 600;
+}
+
+.category-desc {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.count {
+  font-weight: 600;
+}
