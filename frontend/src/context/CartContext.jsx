@@ -6,6 +6,7 @@ export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
     const [cartItems, setCartItems] = useState([]);
+    const [cartLoaded, setCartLoaded] = useState(false);
 
     const getUserData = () => {
         const stored = localStorage.getItem("user");
@@ -33,6 +34,7 @@ export const CartProvider = ({ children }) => {
         } else {
             setCartItems([]);
         }
+        setCartLoaded(true);
     };
 
     // Load from cookie on mount
@@ -47,14 +49,15 @@ export const CartProvider = ({ children }) => {
         return () => window.removeEventListener("storage", handleStorage);
     }, []);
 
-    // Sync to cookie on change
+    // Sync to cookie on change — only after cart has been loaded from cookie
     useEffect(() => {
+        if (!cartLoaded) return;
         const user = getUserData();
         const userId = user?._id || user?.id;
         if (userId) {
             Cookies.set(`fm_cart_${userId}`, JSON.stringify(cartItems), { expires: 30 });
         }
-    }, [cartItems]);
+    }, [cartItems, cartLoaded]);
 
     const addToCart = (product, quantity = 1) => {
         const token = localStorage.getItem("accessToken");

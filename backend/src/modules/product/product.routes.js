@@ -5,6 +5,7 @@ import {
   getAllProductsController,
   getProductByIdController,
   updateProductController,
+  addStockController,
 } from './product.controller.js';
 import { requireAuth, requireRole } from '../auth/auth.middlewares.js';
 import { validate } from '../../middlewares/validate.middlewares.js';
@@ -63,6 +64,17 @@ productRouter.delete(
   requireAuth,
   requireRole(['admin', 'manager']),
   deleteProductController,
+);
+
+/**
+ * @route POST /api/products/:id/stock
+ * @desc Quick add stock for a product - MANAGER only
+ */
+productRouter.post(
+  '/:id/stock',
+  requireAuth,
+  requireRole(['manager']),
+  addStockController,
 );
 
 export default productRouter;

@@ -153,3 +153,31 @@ export const deleteProduct = async (id) => {
   await product.save();
   return product;
 };
+
+export const addStock = async (userId, productId, quantity, note) => {
+  if (!quantity || !Number.isInteger(quantity) || quantity <= 0) {
+    throw new Error('Quantity must be a positive integer');
+  }
+
+  const product = await Product.findById(productId);
+  if (!product) {
+    throw new Error('Product not found');
+  }
+
+  const stockModule = await import('../stock/stock.service.js');
+
+  const payload = {
+    type: 'IN',
+    note: note || `Quick add stock for ${product.name}`,
+    items: [
+      {
+        product_id: productId,
+        quantity: quantity,
+        unit_price: 0 // Quick add doesn't track price
+      }
+    ]
+  };
+
+  const result = await stockModule.createStockTransaction(userId, payload);
+  return result;
+};

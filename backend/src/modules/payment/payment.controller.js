@@ -69,34 +69,45 @@ export const createPaymentUrl = async (req, res) => {
 export const vnpayCallback = async (req, res) => {
     try {
         const vnpayParams = req.query;
+        const { vnp_TxnRef, vnp_ResponseCode } = vnpayParams;
+
         const verify = verifyReturnUrlService(vnpayParams);
+
+        // Luôn cập nhật trạng thái giao dịch kể cả khi thất bại
+        const transaction = await updateTransactionStatusService(vnp_TxnRef, vnp_ResponseCode);
+
         if (!verify.isVerified) {
             return res.redirect(
-                `${process.env.FRONTEND_URL}/payment/failure?message=Invalid signature`,
+                `${process.env.CLIENT_URL}/payment/failure?message=Invalid signature`,
             );
         }
+
         if (!verify.isSuccess) {
+            // Mã 24: Khách hàng hủy giao dịch
+            if (vnp_ResponseCode === '24') {
+                return res.redirect(`${process.env.CLIENT_URL}/cart`);
+            }
             return res.redirect(
-                `${process.env.FRONTEND_URL}/payment/failure?message=${verify.message}`,
+                `${process.env.CLIENT_URL}/payment/failure?message=${verify.message}`,
             );
         }
-        const { vnp_TxnRef, vnp_ResponseCode } = vnpayParams;
-        const transaction = await updateTransactionStatusService(vnp_TxnRef, vnp_ResponseCode);
+
         if (!transaction) {
             return res.redirect(
-                `${process.env.FRONTEND_URL}/payment/failure?message=Transaction not found`,
+                `${process.env.CLIENT_URL}/payment/failure?message=Transaction not found`,
             );
         }
+
         const redirectUrl =
             vnp_ResponseCode === '00'
-                ? `${process.env.FRONTEND_URL}/payment/success?orderId=${transaction.order_id}&transactionCode=${vnp_TxnRef}`
-                : `${process.env.FRONTEND_URL}/payment/failure?orderId=${transaction.order_id}&message=${verify.message}`;
+                ? `${process.env.CLIENT_URL}/cart?payment_success=true&orderId=${transaction.order_id}`
+                : `${process.env.CLIENT_URL}/cart?payment_failed=true&message=${verify.message}`;
 
         return res.redirect(redirectUrl);
     } catch (error) {
         console.error('VNPay callback error:', error);
         return res.redirect(
-            `${process.env.FRONTEND_URL}/payment/failure?message=System error`,
+            `${process.env.CLIENT_URL}/payment/failure?message=System error`,
         );
     }
 };

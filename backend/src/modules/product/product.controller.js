@@ -4,6 +4,7 @@ import {
   getAllProducts,
   getProductById,
   updateProduct,
+  addStock,
 } from './product.service.js';
 
 export const getAllProductsController = async (req, res) => {
@@ -55,4 +56,24 @@ export const updateProductController = async (req, res) => {
 export const deleteProductController = async (req, res) => {
   const product = await deleteProduct(req.params.id);
   res.json(product);
+};
+
+export const addStockController = async (req, res) => {
+  try {
+    const { quantity, note } = req.body;
+    const userId = req.currentUser._id;
+    const productId = req.params.id;
+
+    const result = await addStock(userId, productId, quantity, note);
+    res.status(200).json({
+      success: true,
+      data: result,
+      message: 'Stock generated successfully',
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };

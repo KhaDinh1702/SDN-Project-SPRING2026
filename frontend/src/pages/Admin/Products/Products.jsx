@@ -42,6 +42,11 @@ const Products = () => {
   const [fileList, setFileList] = useState([]);
   const [form] = Form.useForm();
 
+  // Stock Add States
+  const [isStockModalOpen, setIsStockModalOpen] = useState(false);
+  const [selectedStockProduct, setSelectedStockProduct] = useState(null);
+  const [stockForm] = Form.useForm();
+
   // ===== FETCH PRODUCTS =====
   const fetchProducts = async (keyword = "") => {
     setLoading(true);
@@ -114,6 +119,34 @@ const Products = () => {
       fetchProducts();
     } catch (err) {
       message.error("Xóa thất bại: " + err.message);
+    }
+  };
+
+  // ===== QUICK ADD STOCK =====
+  const handleAddStock = (record) => {
+    setSelectedStockProduct(record);
+    stockForm.resetFields();
+    setIsStockModalOpen(true);
+  };
+
+  const handleStockSubmit = async () => {
+    try {
+      const values = await stockForm.validateFields();
+      const res = await fetch(`${API_URL}/api/products/${selectedStockProduct._id}/stock`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`
+        },
+        body: JSON.stringify({ quantity: values.quantity, note: values.note })
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.message);
+      message.success(`Đã thêm ${values.quantity} vào kho thành công!`);
+      setIsStockModalOpen(false);
+      fetchProducts();
+    } catch (err) {
+      message.error("Thêm kho thất bại: " + err.message);
     }
   };
 
@@ -222,21 +255,37 @@ const Products = () => {
     },
     {
       title: "Action",
-      render: (_, record) => (
-        <Space>
-          <Button icon={<EditOutlined />} size="small" onClick={() => handleEdit(record)}>
-            Edit
-          </Button>
-          <Popconfirm
-            title="Xóa sản phẩm này?"
-            onConfirm={() => handleDelete(record._id)}
-          >
-            <Button icon={<DeleteOutlined />} size="small" danger>
-              Delete
+      render: (_, record) => {
+        let role = "";
+        try {
+          const userStr = localStorage.getItem("user");
+          if (userStr) {
+            const user = JSON.parse(userStr);
+            role = user.role;
+          }
+        } catch (e) { }
+
+        return (
+          <Space>
+            {role === "manager" && (
+              <Button icon={<PlusOutlined />} size="small" type="primary" onClick={() => handleAddStock(record)}>
+                Add Stock
+              </Button>
+            )}
+            <Button icon={<EditOutlined />} size="small" onClick={() => handleEdit(record)}>
+              Edit
             </Button>
-          </Popconfirm>
-        </Space>
-      ),
+            <Popconfirm
+              title="Xóa sản phẩm này?"
+              onConfirm={() => handleDelete(record._id)}
+            >
+              <Button icon={<DeleteOutlined />} size="small" danger>
+                Delete
+              </Button>
+            </Popconfirm>
+          </Space>
+        );
+      },
     },
   ];
 
@@ -335,6 +384,32 @@ const Products = () => {
             >
               <Button icon={<UploadOutlined />}>Select Images</Button>
             </Upload>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* ===== STOCK ADD MODAL ===== */}
+      <Modal
+        title={`Add Stock: ${selectedStockProduct?.name || ''}`}
+        open={isStockModalOpen}
+        onOk={handleStockSubmit}
+        onCancel={() => setIsStockModalOpen(false)}
+        okText="Add Stock"
+        width={400}
+      >
+        <Form layout="vertical" form={stockForm}>
+          <Form.Item
+            name="quantity"
+            label="Quantity to Add"
+            rules={[{ required: true, message: "Enter quantity" }]}
+          >
+            <InputNumber style={{ width: "100%" }} min={1} />
+          </Form.Item>
+          <Form.Item
+            name="note"
+            label="Note (Optional)"
+          >
+            <TextArea rows={2} placeholder="Reason for adding stock..." />
           </Form.Item>
         </Form>
       </Modal>
