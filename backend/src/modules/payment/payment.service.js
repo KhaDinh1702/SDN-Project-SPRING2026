@@ -17,7 +17,7 @@ export const createPaymentUrlService = async ({ orderId, amount, orderInfo, bank
         vnp_TxnRef: txnRef,
         vnp_OrderInfo: orderInfo || `Thanh toan don hang ${orderId}`,
         vnp_OrderType: ProductCode.Other,
-        vnp_ReturnUrl: process.env.VNP_RETURN_URL,
+        vnp_ReturnUrl: process.env.VNP_RETURN_URL || 'http://localhost:5001/api/payment/vnpay/callback',
         vnp_Locale: VnpLocale.VN,
         ...(bankCode && { vnp_BankCode: bankCode }),
     });
