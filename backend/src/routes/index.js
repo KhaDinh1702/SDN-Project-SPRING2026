@@ -8,6 +8,7 @@ import orderRouter from '../modules/order/order.routes.js';
 import userRouter from '../modules/users/user.routes.js';
 import roleRouter from '../modules/roles/role.routes.js';
 import paymentRouter from '../modules/payment/payment.routes.js';
+import reviewRouter from '../modules/review/review.routes.js';
 
 const router = Router();
 
@@ -34,5 +35,8 @@ router.use('/users', userRouter);
 
 /**=========== ROLE ===========**/
 router.use('/roles', roleRouter);
+
+/**=========== REVIEW ===========**/
+router.use('/reviews', reviewRouter);
 
 export default router;
