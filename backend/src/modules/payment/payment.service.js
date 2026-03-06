@@ -64,6 +64,20 @@ export const updateTransactionStatusService = async (txnRef, responseCode) => {
             order.order_status = 'Processing';
             await order.save();
         }
+
+        // Trừ stock sau khi VNPay thanh toán thành công
+        const OrderProduct = (await import('../../models/OrderProduct.js')).default;
+        const Product = (await import('../../models/Product.js')).default;
+
+        const orderItems = await OrderProduct.find({ order_id: transaction.order_id });
+
+        await Promise.all(
+            orderItems.map(item =>
+                Product.findByIdAndUpdate(item.product_id, {
+                    $inc: { stock_quantity: -item.quantity }
+                })
+            )
+        );
     }
 
     return transaction;

@@ -25,7 +25,77 @@ import { createPaymentUrlService } from '../payment/payment.service.js';
  */
 export const createOrderService = async (orderData) => {
 	const { items, payment_method, shipping_address, user_id, total_amount } = orderData;
-	// Create Order
+	const Product = (await import('../../models/Product.js')).default;
+
+	// ==========================
+	// 1. VALIDATE ITEMS TỒN TẠI
+	// ==========================
+	if (!items || items.length === 0) {
+		throw new Error('Order must have at least one item.');
+	}
+
+	// ==========================
+	// 2. COD: ATOMIC CHECK + DEDUCT STOCK (tránh race condition)
+	//    VNPay: chỉ validate, deduct sau khi VNPay confirm
+	// ==========================
+	const deductedItems = []; // để rollback nếu cần
+
+	if (payment_method === 'COD') {
+		for (const item of items) {
+			// Atomic: chỉ update nếu stock_quantity >= quantity && is_active = true
+			const updated = await Product.findOneAndUpdate(
+				{
+					_id: item.product_id,
+					is_active: true,
+					stock_quantity: { $gte: item.quantity },
+				},
+				{ $inc: { stock_quantity: -item.quantity } },
+				{ new: false } // trả về document TRƯỚC khi update (có tên sản phẩm)
+			);
+
+			if (!updated) {
+				// Atomic update failed → hết hàng hoặc không tồn tại
+				// Rollback các item đã trừ trước đó
+				await Promise.all(
+					deductedItems.map(d =>
+						Product.findByIdAndUpdate(d.product_id, {
+							$inc: { stock_quantity: d.quantity }
+						})
+					)
+				);
+
+				// Lấy thông tin product để báo lỗi cụ thể
+				const product = await Product.findById(item.product_id).select('name stock_quantity is_active');
+				if (!product) throw new Error(`Product not found: ${item.product_id}`);
+				if (!product.is_active) throw new Error(`"${product.name}" is no longer available.`);
+				throw new Error(
+					product.stock_quantity === 0
+						? `"${product.name}" is out of stock.`
+						: `"${product.name}" only has ${product.stock_quantity} left (you requested ${item.quantity}).`
+				);
+			}
+
+			deductedItems.push(item);
+		}
+	} else {
+		// VNPay: chỉ validate cơ bản (non-atomic, deduct sau khi payment confirm)
+		for (const item of items) {
+			const product = await Product.findById(item.product_id).select('name stock_quantity is_active');
+			if (!product) throw new Error(`Product not found: ${item.product_id}`);
+			if (!product.is_active) throw new Error(`"${product.name}" is no longer available.`);
+			if (product.stock_quantity < item.quantity) {
+				throw new Error(
+					product.stock_quantity === 0
+						? `"${product.name}" is out of stock.`
+						: `"${product.name}" only has ${product.stock_quantity} left.`
+				);
+			}
+		}
+	}
+
+	// ==========================
+	// 3. TẠO ORDER
+	// ==========================
 	const newOrder = await Order.create({
 		user_id,
 		total_amount,
@@ -35,19 +105,21 @@ export const createOrderService = async (orderData) => {
 		payment_status: 'Unpaid',
 	});
 
-	// Create Order Items
-	if (items && items.length > 0) {
-		const orderProducts = items.map(item => ({
-			order_id: newOrder._id,
-			product_id: item.product_id,
-			quantity: item.quantity,
-			unit_price: item.unit_price,
-			total_price: item.quantity * item.unit_price
-		}));
-		await OrderProduct.insertMany(orderProducts);
-	}
+	// ==========================
+	// 4. TẠO ORDER ITEMS
+	// ==========================
+	const orderProducts = items.map(item => ({
+		order_id: newOrder._id,
+		product_id: item.product_id,
+		quantity: item.quantity,
+		unit_price: item.unit_price,
+		total_price: item.quantity * item.unit_price
+	}));
+	await OrderProduct.insertMany(orderProducts);
 
-	// Handle Payment
+	// ==========================
+	// 5. TẠO VNPay URL (nếu cần)
+	// ==========================
 	let paymentUrl = null;
 	if (payment_method === 'VNPay') {
 		const result = await createPaymentUrlService({
@@ -64,6 +136,7 @@ export const createOrderService = async (orderData) => {
 		paymentUrl
 	};
 };
+
 
 /**
  * Get all orders from the database (for admin or management)
