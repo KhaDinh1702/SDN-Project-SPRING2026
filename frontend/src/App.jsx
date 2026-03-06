@@ -25,6 +25,8 @@ const Blog = lazy(() => import('./pages/User/Blog/Blog'));
 const Contact = lazy(() => import('./pages/User/Contact/Contact'));
 const FAQ = lazy(() => import('./pages/User/FAQ/FAQ'));
 
+import ChatWidget from './components/ChatWidget/ChatWidget';
+
 // Admin pages (lazy loaded)
 const AdminLayout = lazy(() => import('./pages/Admin/AdminLayout/AdminLayout'));
 const Dashboard = lazy(() => import('./pages/Admin/Dashboard/Dashboard'));
@@ -204,6 +206,9 @@ function App() {
           </Route>
         </Routes>
       </Suspense>
+
+      {/* Global AI Chatbot Widget */}
+      <ChatWidget />
     </BrowserRouter>
   );
 }
