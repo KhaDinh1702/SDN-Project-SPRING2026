@@ -1,7 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Button, Popconfirm, Modal, Form, Input, Radio, message } from "antd";
 import { DeleteOutlined, ShoppingCartOutlined, ArrowLeftOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import "./Cart.css";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
@@ -10,7 +10,20 @@ import { API_URL } from "../../../config";
 
 export default function Cart() {
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
     const { cartItems, removeFromCart, updateQuantity, totalPrice, totalItems, clearCart } = useContext(CartContext);
+
+    useEffect(() => {
+        if (searchParams.get("payment_success") === "true") {
+            message.success(`Thanh toán thành công đơn hàng đẵ đặt!`);
+            clearCart();
+            // Xóa param khỏi URL để không bị trigger lại khi F5
+            setSearchParams({});
+        } else if (searchParams.get("payment_failed") === "true") {
+            message.error(`Thanh toán thất bại: ${searchParams.get("message") || "Giao dịch bị từ chối"}`);
+            setSearchParams({});
+        }
+    }, [searchParams, setSearchParams, clearCart]);
 
     const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false);
     const [checkoutLoading, setCheckoutLoading] = useState(false);
