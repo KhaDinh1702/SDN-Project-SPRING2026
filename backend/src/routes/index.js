@@ -9,6 +9,7 @@ import userRouter from '../modules/users/user.routes.js';
 import roleRouter from '../modules/roles/role.routes.js';
 import paymentRouter from '../modules/payment/payment.routes.js';
 import reviewRouter from '../modules/review/review.routes.js';
+import aiRouter from '../modules/ai/ai.routes.js';
 
 const router = Router();
 
@@ -38,5 +39,8 @@ router.use('/roles', roleRouter);
 
 /**=========== REVIEW ===========**/
 router.use('/reviews', reviewRouter);
+
+/**=========== AI REC ===========**/
+router.use('/ai', aiRouter);
 
 export default router;
