@@ -232,8 +232,8 @@ export default function ProductDetail() {
             </div>
 
             <div className="price">
-              {(product.price * 25000).toLocaleString("vi-VN")} VND
-              <span className="stock">{product.stock_quantity || 0} in stock</span>
+              {(product.price).toLocaleString("vi-VN")} VND <span style={{ fontSize: 16, color: '#6b7280' }}>/ {product.weight} {product.unit}</span>
+              <span className="stock" style={{ display: 'block', marginTop: 10, fontSize: 14 }}>{product.stock_quantity || 0} in stock</span>
             </div>
 
             <p className="description">{product.description || "No description available."}</p>

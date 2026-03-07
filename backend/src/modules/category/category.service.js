@@ -11,7 +11,7 @@ const getCategoryById = async (id) => {
 };
 
 export const createCategory = async (payload) => {
-  const { name } = payload;
+  const { name, description, image } = payload;
 
   const existingCategory = await Category.findOne({
     name: new RegExp(`^${name}$`, 'i'),
@@ -24,7 +24,7 @@ export const createCategory = async (payload) => {
     });
   }
 
-  const category = await Category.create({ name });
+  const category = await Category.create({ name, description, image });
   return category;
 };
 

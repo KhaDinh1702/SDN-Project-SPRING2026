@@ -15,6 +15,8 @@ app.use(
   cors({
     origin: true, // cho phép mọi origin
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   }),
 );
 

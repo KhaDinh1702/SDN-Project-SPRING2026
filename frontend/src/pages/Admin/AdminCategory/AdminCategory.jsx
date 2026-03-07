@@ -11,11 +11,16 @@ import {
   Popconfirm,
   message,
   Spin,
+  Upload,
+  Tabs,
+  Image,
 } from "antd";
 import {
   PlusOutlined,
   EditOutlined,
   DeleteOutlined,
+  UploadOutlined,
+  LinkOutlined,
 } from "@ant-design/icons";
 import { GiFishCorpse, GiMeat, GiCarrot, GiChiliPepper } from "react-icons/gi";
 import { API_URL } from "../../../config";
@@ -23,7 +28,6 @@ import { API_URL } from "../../../config";
 const { Title } = Typography;
 
 const getAuthHeader = () => ({
-  "Content-Type": "application/json",
   Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
 });
 
@@ -45,11 +49,17 @@ const AdminCategory = () => {
   const [editingCategory, setEditingCategory] = useState(null);
   const [form] = Form.useForm();
 
+  // Image state
+  const [imageTab, setImageTab] = useState("url"); // "url" | "upload"
+  const [imageUrl, setImageUrl] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+
   const fetchCategories = async () => {
     setLoading(true);
     try {
       const res = await fetch(`${API_URL}/api/categories`, {
-        headers: getAuthHeader(),
+        headers: { ...getAuthHeader() },
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
@@ -61,7 +71,7 @@ const AdminCategory = () => {
       }));
       setCategories(normalized);
     } catch (err) {
-      message.error("Không thể tải danh mục: " + err.message);
+      message.error("Failed to load categories: " + err.message);
     } finally {
       setLoading(false);
     }
@@ -71,16 +81,31 @@ const AdminCategory = () => {
     fetchCategories();
   }, []);
 
+  // ===== RESET IMAGE STATE =====
+  const resetImageState = () => {
+    setImageTab("url");
+    setImageUrl("");
+    setImageFile(null);
+    setImagePreview("");
+  };
+
   // ===== OPEN MODALS =====
   const openAddModal = () => {
     setEditingCategory(null);
     form.resetFields();
+    resetImageState();
     setIsModalOpen(true);
   };
 
   const openEditModal = (record) => {
     setEditingCategory(record);
     form.setFieldsValue({ name: record.name, description: record.description });
+    resetImageState();
+    if (record.image) {
+      setImageTab("url");
+      setImageUrl(record.image);
+      setImagePreview(record.image);
+    }
     setIsModalOpen(true);
   };
 
@@ -89,14 +114,14 @@ const AdminCategory = () => {
     try {
       const res = await fetch(`${API_URL}/api/categories/${id}`, {
         method: "DELETE",
-        headers: getAuthHeader(),
+        headers: { ...getAuthHeader(), "Content-Type": "application/json" },
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
-      message.success("Đã xóa danh mục");
+      message.success("Category deleted");
       fetchCategories();
     } catch (err) {
-      message.error("Xóa thất bại: " + err.message);
+      message.error("Delete failed: " + err.message);
     }
   };
 
@@ -110,20 +135,52 @@ const AdminCategory = () => {
         : `${API_URL}/api/categories`;
       const method = isEdit ? "PUT" : "POST";
 
-      const res = await fetch(url, {
-        method,
-        headers: getAuthHeader(),
-        body: JSON.stringify(values),
-      });
+      let res;
+
+      if (imageTab === "upload" && imageFile) {
+        // Send as multipart/form-data when file is selected
+        const formData = new FormData();
+        formData.append("name", values.name);
+        formData.append("description", values.description || "");
+        formData.append("image", imageFile);
+
+        res = await fetch(url, {
+          method,
+          headers: getAuthHeader(), // NO Content-Type → browser sets boundary
+          body: formData,
+        });
+      } else {
+        // Send as JSON with optional image URL
+        res = await fetch(url, {
+          method,
+          headers: { ...getAuthHeader(), "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...values,
+            image: imageTab === "url" ? imageUrl : "",
+          }),
+        });
+      }
+
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
-      message.success(isEdit ? "Cập nhật danh mục thành công" : "Tạo danh mục thành công");
+      message.success(isEdit ? "Category updated successfully" : "Category created successfully");
       setIsModalOpen(false);
       form.resetFields();
+      resetImageState();
       fetchCategories();
     } catch (err) {
-      message.error("Thao tác thất bại: " + err.message);
+      message.error("Operation failed: " + err.message);
     }
+  };
+
+  // ===== FILE UPLOAD HANDLER =====
+  const handleFileChange = (info) => {
+    const file = info.file.originFileObj || info.file;
+    if (!file) return;
+    setImageFile(file);
+    const reader = new FileReader();
+    reader.onload = (e) => setImagePreview(e.target.result);
+    reader.readAsDataURL(file);
   };
 
   const columns = [
@@ -132,21 +189,35 @@ const AdminCategory = () => {
       dataIndex: "name",
       render: (_, record) => (
         <Space>
-          <div
-            style={{
-              width: 42,
-              height: 42,
-              borderRadius: 14,
-              background: record.color,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "white",
-              fontSize: 20,
-            }}
-          >
-            {record.icon}
-          </div>
+          {record.image ? (
+            <img
+              src={record.image}
+              alt={record.name}
+              style={{
+                width: 42,
+                height: 42,
+                borderRadius: 14,
+                objectFit: "cover",
+                border: "1px solid #e5e7eb",
+              }}
+            />
+          ) : (
+            <div
+              style={{
+                width: 42,
+                height: 42,
+                borderRadius: 14,
+                background: record.color,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "white",
+                fontSize: 20,
+              }}
+            >
+              {record.icon}
+            </div>
+          )}
           <div>
             <strong style={{ fontSize: 15 }}>{record.name}</strong>
             <div style={{ fontSize: 12, color: "#6b7280" }}>
@@ -162,12 +233,75 @@ const AdminCategory = () => {
         <Space>
           <Button icon={<EditOutlined />} onClick={() => openEditModal(record)} />
           <Popconfirm
-            title="Bạn có chắc muốn xóa danh mục này?"
+            title="Are you sure you want to delete this category?"
             onConfirm={() => handleDelete(record._id)}
           >
             <Button danger icon={<DeleteOutlined />} />
           </Popconfirm>
         </Space>
+      ),
+    },
+  ];
+
+  const tabItems = [
+    {
+      key: "url",
+      label: (
+        <span>
+          <LinkOutlined /> Paste URL
+        </span>
+      ),
+      children: (
+        <div>
+          <Input
+            placeholder="https://example.com/image.jpg"
+            value={imageUrl}
+            onChange={(e) => {
+              setImageUrl(e.target.value);
+              setImagePreview(e.target.value);
+            }}
+          />
+          {imagePreview && imageTab === "url" && (
+            <div style={{ marginTop: 10, textAlign: "center" }}>
+              <Image
+                src={imagePreview}
+                alt="preview"
+                style={{ maxHeight: 120, borderRadius: 10, objectFit: "cover" }}
+                preview={false}
+                onError={() => setImagePreview("")}
+              />
+            </div>
+          )}
+        </div>
+      ),
+    },
+    {
+      key: "upload",
+      label: (
+        <span>
+          <UploadOutlined /> Upload File
+        </span>
+      ),
+      children: (
+        <div>
+          <Upload
+            showUploadList={false}
+            beforeUpload={() => false} // prevent auto upload
+            onChange={handleFileChange}
+            accept="image/*"
+          >
+            <Button icon={<UploadOutlined />}>Choose Image</Button>
+          </Upload>
+          {imagePreview && imageTab === "upload" && (
+            <div style={{ marginTop: 10, textAlign: "center" }}>
+              <img
+                src={imagePreview}
+                alt="preview"
+                style={{ maxHeight: 120, borderRadius: 10, objectFit: "cover" }}
+              />
+            </div>
+          )}
+        </div>
       ),
     },
   ];
@@ -193,14 +327,29 @@ const AdminCategory = () => {
         title={editingCategory ? "Edit Category" : "Add Category"}
         open={isModalOpen}
         onOk={handleSubmit}
-        onCancel={() => setIsModalOpen(false)}
+        onCancel={() => {
+          setIsModalOpen(false);
+          resetImageState();
+        }}
+        width={520}
       >
         <Form form={form} layout="vertical">
-          <Form.Item name="name" label="Category Name" rules={[{ required: true }]}>
+          <Form.Item name="name" label="Category Name" rules={[{ required: true, message: "Please enter a category name" }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="description" label="Description" rules={[{ required: true }]}>
+          <Form.Item name="description" label="Description">
             <Input />
+          </Form.Item>
+          <Form.Item label="Image (optional)">
+            <Tabs
+              activeKey={imageTab}
+              onChange={(key) => {
+                setImageTab(key);
+                setImagePreview(key === "url" ? imageUrl : "");
+              }}
+              items={tabItems}
+              size="small"
+            />
           </Form.Item>
         </Form>
       </Modal>
