@@ -1,17 +1,17 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import './ChatWidget.css';
 import { CartContext } from '../../context/CartContext';
 import { message } from 'antd';
 
-const MOCK_AVATAR = "🧑‍🍳";
-
 const ChatWidget = () => {
+    const location = useLocation();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
         {
             sender: 'bot',
-            text: 'Chào bạn! Mình là đầu bếp AI của FreshMart. Bạn đang có nguyên liệu gì trong bếp nhỉ? Hoặc bạn đang thèm món gì, cứ hỏi mình nhé!'
+            text: 'Chào bạn! Mình là trợ lý AI của FreshMart. Bạn đang cần tìm kiếm sản phẩm gì hay cần gợi ý thực đơn hôm nay, cứ hỏi mình nhé!'
         }
     ]);
     const [inputVal, setInputVal] = useState('');
@@ -29,6 +29,11 @@ const ChatWidget = () => {
     useEffect(() => {
         scrollToBottom();
     }, [messages, loading]);
+
+    // Stop rendering entirely if not on the Home Page
+    if (location.pathname !== '/') {
+        return null;
+    }
 
     const handleSend = async (e) => {
         e.preventDefault();
@@ -73,10 +78,10 @@ const ChatWidget = () => {
             {isOpen && (
                 <div className='chat-window'>
                     <div className='chat-header'>
-                        <div className='chat-avatar'> {MOCK_AVATAR} </div>
+                        <div className='chat-avatar'>FM</div>
                         <div>
-                            <h3>AI Bếp Trưởng</h3>
-                            <p>Luôn sẵn sàng gợi ý món ngon</p>
+                            <h3>Trợ lý FreshMart</h3>
+                            <p>Sẵn sàng hỗ trợ bạn</p>
                         </div>
                     </div>
 
@@ -119,7 +124,7 @@ const ChatWidget = () => {
                         ))}
                         {loading && (
                             <div className='message bot loading'>
-                                Đang suy nghĩ món ngon...
+                                Đang xử lý...
                             </div>
                         )}
                         <div ref={messagesEndRef} />
@@ -129,7 +134,7 @@ const ChatWidget = () => {
                         <input
                             type='text'
                             className='chat-input'
-                            placeholder='Nhập nguyên liệu bạn có...'
+                            placeholder='Nhập yêu cầu của bạn...'
                             value={inputVal}
                             onChange={e => setInputVal(e.target.value)}
                             disabled={loading}

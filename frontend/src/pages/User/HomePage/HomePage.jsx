@@ -84,13 +84,19 @@ export default function HomePage() {
 
             <div className="category-grid">
               {categories.map((c) => {
-                let imagePath = "";
+                // Prioritize the dynamic image set in the Admin Panel
+                let imagePath = c.image;
 
-                if (c.name === "Fish") imagePath = "/images/categories/ca.jpg";
-                else if (c.name === "Meat") imagePath = "/images/categories/thit.webp";
-                else if (c.name === "Vegetables") imagePath = "/images/categories/rau.jpg";
-                else if (c.name === "Spices") imagePath = "/images/categories/giavi.jpg";
-                else if (c.name === "Fruits") imagePath = "/images/categories/traicay.webp";
+                // Fallback to hardcoded images if no dynamic image is set
+                if (!imagePath) {
+                  const nameLower = c.name?.toLowerCase() || "";
+                  if (nameLower.includes("fish") || nameLower.includes("seafood")) imagePath = "/images/categories/ca.jpg";
+                  else if (nameLower.includes("meat")) imagePath = "/images/categories/thit.webp";
+                  else if (nameLower.includes("veg")) imagePath = "/images/categories/rau.jpg";
+                  else if (nameLower.includes("spice")) imagePath = "/images/categories/giavi.jpg";
+                  else if (nameLower.includes("fruit")) imagePath = "/images/categories/traicay.webp";
+                  else imagePath = "https://via.placeholder.com/300x200?text=" + encodeURIComponent(c.name);
+                }
 
                 return (
                   <div
@@ -99,7 +105,7 @@ export default function HomePage() {
                     onClick={() => navigate(`/category/${c._id || c.id}`)}
                   >
                     <div className="category-image">
-                      <img src={imagePath} alt={c.name} />
+                      <img src={imagePath} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
                     <h4>{c.name}</h4>
                   </div>
@@ -147,7 +153,10 @@ export default function HomePage() {
                   </div>
 
                   <div className="product-footer">
-                    <span className="product-price">{(p.price * 25000).toLocaleString("vi-VN")} VND</span>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <span className="product-price">{(p.price).toLocaleString("vi-VN")} VND</span>
+                      <span style={{ fontSize: 13, color: '#6b7280', marginTop: 2 }}>/ {p.weight} {p.unit}</span>
+                    </div>
 
                     <Button
                       type="primary"

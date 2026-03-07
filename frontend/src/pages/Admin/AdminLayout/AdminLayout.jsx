@@ -60,27 +60,34 @@ const AdminLayout = () => {
           mode="inline"
           selectedKeys={[location.pathname]}
           className="menu"
-        >
-          <Menu.Item key="/admin/dashboard" icon={<DashboardOutlined />}>
-            <Link to="/admin/dashboard">Dashboard</Link>
-          </Menu.Item>
-
-          <Menu.Item key="/admin/products" icon={<ShoppingOutlined />}>
-            <Link to="/admin/products">Products</Link>
-          </Menu.Item>
-
-          <Menu.Item key="/admin/categoryadmin" icon={<UserOutlined />}>
-            <Link to="/admin/categoryadmin">Category</Link>
-          </Menu.Item>
-
-          <Menu.Item key="/admin/orders" icon={<ShoppingCartOutlined />}>
-            <Link to="/admin/orders">Orders</Link>
-          </Menu.Item>
-
-          <Menu.Item key="/admin/users" icon={<UserOutlined />}>
-            <Link to="/admin/users">Users</Link>
-          </Menu.Item>
-        </Menu>
+          items={[
+            {
+              key: '/admin/dashboard',
+              icon: <DashboardOutlined />,
+              label: <Link to="/admin/dashboard">Dashboard</Link>,
+            },
+            {
+              key: '/admin/products',
+              icon: <ShoppingOutlined />,
+              label: <Link to="/admin/products">Products</Link>,
+            },
+            {
+              key: '/admin/categoryadmin',
+              icon: <UserOutlined />,
+              label: <Link to="/admin/categoryadmin">Category</Link>,
+            },
+            {
+              key: '/admin/orders',
+              icon: <ShoppingCartOutlined />,
+              label: <Link to="/admin/orders">Orders</Link>,
+            },
+            {
+              key: '/admin/users',
+              icon: <UserOutlined />,
+              label: <Link to="/admin/users">Users</Link>,
+            },
+          ]}
+        />
       </Sider>
 
       {/* Main */}

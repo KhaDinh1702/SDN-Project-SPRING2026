@@ -10,13 +10,13 @@
 .chat-fab {
     width: 60px;
     height: 60px;
-    background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+    background: #0a3d00;
     border-radius: 50%;
     border: none;
     color: white;
     font-size: 24px;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+    box-shadow: 0 4px 15px rgba(10, 61, 0, 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -25,14 +25,14 @@
 
 .chat-fab:hover {
     transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+    box-shadow: 0 6px 20px rgba(10, 61, 0, 0.6);
 }
 
 .chat-fab.open {
     transform: rotate(90deg);
     background: #fff;
-    color: #FF6B6B;
-    border: 2px solid #FF6B6B;
+    color: #0a3d00;
+    border: 2px solid #0a3d00;
 }
 
 /* Chat Window */
@@ -67,12 +67,26 @@
 
 /* Header */
 .chat-header {
-    background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+    background: #0a3d00;
     color: white;
     padding: 15px 20px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
+}
+
+.chat-avatar {
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    color: #0a3d00;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
 }
 
 .chat-header h3 {
@@ -95,7 +109,7 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
-    background: #f8fafc;
+    background: #fdfaf6;
 }
 
 .message {
@@ -127,7 +141,7 @@
 
 .message.user {
     align-self: flex-end;
-    background: #FF6B6B;
+    background: #1b5e20;
     color: white;
     border-bottom-right-radius: 4px;
 }
@@ -162,11 +176,11 @@
 }
 
 .chat-input:focus {
-    border-color: #FF6B6B;
+    border-color: #0a3d00;
 }
 
 .chat-send-btn {
-    background: #FF6B6B;
+    background: #0a3d00;
     color: white;
     border: none;
     width: 40px;
@@ -180,7 +194,7 @@
 }
 
 .chat-send-btn:hover:not(:disabled) {
-    background: #ee5253;
+    background: #145c00;
     transform: scale(1.05);
 }
 
@@ -216,8 +230,8 @@
 
 .chat-product-card:hover {
     background: #fff;
-    border-color: #FF6B6B;
-    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.1);
+    border-color: #0a3d00;
+    box-shadow: 0 2px 8px rgba(10, 61, 0, 0.1);
 }
 
 .chat-product-img {
@@ -246,15 +260,15 @@
 
 .chat-product-price {
     font-size: 0.8rem;
-    color: #FF6B6B;
+    color: #1b5e20;
     font-weight: 700;
     margin: 0 0 6px 0;
 }
 
 .chat-add-btn {
     background: white;
-    border: 1px solid #FF6B6B;
-    color: #FF6B6B;
+    border: 1px solid #0a3d00;
+    color: #0a3d00;
     font-size: 0.75rem;
     font-weight: 600;
     padding: 4px 10px;
@@ -264,6 +278,6 @@
 }
 
 .chat-add-btn:hover {
-    background: #FF6B6B;
+    background: #0a3d00;
     color: white;
 }
