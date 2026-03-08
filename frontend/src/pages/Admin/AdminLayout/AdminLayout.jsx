@@ -35,7 +35,7 @@ const AdminLayout = () => {
 
     localStorage.removeItem("accessToken");
     localStorage.removeItem("user");
-    message.success("Logged out successfully");
+    message.success("Đăng xuất thành công");
     navigate("/login");
   };
 
@@ -43,7 +43,7 @@ const AdminLayout = () => {
     {
       key: "logout",
       icon: <LogoutOutlined />,
-      label: "Logout",
+      label: "Đăng xuất",
       danger: true,
       onClick: handleLogout,
     }
@@ -53,7 +53,7 @@ const AdminLayout = () => {
     <Layout className="admin-layout">
       {/* Sidebar */}
       <Sider width={240} className="sidebar">
-        <div className="logo">FarmAdmin</div>
+        <div className="logo">Quản trị FarmAdmin</div>
 
         <Menu
           theme="dark"
@@ -64,27 +64,27 @@ const AdminLayout = () => {
             {
               key: '/admin/dashboard',
               icon: <DashboardOutlined />,
-              label: <Link to="/admin/dashboard">Dashboard</Link>,
+              label: <Link to="/admin/dashboard">Bảng điều khiển</Link>,
             },
             {
               key: '/admin/products',
               icon: <ShoppingOutlined />,
-              label: <Link to="/admin/products">Products</Link>,
+              label: <Link to="/admin/products">Sản phẩm</Link>,
             },
             {
               key: '/admin/categoryadmin',
               icon: <UserOutlined />,
-              label: <Link to="/admin/categoryadmin">Category</Link>,
+              label: <Link to="/admin/categoryadmin">Danh mục</Link>,
             },
             {
               key: '/admin/orders',
               icon: <ShoppingCartOutlined />,
-              label: <Link to="/admin/orders">Orders</Link>,
+              label: <Link to="/admin/orders">Đơn hàng</Link>,
             },
             {
               key: '/admin/users',
               icon: <UserOutlined />,
-              label: <Link to="/admin/users">Users</Link>,
+              label: <Link to="/admin/users">Người dùng</Link>,
             },
           ]}
         />
@@ -93,7 +93,7 @@ const AdminLayout = () => {
       {/* Main */}
       <Layout>
         <Header className="admin-header">
-          <h2>Admin Dashboard</h2>
+          <h2>Bảng điều khiển Quản trị viên</h2>
 
           <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
             <Space className="user-dropdown">

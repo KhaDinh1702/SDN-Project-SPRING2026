@@ -109,13 +109,13 @@ export default function Category() {
       <Content className="category-container">
         <div className="category-hero">
           <div className="back" onClick={() => navigate("/")}>
-            <ArrowLeftOutlined /> Back to home
+            <ArrowLeftOutlined /> Về trang chủ
           </div>
 
           <h1>{activeCategoryName}</h1>
           <p>
-            Fresh and premium{" "}
-            {activeCategoryName?.toLowerCase()} delivered daily
+            Các sản phẩm{" "}
+            {activeCategoryName?.toLowerCase()} tươi ngon, giao tận nơi mỗi ngày
           </p>
         </div>
 
@@ -138,7 +138,7 @@ export default function Category() {
           </div>
 
           <Search
-            placeholder="Search product..."
+            placeholder="Tìm kiếm sản phẩm..."
             onSearch={(value) => setKeyword(value)}
             allowClear
             style={{ width: 200 }}
@@ -149,22 +149,22 @@ export default function Category() {
             onChange={(value) => setSort(value)}
             className="sort-select"
           >
-            <Option value="default">Default</Option>
-            <Option value="low">Price: Low to High</Option>
-            <Option value="high">Price: High to Low</Option>
+            <Option value="default">Mặc định</Option>
+            <Option value="low">Giá: Thấp đến Cao</Option>
+            <Option value="high">Giá: Cao đến Thấp</Option>
           </Select>
         </div>
 
         <div className="product-grid">
           {sortedProducts.length === 0 ? (
             <p style={{ textAlign: "center", marginTop: 50 }}>
-              No products found.
+              Không tìm thấy sản phẩm nào.
             </p>
           ) : (
             sortedProducts.map((item) => (
               <div key={item._id} className="product-card">
                 {item.images?.[0]?.isPrimary && (
-                  <span className="badge">New</span>
+                  <span className="badge">Mới</span>
                 )}
 
                 <img
@@ -190,7 +190,7 @@ export default function Category() {
 
                   <div className="bottom">
                     <span className="price">{item.price.toLocaleString("vi-VN")} VND</span>
-                    <button className="add-btn" onClick={() => addToCart(item)}>Add</button>
+                    <button className="add-btn" onClick={() => addToCart(item)}>Thêm</button>
                   </div>
                 </div>
               </div>

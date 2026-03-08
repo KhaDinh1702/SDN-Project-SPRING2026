@@ -45,7 +45,7 @@ export default function Login() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.message || 'Login failed');
+        throw new Error(data.message || 'Đăng nhập thất bại');
       }
 
       // Save token & user info
@@ -53,7 +53,7 @@ export default function Login() {
       localStorage.setItem('user', JSON.stringify(data.user));
       reloadCart();
 
-      message.success('Login successful!');
+      message.success('Đăng nhập thành công!');
 
       // Redirect based on role
       if (data.user.role === 'admin') {
@@ -66,7 +66,7 @@ export default function Login() {
         navigate('/');
       }
     } catch (err) {
-      message.error(err.message || 'Login failed');
+      message.error(err.message || 'Đăng nhập thất bại');
     } finally {
       setLoading(false);
     }
@@ -87,14 +87,14 @@ export default function Login() {
             color: '#333',
           }}
         >
-          Back to Home
+          Về trang chủ
         </Button>
         <div className='login-card'>
-          <h1>Welcome Back</h1>
-          <p className='subtitle'>Sign in to your Fresh Market account</p>
+          <h1>Chào mừng trở lại</h1>
+          <p className='subtitle'>Đăng nhập vào tài khoản Fresh Market của bạn</p>
 
           {/* EMAIL */}
-          <label>Email Address</label>
+          <label>Địa chỉ Email</label>
           <div className={`input-box ${email && !isEmailValid ? 'error' : ''}`}>
             <MailOutlined />
             <input
@@ -105,11 +105,11 @@ export default function Login() {
             />
           </div>
           {email && !isEmailValid && (
-            <span className='error-text'>Invalid email address</span>
+            <span className='error-text'>Địa chỉ email không hợp lệ</span>
           )}
 
           {/* PASSWORD */}
-          <label>Password</label>
+          <label>Mật khẩu</label>
           <div
             className={`input-box ${password && !isPasswordValid ? 'error' : ''
               }`}
@@ -117,7 +117,7 @@ export default function Login() {
             <LockOutlined />
             <input
               type={showPassword ? 'text' : 'password'}
-              placeholder='Enter your password'
+              placeholder='Nhập mật khẩu của bạn'
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -135,7 +135,7 @@ export default function Login() {
           </div>
           {password && !isPasswordValid && (
             <span className='error-text'>
-              Password must be at least 6 characters
+              Mật khẩu phải có ít nhất 6 ký tự
             </span>
           )}
 
@@ -143,14 +143,14 @@ export default function Login() {
           <div className='login-options'>
             <label className='remember'>
               <input type='checkbox' />
-              Remember me
+              Ghi nhớ đăng nhập
             </label>
             <span
               className='forgot'
               onClick={() => navigate('/forgot-password')}
               style={{ cursor: 'pointer', color: '#1890ff' }}
             >
-              Forgot Password?
+              Quên mật khẩu?
             </span>
           </div>
 
@@ -163,12 +163,12 @@ export default function Login() {
             onClick={handleLogin}
             className='login-btn'
           >
-            Sign In
+            Đăng nhập
           </Button>
 
           {/* DIVIDER */}
           <div className='divider'>
-            <span>or</span>
+            <span>hoặc</span>
           </div>
 
           {/* GOOGLE */}
@@ -187,12 +187,12 @@ export default function Login() {
                 const data = await res.json();
 
                 if (!res.ok) {
-                  throw new Error(data.message || 'Google login failed');
+                  throw new Error(data.message || 'Đăng nhập Google thất bại');
                 }
 
                 localStorage.setItem('accessToken', data.accessToken);
                 localStorage.setItem('user', JSON.stringify(data.user));
-                message.success('Login successful!');
+                message.success('Đăng nhập thành công!');
 
                 if (data.user.role === 'admin') {
                   navigate('/admin/dashboard');
@@ -204,16 +204,15 @@ export default function Login() {
                   navigate('/');
                 }
               } catch (err) {
-                message.error(err.message || 'Google login failed');
+                message.error(err.message || 'Đăng nhập Google thất bại');
               }
             }}
-            onError={() => message.error('Google sign-in failed')}
+            onError={() => message.error('Đăng nhập Google thất bại')}
           />
 
-          {/* 👉 FIX CHỖ NÀY */}
           <p className='signup-text'>
-            Don't have an account?{' '}
-            <span onClick={() => navigate('/register')}>Sign up here</span>
+            Chưa có tài khoản?{' '}
+            <span onClick={() => navigate('/register')}>Đăng ký tại đây</span>
           </p>
         </div>
       </div>

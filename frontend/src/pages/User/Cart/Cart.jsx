@@ -15,7 +15,7 @@ export default function Cart() {
 
     useEffect(() => {
         if (searchParams.get("payment_success") === "true") {
-            message.success(`Thanh toán thành công đơn hàng đẵ đặt!`);
+            message.success(`Thanh toán thành công đơn hàng đã đặt!`);
             clearCart();
             // Xóa param khỏi URL để không bị trigger lại khi F5
             setSearchParams({});
@@ -32,7 +32,7 @@ export default function Cart() {
     const handleCheckoutClick = () => {
         const token = localStorage.getItem("accessToken");
         if (!token) {
-            message.warning("Please login to proceed to checkout.");
+            message.warning("Vui lòng đăng nhập để tiến hành thanh toán.");
             navigate("/login");
             return;
         }
@@ -43,7 +43,7 @@ export default function Cart() {
         const token = localStorage.getItem("accessToken");
         const userStr = localStorage.getItem("user");
         if (!token || !userStr) {
-            message.warning("Please login to checkout");
+            message.warning("Vui lòng đăng nhập để thanh toán");
             navigate("/login");
             return;
         }
@@ -74,14 +74,14 @@ export default function Cart() {
             });
 
             const data = await response.json();
-            if (!response.ok) throw new Error(data.message || "Failed to create order");
+            if (!response.ok) throw new Error(data.message || "Tạo đơn hàng thất bại");
 
             if (data.success) {
                 if (values.payment_method === "VNPay" && data.data.paymentUrl) {
                     // Redirect to VNPay
                     window.location.href = data.data.paymentUrl;
                 } else {
-                    message.success("Order placed successfully!");
+                    message.success("Đặt hàng thành công!");
                     clearCart();
                     setIsCheckoutModalVisible(false);
                     navigate("/profile");
@@ -106,17 +106,17 @@ export default function Cart() {
                     onClick={() => navigate(-1)}
                     style={{ marginBottom: 20, paddingLeft: 0, color: '#666' }}
                 >
-                    Continue Shopping
+                    Tiếp tục mua sắm
                 </Button>
 
-                <h1>Your Shopping Cart</h1>
+                <h1>Giỏ hàng của bạn</h1>
 
                 {cartItems.length === 0 ? (
                     <div className="cart-empty">
                         <ShoppingCartOutlined className="cart-empty-icon" />
-                        <h2>Your cart is currently empty.</h2>
+                        <h2>Giỏ hàng của bạn hiện đang trống.</h2>
                         <Button type="primary" size="large" onClick={() => navigate("/")}>
-                            Start Shopping
+                            Bắt đầu mua sắm
                         </Button>
                     </div>
                 ) : (
@@ -149,11 +149,11 @@ export default function Cart() {
                                         </div>
 
                                         <Popconfirm
-                                            title="Remove the item"
-                                            description="Are you sure to remove this item?"
+                                            title="Xóa sản phẩm"
+                                            description="Bạn có chắc chắn muốn xóa sản phẩm này không?"
                                             onConfirm={() => removeFromCart(itemId)}
-                                            okText="Yes"
-                                            cancelText="No"
+                                            okText="Có"
+                                            cancelText="Không"
                                         >
                                             <button className="cart-item-remove">
                                                 <DeleteOutlined />
@@ -165,24 +165,24 @@ export default function Cart() {
                         </div>
 
                         <div className="cart-summary">
-                            <h2>Order Summary</h2>
+                            <h2>Tóm tắt đơn hàng</h2>
 
                             <div className="summary-row">
-                                <span>Items ({totalItems}):</span>
+                                <span>Sản phẩm ({totalItems}):</span>
                                 <span>{(totalPrice).toLocaleString("vi-VN")} VND</span>
                             </div>
                             <div className="summary-row">
-                                <span>Shipping:</span>
+                                <span>Phí vận chuyển:</span>
                                 <span>0 VND</span>
                             </div>
 
                             <div className="summary-row total">
-                                <span>Total:</span>
+                                <span>Tổng cộng:</span>
                                 <span>{(totalPrice).toLocaleString("vi-VN")} VND</span>
                             </div>
 
                             <Button type="primary" className="checkout-btn" onClick={handleCheckoutClick}>
-                                Proceed to Checkout
+                                Tiến hành thanh toán
                             </Button>
                         </div>
                     </div>
@@ -190,7 +190,7 @@ export default function Cart() {
             </div>
 
             <Modal
-                title="Checkout Information"
+                title="Thông tin giao hàng"
                 open={isCheckoutModalVisible}
                 onCancel={() => setIsCheckoutModalVisible(false)}
                 footer={null}
@@ -198,25 +198,25 @@ export default function Cart() {
                 <Form layout="vertical" form={form} onFinish={handleCheckout}>
                     <Form.Item
                         name="shipping_address"
-                        label="Shipping Address"
-                        rules={[{ required: true, message: "Please enter your shipping address" }]}
+                        label="Địa chỉ giao hàng"
+                        rules={[{ required: true, message: "Vui lòng nhập địa chỉ giao hàng" }]}
                     >
                         <Input.TextArea rows={3} placeholder="123 Example St, City, Country" />
                     </Form.Item>
                     <Form.Item
                         name="payment_method"
-                        label="Payment Method"
-                        rules={[{ required: true, message: "Please select a payment method" }]}
+                        label="Phương thức thanh toán"
+                        rules={[{ required: true, message: "Vui lòng chọn phương thức thanh toán" }]}
                         initialValue="VNPay"
                     >
                         <Radio.Group>
-                            <Radio value="VNPay">Pay with VNPay</Radio>
-                            <Radio value="COD">Cash on Delivery (COD)</Radio>
+                            <Radio value="VNPay">Thanh toán với VNPay</Radio>
+                            <Radio value="COD">Thanh toán khi nhận hàng (COD)</Radio>
                         </Radio.Group>
                     </Form.Item>
                     <Form.Item>
                         <Button type="primary" htmlType="submit" loading={checkoutLoading} block>
-                            Confirm Order
+                            Xác nhận đặt hàng
                         </Button>
                     </Form.Item>
                 </Form>

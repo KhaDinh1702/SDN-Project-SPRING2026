@@ -32,7 +32,7 @@ export default function Dashboard() {
                 setProducts(prodJson.data || prodJson || []);
                 setStockHistory(stockJson.data || stockJson || []);
             } catch (err) {
-                message.error("Không thể tải dữ liệu dashboard: " + err.message);
+                message.error("Không thể tải dữ liệu bảng điều khiển: " + err.message);
             } finally {
                 setLoading(false);
             }
@@ -75,35 +75,35 @@ export default function Dashboard() {
         .map((p) => ({ ...p, key: p._id }));
 
     const productColumns = [
-        { title: "Product", dataIndex: "name" },
+        { title: "Sản phẩm", dataIndex: "name" },
         {
-            title: "Category",
+            title: "Danh mục",
             render: (_, r) => r.category?.name || r.category || "—",
         },
         {
-            title: "Price",
+            title: "Giá bán",
             dataIndex: "price",
             render: (p) => (p || 0).toLocaleString("vi-VN") + " đ",
         },
-        { title: "Stock", dataIndex: "stock_quantity" },
+        { title: "Tồn kho", dataIndex: "stock_quantity" },
         {
-            title: "Status",
+            title: "Trạng thái",
             render: (_, record) => (
-                <Tag color="red">Low Stock</Tag>
+                <Tag color="red">Sắp hết hàng</Tag>
             ),
         },
     ];
 
     return (
         <div className="dashboard-container">
-            <h2>Manager Dashboard</h2>
+            <h2>Bảng điều khiển Quản lý</h2>
             <Spin spinning={loading}>
                 {/* Stats */}
                 <Row gutter={16}>
                     <Col span={8}>
                         <Card className="stat-card">
                             <Statistic
-                                title="Total Products"
+                                title="Tổng sản phẩm"
                                 value={products.length}
                                 prefix={<AppstoreOutlined />}
                             />
@@ -112,7 +112,7 @@ export default function Dashboard() {
                     <Col span={8}>
                         <Card className="stat-card">
                             <Statistic
-                                title="Total Stock IN (Transactions)"
+                                title="Phiếu nhập kho"
                                 value={totalStockIn}
                                 prefix={<ArrowUpOutlined />}
                                 valueStyle={{ color: '#3f8600' }}
@@ -122,7 +122,7 @@ export default function Dashboard() {
                     <Col span={8}>
                         <Card className="stat-card">
                             <Statistic
-                                title="Total Stock OUT (Transactions)"
+                                title="Phiếu xuất kho"
                                 value={totalStockOut}
                                 prefix={<ArrowDownOutlined />}
                                 valueStyle={{ color: '#cf1322' }}
@@ -134,13 +134,13 @@ export default function Dashboard() {
                 {/* Charts */}
                 <Row gutter={16} style={{ marginTop: 30 }}>
                     <Col span={12}>
-                        <Card title="Product Categories" className="chart-card">
+                        <Card title="Danh mục sản phẩm" className="chart-card">
                             <Pie {...pieConfig} />
                         </Card>
                     </Col>
                     <Col span={12}>
                         {/* Low Stock Alerts */}
-                        <Card title="Low Stock Alerts (< 10 items)" className="table-card">
+                        <Card title="Cảnh báo sắp hết hàng (< 10 SP)" className="table-card">
                             <Table
                                 columns={productColumns}
                                 dataSource={lowStockProducts}

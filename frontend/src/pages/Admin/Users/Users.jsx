@@ -141,7 +141,7 @@ const Users = () => {
 
   const columns = [
     {
-      title: "User",
+      title: "Người dùng",
       render: (_, record) => (
         <Space>
           <Avatar className="user-avatar">
@@ -159,7 +159,7 @@ const Users = () => {
       ),
     },
     {
-      title: "Role",
+      title: "Vai trò",
       render: (_, record) => {
         const roleName = record.role || "N/A";
         const color =
@@ -172,30 +172,30 @@ const Users = () => {
       },
     },
     {
-      title: "Status",
+      title: "Trạng thái",
       render: (_, record) => {
         const active = record.is_active !== false;
         return active ? (
           <span className="status active">
-            <span className="dot green"></span> Active
+            <span className="dot green"></span> Hoạt động
           </span>
         ) : (
           <span className="status inactive">
-            <span className="dot gray"></span> Inactive
+            <span className="dot gray"></span> Ngừng hoạt động
           </span>
         );
       },
     },
     {
-      title: "Actions",
+      title: "Thao tác",
       render: (_, record) => {
         const active = record.is_active !== false;
         return (
           <Popconfirm
             title={
               active
-                ? "Bạn có chắc muốn ban user này?"
-                : "Bạn có chắc muốn unban user này?"
+                ? "Bạn có chắc muốn khóa người dùng này?"
+                : "Bạn có chắc muốn mở khóa người dùng này?"
             }
             onConfirm={() => handleToggleBan(record)}
           >
@@ -203,7 +203,7 @@ const Users = () => {
               danger={active}
               icon={active ? <StopOutlined /> : <CheckCircleOutlined />}
             >
-              {active ? "Ban" : "Unban"}
+              {active ? "Khóa" : "Mở khóa"}
             </Button>
           </Popconfirm>
         );
@@ -222,19 +222,19 @@ const Users = () => {
       <Row gutter={16} className="stats-row">
         <Col span={8}>
           <Card className="stat-card">
-            <h4>Total Users</h4>
+            <h4>Tổng người dùng</h4>
             <h2>{totalUsers}</h2>
           </Card>
         </Col>
         <Col span={8}>
           <Card className="stat-card">
-            <h4>Active Users</h4>
+            <h4>Đang hoạt động</h4>
             <h2>{activeUsers}</h2>
           </Card>
         </Col>
         <Col span={8}>
           <Card className="stat-card">
-            <h4>Admins</h4>
+            <h4>Quản trị viên</h4>
             <h2>{adminUsers}</h2>
           </Card>
         </Col>
@@ -243,23 +243,23 @@ const Users = () => {
       <Card className="table-card">
         <div className="table-header">
           <div>
-            <h3>User Management</h3>
-            <p>Manage staff, managers, and admin accounts</p>
+            <h3>Quản lý Người dùng</h3>
+            <p>Quản lý tài khoản nhân viên, quản lý và quản trị viên</p>
           </div>
           <Button type="primary" icon={<PlusOutlined />} onClick={openAddModal}>
-            Add User
+            Thêm người dùng
           </Button>
         </div>
 
         <div className="filters">
           <Input
             prefix={<SearchOutlined />}
-            placeholder="Search by name, username or email..."
+            placeholder="Tìm theo tên, tên tài khoản hoặc email..."
             onChange={(e) => setSearch(e.target.value)}
             style={{ width: 300 }}
           />
           <Select defaultValue="All" onChange={setRoleFilter}>
-            <Option value="All">All Roles</Option>
+            <Option value="All">Tất cả vai trò</Option>
             {ALLOWED_ROLES.map((r) => (
               <Option key={r} value={r}>
                 {r.charAt(0).toUpperCase() + r.slice(1)}
@@ -267,9 +267,9 @@ const Users = () => {
             ))}
           </Select>
           <Select defaultValue="All" onChange={setStatusFilter}>
-            <Option value="All">All Status</Option>
-            <Option value="Active">Active</Option>
-            <Option value="Inactive">Inactive</Option>
+            <Option value="All">Tất cả trạng thái</Option>
+            <Option value="Active">Hoạt động</Option>
+            <Option value="Inactive">Ngừng hoạt động</Option>
           </Select>
         </div>
 
@@ -280,64 +280,64 @@ const Users = () => {
 
       {/* MODAL: ADD USER */}
       <Modal
-        title="Add New User"
+        title="Thêm Người dùng mới"
         open={isModalOpen}
         onOk={handleSubmit}
         onCancel={() => setIsModalOpen(false)}
-        okText="Create"
-        cancelText="Cancel"
+        okText="Tạo mới"
+        cancelText="Hủy"
       >
         <Form layout="vertical" form={form}>
           <Form.Item
             name="first_name"
-            label="First Name"
-            rules={[{ required: true, message: "Please enter first name" }]}
+            label="Tên"
+            rules={[{ required: true, message: "Vui lòng nhập tên" }]}
           >
-            <Input placeholder="e.g. Nguyen" />
+            <Input placeholder="VD: Nguyễn" />
           </Form.Item>
           <Form.Item
             name="last_name"
-            label="Last Name"
-            rules={[{ required: true, message: "Please enter last name" }]}
+            label="Họ"
+            rules={[{ required: true, message: "Vui lòng nhập họ" }]}
           >
-            <Input placeholder="e.g. Van A" />
+            <Input placeholder="VD: Văn A" />
           </Form.Item>
           <Form.Item
             name="username"
-            label="Username"
+            label="Tên tài khoản"
             rules={[
-              { required: true, message: "Please enter username" },
-              { min: 3, message: "Username must be at least 3 characters" },
+              { required: true, message: "Vui lòng nhập tên tài khoản" },
+              { min: 3, message: "Tên tài khoản phải có ít nhất 3 ký tự" },
             ]}
           >
-            <Input placeholder="e.g. nguyenvana" />
+            <Input placeholder="VD: nguyenvana" />
           </Form.Item>
           <Form.Item
             name="email"
             label="Email"
             rules={[
-              { required: true, message: "Please enter email" },
-              { type: "email", message: "Invalid email format" },
+              { required: true, message: "Vui lòng nhập email" },
+              { type: "email", message: "Định dạng email không hợp lệ" },
             ]}
           >
-            <Input placeholder="e.g. user@example.com" />
+            <Input placeholder="user@example.com" />
           </Form.Item>
           <Form.Item
             name="password"
-            label="Password"
+            label="Mật khẩu"
             rules={[
-              { required: true, message: "Please enter password" },
-              { min: 6, message: "Password must be at least 6 characters" },
+              { required: true, message: "Vui lòng nhập mật khẩu" },
+              { min: 6, message: "Mật khẩu phải có ít nhất 6 ký tự" },
             ]}
           >
-            <Input.Password placeholder="At least 6 characters" />
+            <Input.Password placeholder="Ít nhất 6 ký tự" />
           </Form.Item>
           <Form.Item
             name="role"
-            label="Role"
-            rules={[{ required: true, message: "Please select a role" }]}
+            label="Vai trò"
+            rules={[{ required: true, message: "Vui lòng chọn vai trò" }]}
           >
-            <Select placeholder="Select role">
+            <Select placeholder="Chọn vai trò">
               {ALLOWED_ROLES.map((r) => (
                 <Option key={r} value={r}>
                   {r.charAt(0).toUpperCase() + r.slice(1)}

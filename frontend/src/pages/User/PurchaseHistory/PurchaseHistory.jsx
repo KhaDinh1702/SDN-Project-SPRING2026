@@ -44,12 +44,12 @@ export default function PurchaseHistory() {
             const data = await res.json();
 
             if (!res.ok) {
-                throw new Error(data.message || "Failed to load history");
+                throw new Error(data.message || "Tải lịch sử thất bại");
             }
 
             setHistory(data.data || []);
         } catch (err) {
-            message.error(err.message || "Failed to load history");
+            message.error(err.message || "Tải lịch sử thất bại");
         } finally {
             setLoading(false);
         }
@@ -61,7 +61,7 @@ export default function PurchaseHistory() {
 
             <div className="purchase-history-page">
                 <div className="history-container">
-                    <h1>My Purchase History</h1>
+                    <h1>Lịch sử mua hàng của tôi</h1>
 
                     {loading ? (
                         <div style={{ textAlign: "center", padding: "60px" }}>
@@ -69,9 +69,9 @@ export default function PurchaseHistory() {
                         </div>
                     ) : history.length === 0 ? (
                         <div className="no-orders">
-                            <h2>You haven't placed any orders yet.</h2>
+                            <h2>Bạn chưa đặt đơn hàng nào.</h2>
                             <Button type="primary" onClick={() => navigate("/")} style={{ marginTop: 16 }}>
-                                Start Shopping
+                                Bắt đầu mua sắm
                             </Button>
                         </div>
                     ) : (
@@ -79,11 +79,11 @@ export default function PurchaseHistory() {
                             <div key={order._id} className="order-card">
                                 <div className="order-header">
                                     <div className="order-header-left">
-                                        <strong>Order #{order._id.slice(-8).toUpperCase()}</strong>
+                                        <strong>Đơn hàng #{order._id.slice(-8).toUpperCase()}</strong>
                                         <p>{new Date(order.created_at).toLocaleString("vi-VN")}</p>
                                         <div style={{ display: "flex", gap: "8px" }}>
                                             <Tag className="order-status-tag" color={order.payment_status === "Paid" ? "green" : "volcano"}>
-                                                {order.payment_status || "Unpaid"}
+                                                {order.payment_status || "Chưa thanh toán"}
                                             </Tag>
                                             <Tag className="order-status-tag" color={getStatusColor(order.order_status)}>
                                                 {order.order_status}
@@ -97,8 +97,8 @@ export default function PurchaseHistory() {
                                             return (
                                                 <div key={idx} className="order-item-row">
                                                     <div className="order-item-info">
-                                                        <h4>{product.name || "Unknown Product"}</h4>
-                                                        <p>Qty: {item.quantity}</p>
+                                                        <h4>{product.name || "Sản phẩm không xác định"}</h4>
+                                                        <p>SL: {item.quantity}</p>
                                                     </div>
                                                     <div className="order-item-price">
                                                         {(item.unit_price * item.quantity).toLocaleString("vi-VN")} VND
@@ -109,7 +109,7 @@ export default function PurchaseHistory() {
                                     </div>
 
                                     <div className="order-footer">
-                                        <span>Total Amount:</span>
+                                        <span>Tổng tiền:</span>
                                         <strong>{(order.total_amount || 0).toLocaleString("vi-VN")} VND</strong>
                                     </div>
                                 </div>

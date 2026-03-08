@@ -139,7 +139,7 @@ export default function ProductDetail() {
 
       <div className="product-detail">
         <button className="back-btn" onClick={() => navigate(-1)}>
-          ← Back to Home
+          ← Về trang chủ
         </button>
 
         <div className="detail-grid">
@@ -151,13 +151,13 @@ export default function ProductDetail() {
 
             {/* FEEDBACK */}
             <div className="feedback-section">
-              <h3>Write a Review</h3>
+              <h3>Viết đánh giá</h3>
 
               {currentUser ? (
                 <>
                   <div className="user-info">
                     <img src={isAnonymous ? "https://i.pravatar.cc/100" : currentUser.avatar_url || "https://i.pravatar.cc/100"} alt="avatar" />
-                    <span>{isAnonymous ? "Anonymous" : `${currentUser.first_name} ${currentUser.last_name}`}</span>
+                    <span>{isAnonymous ? "Ẩn danh" : `${currentUser.first_name} ${currentUser.last_name}`}</span>
                   </div>
 
                   <div style={{ marginBottom: "1rem" }}>
@@ -165,51 +165,51 @@ export default function ProductDetail() {
                       checked={isAnonymous}
                       onChange={(e) => setIsAnonymous(e.target.checked)}
                     >
-                      Post anonymously
+                      Đăng ẩn danh
                     </Checkbox>
                   </div>
 
                   <Rate allowHalf value={userRating} onChange={setUserRating} style={{ marginBottom: "1rem" }} />
 
                   <textarea
-                    placeholder="Share your experience..."
+                    placeholder="Chia sẻ trải nghiệm của bạn..."
                     value={feedback}
                     onChange={(e) => setFeedback(e.target.value)}
                     style={{ border: "1px solid #ccc", padding: "10px", borderRadius: "5px", width: "100%", height: "80px", marginBottom: "1rem" }}
                   />
 
                   <Button type="primary" block onClick={handleSubmitReview}>
-                    Submit Review
+                    Gửi đánh giá
                   </Button>
                 </>
               ) : (
                 <div style={{ padding: "10px 0", color: "#666" }}>
-                  Please <a href="/login" style={{ color: "var(--primary-color)", fontWeight: "bold" }}>log in</a> to write a review.
+                  Vui lòng <a href="/login" style={{ color: "var(--primary-color)", fontWeight: "bold" }}>đăng nhập</a> để viết đánh giá.
                 </div>
               )}
             </div>
 
             {/* REVIEW LIST */}
             <div className="review-list">
-              <h3>Customer Reviews</h3>
+              <h3>Đánh giá từ khách hàng</h3>
 
               {reviews.length === 0 && (
-                <p className="no-review">No reviews yet.</p>
+                <p className="no-review">Chưa có đánh giá nào.</p>
               )}
 
               {reviews.map((r) => (
                 <div key={r._id} className="review-item">
                   <div className="review-header" style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <img src={r.isAnonymous ? "https://i.pravatar.cc/100" : r.user?.avatar_url || "https://i.pravatar.cc/100"} alt={r.isAnonymous ? "Anonymous" : r.user?.first_name || "User"} />
+                      <img src={r.isAnonymous ? "https://i.pravatar.cc/100" : r.user?.avatar_url || "https://i.pravatar.cc/100"} alt={r.isAnonymous ? "Ẩn danh" : r.user?.first_name || "Nội danh"} />
                       <div>
-                        <strong>{r.isAnonymous ? "Anonymous" : `${r.user?.first_name || ""} ${r.user?.last_name || ""}`.trim() || "Anonymous"}</strong>
+                        <strong>{r.isAnonymous ? "Ẩn danh" : `${r.user?.first_name || ""} ${r.user?.last_name || ""}`.trim() || "Ẩn danh"}</strong>
                         <Rate disabled allowHalf value={r.rating} />
                       </div>
                     </div>
                     {currentUser && currentUser.id === r.user?._id && (
                       <Button type="text" danger onClick={() => handleDeleteReview(r._id)}>
-                        Delete
+                        Xóa
                       </Button>
                     )}
                   </div>
@@ -223,31 +223,31 @@ export default function ProductDetail() {
 
           {/* RIGHT */}
           <div className="detail-info">
-            <span className="category">{product.category?.name || "Uncategorized"}</span>
+            <span className="category">{product.category?.name || "Chưa phân loại"}</span>
             <h1>{product.name}</h1>
 
             <div className="rating">
               <Rate disabled allowHalf defaultValue={5} />
-              <span className="review">4.9 (89 reviews)</span>
+              <span className="review">4.9 (89 đánh giá)</span>
             </div>
 
             <div className="price">
               {(product.price).toLocaleString("vi-VN")} VND <span style={{ fontSize: 16, color: '#6b7280' }}>/ {product.weight} {product.unit}</span>
-              <span className="stock" style={{ display: 'block', marginTop: 10, fontSize: 14 }}>{product.stock_quantity || 0} in stock</span>
+              <span className="stock" style={{ display: 'block', marginTop: 10, fontSize: 14 }}>Còn {product.stock_quantity || 0} sản phẩm</span>
             </div>
 
-            <p className="description">{product.description || "No description available."}</p>
+            <p className="description">{product.description || "Không có mô tả sản phẩm."}</p>
 
             <div className="info-box">
-              <strong>Origin</strong>
-              <p>{product.origin || "Unknown"}</p>
+              <strong>Nguồn gốc xuất xứ</strong>
+              <p>{product.origin || "Không rõ"}</p>
             </div>
 
-            <h3>Nutritional Content</h3>
+            <h3>Thành phần dinh dưỡng</h3>
             <div className="nutrition">
               {(product.nutrition || [
-                { name: "Protein", value: "26g" },
-                { name: "Iron", value: "2.8mg" }
+                { name: "Chất đạm (Protein)", value: "26g" },
+                { name: "Sắt (Iron)", value: "2.8mg" }
               ]).map((n, i) => (
                 <div key={i}>
                   <strong>{n.name}</strong>
@@ -257,7 +257,7 @@ export default function ProductDetail() {
             </div>
 
             <Button type="primary" size="large" block onClick={() => addToCart(product, 1)}>
-              Add to Cart
+              Thêm vào giỏ
             </Button>
           </div>
         </div>

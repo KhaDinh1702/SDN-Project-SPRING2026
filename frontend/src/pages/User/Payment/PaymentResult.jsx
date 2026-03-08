@@ -27,39 +27,39 @@ export default function PaymentResult({ status }) {
                     {status === "success" ? (
                         <Result
                             status="success"
-                            title="Payment Successful!"
+                            title="Thanh toán thành công!"
                             subTitle={
                                 <div>
-                                    <p>Your payment has been successfully processed.</p>
-                                    {orderId && <p><strong>Order ID:</strong> {orderId}</p>}
-                                    {transactionCode && <p><strong>Transaction Code:</strong> {transactionCode}</p>}
+                                    <p>Giao dịch thanh toán của bạn đã được xử lý thành công.</p>
+                                    {orderId && <p><strong>Mã đơn hàng:</strong> {orderId}</p>}
+                                    {transactionCode && <p><strong>Mã giao dịch:</strong> {transactionCode}</p>}
                                 </div>
                             }
                             extra={[
                                 <Button type="primary" key="orders" onClick={() => navigate("/profile")}>
-                                    View My Orders
+                                    Xem đơn hàng của tôi
                                 </Button>,
                                 <Button key="home" onClick={() => navigate("/")}>
-                                    Back to Home
+                                    Về trang chủ
                                 </Button>,
                             ]}
                         />
                     ) : (
                         <Result
                             status="error"
-                            title="Payment Failed"
+                            title="Thanh toán thất bại"
                             subTitle={
                                 <div>
-                                    <p>Unfortunately, your payment could not be processed.</p>
-                                    {message && <p><strong>Reason:</strong> {message}</p>}
+                                    <p>Rất tiếc, giao dịch thanh toán của bạn không thể thực hiện được.</p>
+                                    {message && <p><strong>Lý do:</strong> {message}</p>}
                                 </div>
                             }
                             extra={[
                                 <Button type="primary" key="cart" onClick={() => navigate("/cart")}>
-                                    Return to Cart
+                                    Quay lại giỏ hàng
                                 </Button>,
                                 <Button key="home" onClick={() => navigate("/")}>
-                                    Back to Home
+                                    Về trang chủ
                                 </Button>,
                             ]}
                         />

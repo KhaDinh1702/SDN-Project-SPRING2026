@@ -9,49 +9,49 @@ const { Panel } = Collapse;
 
 const faqData = [
     {
-        category: "Ordering & Payment",
+        category: "Đặt hàng & Thanh toán",
         questions: [
             {
-                q: "What payment methods do you accept?",
-                a: "We accept PayPal, Credit/Debit cards (Visa, MasterCard, Amex), and cash on delivery for specific locations."
+                q: "Các phương thức thanh toán hiện có?",
+                a: "Chúng tôi hỗ trợ VNPay, thẻ Tín dụng/Ghi nợ, và tiền mặt khi giao hàng (với một số khu vực nhất định)."
             },
             {
-                q: "How can I track my order?",
-                a: "Once your order is shipped, you will receive an email with a tracking number. You can also view your order status in the 'Purchase History' section of your profile."
+                q: "Làm thế nào để theo dõi đơn hàng?",
+                a: "Khi đơn hàng được giao, bạn sẽ nhận được mã theo dõi qua email, hoặc có thể kiểm tra ở phần 'Lịch sử mua hàng' tài khoản."
             },
             {
-                q: "Can I cancel or modify my order?",
-                a: "You can cancel or modify your order within 1 hour of placing it by contacting our support team. After this window, the order will likely be in processing and cannot be changed."
+                q: "Tôi có thể hủy hay thay đổi đơn được không?",
+                a: "Bạn có thể hủy hoặc sửa đơn trong khoảng 1 giờ kể từ lúc đặt hàng bằng cách liên hệ đội ngũ hỗ trợ."
             }
         ]
     },
     {
-        category: "Shipping & Delivery",
+        category: "Vận chuyển & Giao hàng",
         questions: [
             {
-                q: "Do you offer same-day delivery?",
-                a: "Yes! We offer same-day delivery for all orders placed before 12:00 PM within our local coverage area."
+                q: "Có giao hàng trong ngày không?",
+                a: "Có! Giao hàng trong ngày áp dụng cho đơn đặt trước 12:00 trưa ở khu vực nội thành."
             },
             {
-                q: "What happens if I'm not home during delivery?",
-                a: "If you're an apartment resident, we can leave it with the concierge. Otherwise, our courier will attempt to call you, or reschedule for the next day."
+                q: "Sẽ ra sao nếu tôi không có mặt để nhận hàng?",
+                a: "Chúng tôi sẽ gửi tại ban quản lý tòa nhà, hoặc người giao nhận sẽ bảo lưu gói hàng rồi hẹn sang ngày sau."
             },
             {
-                q: "How much is the shipping fee?",
-                a: "Shipping is completely free for orders over $50. For orders under $50, a flat rate of $5 applies."
+                q: "Phí vận chuyển là bao nhiêu?",
+                a: "Tiêu chuẩn là miễn phí nếu đơn trên 500,000 VND. Trường hợp này sẽ cộng thêm 50,000 phí."
             }
         ]
     },
     {
-        category: "Products & Quality",
+        category: "Sản phẩm & Chất lượng",
         questions: [
             {
-                q: "Are all your products organic?",
-                a: "The majority of our fresh produce is certified organic. Any item that is not organic will be clearly labeled as 'Conventional' in its description."
+                q: "Sản phẩm có thực sự chuẩn hữu cơ?",
+                a: "Đa số nông sản tại siêu thị đều được chứng nhận hữu cơ xanh."
             },
             {
-                q: "What is your return policy for fresh produce?",
-                a: "We guarantee 100% freshness! If you are unsatisfied with the quality of any item, report it within 24 hours of delivery for a full refund or replacement."
+                q: "Chính sách đổi trả nông sản?",
+                a: "Sự cam kết về chất lượng là 100%. Mọi ý kiến hoàn trả xin cung cấp chi tiết trong 24 giờ kể từ lúc nhận."
             }
         ]
     }
@@ -64,16 +64,16 @@ export default function FAQ() {
             <div className="faq-page">
                 {/* FAQ HEADER */}
                 <div className="faq-header">
-                    <h1>Frequently Asked Questions</h1>
-                    <p>Find answers to common questions about our products, delivery, and services.</p>
+                    <h1>Câu hỏi thường gặp</h1>
+                    <p>Tìm câu trả lời cho các câu hỏi phổ biến về sản phẩm, giao hàng và dịch vụ của chúng tôi.</p>
                 </div>
 
                 {/* FAQ CONTENT */}
                 <div className="faq-container">
                     <div className="faq-intro">
                         <QuestionCircleOutlined className="faq-icon" />
-                        <h2>How can we help you?</h2>
-                        <p>If you cannot find the answer you're looking for, feel free to visit our Contact page and send us a message.</p>
+                        <h2>Chúng tôi có thể giúp gì cho bạn?</h2>
+                        <p>Nếu bạn không tìm thấy câu trả lời đang cần, hãy truy cập trang Liên hệ và gửi tin nhắn.</p>
                     </div>
 
                     <div className="faq-categories">

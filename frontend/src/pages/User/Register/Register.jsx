@@ -51,7 +51,7 @@ export default function Register() {
 
   const handleRegister = async () => {
     if (!isFormValid) {
-      message.error('Please fill all required fields');
+      message.error('Vui lòng điền đầy đủ thông tin');
       return;
     }
 
@@ -76,13 +76,13 @@ export default function Register() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.message || 'Registration failed');
+        throw new Error(data.message || 'Đăng ký thất bại');
       }
 
-      message.success('Account created successfully!');
+      message.success('Tạo tài khoản thành công!');
       navigate('/login');
     } catch (err) {
-      message.error(err.message || 'Registration failed');
+      message.error(err.message || 'Đăng ký thất bại');
     } finally {
       setLoading(false);
     }
@@ -103,16 +103,16 @@ export default function Register() {
             color: '#333',
           }}
         >
-          Back to Home
+          Về trang chủ
         </Button>
         <div className='register-card'>
-          <h1>Create Account</h1>
-          <p className='subtitle'>Join Fresh Market and start shopping fresh</p>
+          <h1>Tạo Tài khoản</h1>
+          <p className='subtitle'>Tham gia Fresh Market và bắt đầu mua sắm nông sản sạch</p>
 
           {/* NAME */}
           <div className='row'>
             <div>
-              <label>First Name</label>
+              <label>Tên</label>
               <div className='input-box'>
                 <UserOutlined />
                 <input
@@ -124,7 +124,7 @@ export default function Register() {
             </div>
 
             <div>
-              <label>Last Name</label>
+              <label>Họ</label>
               <div className='input-box'>
                 <UserOutlined />
                 <input
@@ -137,11 +137,10 @@ export default function Register() {
           </div>
 
           {/* EMAIL */}
-          <label>Email Address</label>
+          <label>Địa chỉ Email</label>
           <div
-            className={`input-box ${
-              form.email && !isEmailValid ? 'error' : ''
-            }`}
+            className={`input-box ${form.email && !isEmailValid ? 'error' : ''
+              }`}
           >
             <MailOutlined />
             <input
@@ -153,8 +152,8 @@ export default function Register() {
 
           {/* PHONE */}
           <label>
-            Phone Number{' '}
-            <span style={{ color: '#999', fontWeight: 400 }}>(optional)</span>
+            Số điện thoại{' '}
+            <span style={{ color: '#999', fontWeight: 400 }}>(tùy chọn)</span>
           </label>
           <div className='input-box'>
             <PhoneOutlined />
@@ -166,12 +165,12 @@ export default function Register() {
           </div>
 
           {/* PASSWORD */}
-          <label>Password</label>
+          <label>Mật khẩu</label>
           <div className='input-box'>
             <LockOutlined />
             <input
               type={showPassword ? 'text' : 'password'}
-              placeholder='Create a strong password'
+              placeholder='Tạo mật khẩu mạnh'
               value={form.password}
               onChange={(e) => handleChange('password', e.target.value)}
             />
@@ -189,16 +188,15 @@ export default function Register() {
           </div>
 
           {/* CONFIRM PASSWORD */}
-          <label>Confirm Password</label>
+          <label>Xác nhận Mật khẩu</label>
           <div
-            className={`input-box ${
-              form.confirmPassword && !isConfirmValid ? 'error' : ''
-            }`}
+            className={`input-box ${form.confirmPassword && !isConfirmValid ? 'error' : ''
+              }`}
           >
             <LockOutlined />
             <input
               type={showConfirm ? 'text' : 'password'}
-              placeholder='Confirm your password'
+              placeholder='Xác nhận lại mật khẩu'
               value={form.confirmPassword}
               onChange={(e) => handleChange('confirmPassword', e.target.value)}
             />
@@ -223,8 +221,8 @@ export default function Register() {
               onChange={(e) => handleChange('agree', e.target.checked)}
             />
             <span>
-              I agree to the <strong>Terms of Service</strong> and{' '}
-              <strong>Privacy Policy</strong>
+              Tôi đồng ý với <strong>Điều khoản Dịch vụ</strong> và{' '}
+              <strong>Chính sách Bảo mật</strong>
             </span>
           </div>
 
@@ -237,28 +235,27 @@ export default function Register() {
             loading={loading}
             onClick={handleRegister}
           >
-            {loading ? 'Creating Account...' : 'Create Account'}
+            {loading ? 'Đang tạo...' : 'Đăng ký'}
           </Button>
 
           <div className='divider'>
-            <span>or</span>
+            <span>hoặc</span>
           </div>
 
           <Button
             block
             className='google-btn'
           >
-            Continue with Google
+            Tiếp tục với Google
           </Button>
 
-          {/* SIGN IN */}
           <p className='signin-text'>
-            Already have an account?{' '}
+            Đã có tài khoản?{' '}
             <strong
               className='signin-link'
               onClick={() => navigate('/login')}
             >
-              Sign in here
+              Đăng nhập tại đây
             </strong>
           </p>
         </div>

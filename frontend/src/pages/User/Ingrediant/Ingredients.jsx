@@ -56,18 +56,18 @@ export default function Ingredients() {
       <Content className="ingredient-container">
 
         <div className="hero-section">
-          <h1>Recipe Ingredients</h1>
-          <p>Discover dishes and find all the fresh products you need in one place</p>
+          <h1>Nguyên liệu Món ăn</h1>
+          <p>Khám phá các món ăn và tìm tất cả những nguyên liệu tươi ngon bạn cần</p>
         </div>
 
         {loading ? (
-          <div style={{ textAlign: "center", padding: "50px" }}>Loading dishes...</div>
+          <div style={{ textAlign: "center", padding: "50px" }}>Đang tải món ăn...</div>
         ) : dishes.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "50px" }}>No dishes found.</div>
+          <div style={{ textAlign: "center", padding: "50px" }}>Không tìm thấy món ăn nào.</div>
         ) : (
           <Row gutter={60}>
             <Col span={10}>
-              <h3 className="browse-title">Browse Dishes</h3>
+              <h3 className="browse-title">Khám phá món ăn</h3>
 
               {dishes.map((dish) => (
                 <Card
@@ -83,8 +83,8 @@ export default function Ingredients() {
                       <h4>{dish.name}</h4>
                       <p className="dish-desc">{dish.description}</p>
                       <div className="dish-meta">
-                        <ClockCircleOutlined /> 30 mins
-                        <UserOutlined style={{ marginLeft: 20 }} /> 2 servings
+                        <ClockCircleOutlined /> 30 phút
+                        <UserOutlined style={{ marginLeft: 20 }} /> 2 phần ăn
                       </div>
                     </Col>
                   </Row>
@@ -101,18 +101,18 @@ export default function Ingredients() {
                   <p className="main-desc">{selectedDish.description}</p>
 
                   <div className="detail-meta">
-                    <div><ClockCircleOutlined /> Prep Time <strong>30 mins</strong></div>
-                    <div><UserOutlined /> Servings <strong>2</strong></div>
+                    <div><ClockCircleOutlined /> Thời gian chuẩn bị <strong>30 phút</strong></div>
+                    <div><UserOutlined /> Phần ăn <strong>2</strong></div>
                     <button
                       className="add-btn"
                       onClick={handleAddAllIngredients}
                       style={{ marginLeft: 'auto', padding: '10px 20px', fontSize: '16px' }}
                     >
-                      Add All Ingredients to Cart
+                      Thêm tất cả nguyên liệu vào giỏ
                     </button>
                   </div>
 
-                  <h3 className="ingredient-title">Ingredients</h3>
+                  <h3 className="ingredient-title">Nguyên liệu</h3>
 
                   <div className="ingredient-box">
                     {selectedDish.products?.map((item, i) => (
@@ -121,18 +121,18 @@ export default function Ingredients() {
                           <img src={item.product?.images?.[0]?.url || item.product?.images?.[0]} alt={item.product?.name} />
                           <span>{item.product?.name}</span>
                         </div>
-                        <span className="ingredient-amount">Qty: {item.quantity}</span>
+                        <span className="ingredient-amount">SL: {item.quantity}</span>
                       </div>
                     ))}
                   </div>
-                  <h3 className="available-title">Available Products</h3>
+                  <h3 className="available-title">Sản phẩm có sẵn</h3>
 
                   <div className="product-grid">
                     {selectedDish.products?.map((item, i) => (
                       <div key={i} className="product-card">
                         <img src={item.product?.images?.[0]?.url || item.product?.images?.[0]} alt={item.product?.name} />
                         <div className="product-info">
-                          <span className="product-category">Ingredient</span>
+                          <span className="product-category">Nguyên liệu</span>
                           <h4>{item.product?.name}</h4>
                           <div className="product-bottom">
                             <span className="product-price">{(item.product?.price || 0).toLocaleString("vi-VN")} VND</span>
@@ -140,7 +140,7 @@ export default function Ingredients() {
                               className="add-btn"
                               onClick={() => addToCart(item.product, item.quantity)}
                             >
-                              Add
+                              Thêm
                             </button>
                           </div>
                         </div>

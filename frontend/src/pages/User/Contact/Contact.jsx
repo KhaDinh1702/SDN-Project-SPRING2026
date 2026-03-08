@@ -12,7 +12,7 @@ export default function Contact() {
 
     const onFinish = (values) => {
         console.log("Form values:", values);
-        message.success("Thank you! Your message has been sent successfully.");
+        message.success("Cảm ơn! Tin nhắn của bạn đã được gửi thành công.");
         form.resetFields();
     };
 
@@ -22,8 +22,8 @@ export default function Contact() {
             <div className="contact-page">
                 {/* CONTACT HEADER */}
                 <div className="contact-header">
-                    <h1>Contact Us</h1>
-                    <p>We'd love to hear from you. Get in touch with our team today!</p>
+                    <h1>Liên hệ</h1>
+                    <p>Chúng tôi rất muốn lắng nghe từ bạn. Hãy liên hệ với đội ngũ ngay hôm nay!</p>
                 </div>
 
                 <div className="contact-container">
@@ -31,9 +31,9 @@ export default function Contact() {
 
                         {/* LEFT: CONTACT DETAILS */}
                         <div className="contact-info">
-                            <h2>Get in Touch</h2>
+                            <h2>Giữ liên lạc</h2>
                             <p className="contact-desc">
-                                Whether you have a question about our products, delivery, or anything else, our team is ready to answer all your questions.
+                                Nếu bạn có câu hỏi về sản phẩm hay vận chuyển, đội ngũ chuyên nghiệp rất sẵn lòng trả lời mọi thắc mắc.
                             </p>
 
                             <div className="info-item">
@@ -41,8 +41,8 @@ export default function Contact() {
                                     <EnvironmentOutlined />
                                 </div>
                                 <div className="info-text">
-                                    <h3>Our Head Office</h3>
-                                    <p>123 Fresh Ave, Farming District, NY 10001, USA</p>
+                                    <h3>Trụ sở chính</h3>
+                                    <p>123 Đường Fresh, Quận Nông dân, NY 10001, USA</p>
                                 </div>
                             </div>
 
@@ -51,9 +51,9 @@ export default function Contact() {
                                     <PhoneOutlined />
                                 </div>
                                 <div className="info-text">
-                                    <h3>Call Us</h3>
+                                    <h3>Gọi cho chúng tôi</h3>
                                     <p>+1 (555) 123-4567</p>
-                                    <p className="sub-text">Mon-Fri from 8am to 5pm</p>
+                                    <p className="sub-text">Thứ 2-Thứ 6, 8h-17h</p>
                                 </div>
                             </div>
 
@@ -62,16 +62,16 @@ export default function Contact() {
                                     <MailOutlined />
                                 </div>
                                 <div className="info-text">
-                                    <h3>Email Us</h3>
+                                    <h3>Gửi Email</h3>
                                     <p>support@freshmart.com</p>
-                                    <p className="sub-text">We'll respond within 24 hours</p>
+                                    <p className="sub-text">Chúng tôi sẽ trả lời trong vòng 24 giờ</p>
                                 </div>
                             </div>
                         </div>
 
                         {/* RIGHT: CONTACT FORM */}
                         <div className="contact-form-container">
-                            <h2>Send a Message</h2>
+                            <h2>Gửi tin nhắn</h2>
                             <Form
                                 form={form}
                                 layout="vertical"
@@ -79,38 +79,38 @@ export default function Contact() {
                                 className="contact-form"
                             >
                                 <Form.Item
-                                    label="Your Name"
+                                    label="Tên của bạn"
                                     name="name"
-                                    rules={[{ required: true, message: "Please enter your name" }]}
+                                    rules={[{ required: true, message: "Vui lòng nhập tên" }]}
                                 >
-                                    <Input size="large" placeholder="John Doe" />
+                                    <Input size="large" placeholder="Nguyễn Văn A" />
                                 </Form.Item>
 
                                 <Form.Item
-                                    label="Email Address"
+                                    label="Địa chỉ Email"
                                     name="email"
                                     rules={[
-                                        { required: true, message: "Please enter your email" },
-                                        { type: "email", message: "Please enter a valid email address" }
+                                        { required: true, message: "Vui lòng nhập email" },
+                                        { type: "email", message: "Vui lòng nhập địa chỉ email hợp lệ" }
                                     ]}
                                 >
-                                    <Input size="large" placeholder="john@example.com" />
+                                    <Input size="large" placeholder="nguyenvana@example.com" />
                                 </Form.Item>
 
                                 <Form.Item
-                                    label="Subject"
+                                    label="Tiêu đề"
                                     name="subject"
-                                    rules={[{ required: true, message: "Please enter a subject" }]}
+                                    rules={[{ required: true, message: "Vui lòng nhập tiêu đề" }]}
                                 >
-                                    <Input size="large" placeholder="How can we help you?" />
+                                    <Input size="large" placeholder="Chúng tôi có thể giúp gì cho bạn?" />
                                 </Form.Item>
 
                                 <Form.Item
-                                    label="Message"
+                                    label="Nội dung"
                                     name="message"
-                                    rules={[{ required: true, message: "Please enter your message" }]}
+                                    rules={[{ required: true, message: "Vui lòng nhập nội dung" }]}
                                 >
-                                    <TextArea rows={5} placeholder="Write your message here..." />
+                                    <TextArea rows={5} placeholder="Viết tin nhắn của bạn ở đây..." />
                                 </Form.Item>
 
                                 <Button
@@ -120,7 +120,7 @@ export default function Contact() {
                                     icon={<SendOutlined />}
                                     className="submit-btn"
                                 >
-                                    Send Message
+                                    Gửi tin nhắn
                                 </Button>
                             </Form>
                         </div>
