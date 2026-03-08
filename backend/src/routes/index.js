@@ -2,6 +2,7 @@ import express from 'express';
 import { Router } from 'express';
 import authRouter from '../modules/auth/auth.routes.js';
 import productRouter from '../modules/product/product.routes.js';
+import dishRouter from '../modules/dish/dish.routes.js';
 import categoryRouter from '../modules/category/category.routes.js';
 import stockRouter from '../modules/stock/stock.routes.js';
 import orderRouter from '../modules/order/order.routes.js';
@@ -21,6 +22,9 @@ router.use('/products', productRouter);
 
 /**=========== CATEGORY ===========**/
 router.use('/categories', categoryRouter);
+
+/**=========== DISH ===========**/
+router.use('/dishes', dishRouter);
 
 /**=========== ORDER ===========**/
 router.use('/orders', orderRouter);
