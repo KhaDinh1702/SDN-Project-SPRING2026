@@ -10,12 +10,12 @@ export const getAllDishes = async ({ keyword }) => {
         filter.name = { $regex: keyword, $options: 'i' };
     }
     return await Dish.find(filter)
-        .populate('products.product', 'name images')
+        .populate('products.product', 'name images price')
         .sort({ createdAt: -1 });
 };
 
 export const getDishById = async (id) => {
-    return await Dish.findById(id).populate('products.product', 'name images');
+    return await Dish.findById(id).populate('products.product', 'name images price');
 };
 
 export const createDish = async (payload, files = []) => {
@@ -102,7 +102,7 @@ export const updateDish = async (id, payload, files = []) => {
 
     const dish = await Dish.findByIdAndUpdate(id, payload, {
         new: true,
-    }).populate('products.product', 'name images');
+    }).populate('products.product', 'name images price');
 
     return dish;
 };

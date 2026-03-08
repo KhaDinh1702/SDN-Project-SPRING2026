@@ -57,11 +57,11 @@ export default function Cart() {
                 items: cartItems.map(item => ({
                     product_id: item._id || item.id,
                     quantity: item.quantity,
-                    unit_price: item.price * 25000
+                    unit_price: item.price
                 })),
                 payment_method: values.payment_method,
                 shipping_address: values.shipping_address,
-                total_amount: totalPrice * 25000
+                total_amount: totalPrice
             };
 
             const response = await fetch(`${API_URL}/api/orders`, {
@@ -132,7 +132,7 @@ export default function Cart() {
                                         <img src={imgUrl} alt={itemName} className="cart-item-img" />
                                         <div className="cart-item-info">
                                             <h3>{itemName}</h3>
-                                            <div className="cart-item-price">{(item.price * 25000).toLocaleString("vi-VN")} VND</div>
+                                            <div className="cart-item-price">{(item.price).toLocaleString("vi-VN")} VND</div>
                                             <div className="cart-item-controls">
                                                 <button onClick={() => updateQuantity(itemId, -1)} disabled={item.quantity <= 1}>
                                                     -
@@ -145,7 +145,7 @@ export default function Cart() {
                                         </div>
 
                                         <div className="cart-item-total">
-                                            {((item.price * 25000) * item.quantity).toLocaleString("vi-VN")} VND
+                                            {((item.price) * item.quantity).toLocaleString("vi-VN")} VND
                                         </div>
 
                                         <Popconfirm
@@ -169,7 +169,7 @@ export default function Cart() {
 
                             <div className="summary-row">
                                 <span>Items ({totalItems}):</span>
-                                <span>{(totalPrice * 25000).toLocaleString("vi-VN")} VND</span>
+                                <span>{(totalPrice).toLocaleString("vi-VN")} VND</span>
                             </div>
                             <div className="summary-row">
                                 <span>Shipping:</span>
@@ -178,7 +178,7 @@ export default function Cart() {
 
                             <div className="summary-row total">
                                 <span>Total:</span>
-                                <span>{(totalPrice * 25000).toLocaleString("vi-VN")} VND</span>
+                                <span>{(totalPrice).toLocaleString("vi-VN")} VND</span>
                             </div>
 
                             <Button type="primary" className="checkout-btn" onClick={handleCheckoutClick}>

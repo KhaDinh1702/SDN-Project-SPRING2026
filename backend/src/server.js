@@ -5,6 +5,11 @@ import connectDB from './config/db.js';
 import routes from './routes/index.js';
 import { errorHandler } from './middlewares/error.middleware.js';
 import cookieParser from 'cookie-parser';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -21,6 +26,9 @@ app.use(
 );
 
 app.use(json());
+
+// Serve static files for mock uploads
+app.use('/public/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
 // Health Check Route
 app.get('/', (req, res) => {
