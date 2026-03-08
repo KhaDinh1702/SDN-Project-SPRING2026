@@ -36,6 +36,13 @@ const getStatusColor = (status) => {
   }
 };
 
+const orderStatusMap = {
+  Processing: "Đang xử lý",
+  Shipped: "Đang giao",
+  Delivered: "Đã giao",
+  Cancelled: "Đã hủy"
+};
+
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -115,19 +122,19 @@ const Orders = () => {
 
   const columns = [
     {
-      title: "Order ID",
+      title: "Mã ĐH",
       dataIndex: "_id",
       render: (id) => `#${id?.slice(-6).toUpperCase()}`,
     },
     {
-      title: "User",
+      title: "Người dùng",
       render: (_, record) => {
         const u = record.user_id;
         return typeof u === "object" ? (u?.name || u?.email || "—") : (u || "—");
       },
     },
     {
-      title: "Items",
+      title: "Sản phẩm",
       render: (_, record) => {
         const items = record.items || record.products || [];
         return items
@@ -142,20 +149,20 @@ const Orders = () => {
       },
     },
     {
-      title: "Amount",
+      title: "Tổng tiền",
       dataIndex: "total_amount",
       render: (val) => (val || 0).toLocaleString("vi-VN") + " đ",
     },
     {
-      title: "Payment",
+      title: "Thanh toán",
       dataIndex: "payment_status",
       render: (status) => {
         let color = status === "Paid" ? "green" : "volcano";
-        return <Tag color={color}>{status || "Unpaid"}</Tag>;
+        return <Tag color={color}>{status || "Chưa TT"}</Tag>;
       },
     },
     {
-      title: "Status",
+      title: "Trạng thái",
       render: (_, record) => (
         <Select
           value={record.order_status}
@@ -165,26 +172,26 @@ const Orders = () => {
         >
           {["Processing", "Shipped", "Delivered", "Cancelled"].map((s) => (
             <Option key={s} value={s}>
-              <Tag color={getStatusColor(s)}>{s}</Tag>
+              <Tag color={getStatusColor(s)}>{orderStatusMap[s] || s}</Tag>
             </Option>
           ))}
         </Select>
       ),
     },
     {
-      title: "Date",
+      title: "Ngày đặt",
       dataIndex: "created_at",
       render: (val) => val ? new Date(val).toLocaleDateString("vi-VN") : "—",
     },
     {
-      title: "Actions",
+      title: "Thao tác",
       render: (_, record) => (
         <Button
           type="link"
           icon={<EyeOutlined />}
           onClick={() => { setSelectedOrder(record); setIsViewOpen(true); }}
         >
-          View
+          Xem chi tiết
         </Button>
       ),
     },
@@ -192,21 +199,21 @@ const Orders = () => {
 
   return (
     <div className="orders-container">
-      <Title level={3}>Order Management</Title>
+      <Title level={3}>Quản lý Đơn hàng</Title>
 
       {/* Summary */}
       <Row gutter={16} className="summary-row">
         <Col span={6}>
-          <Card className="summary-card">Total Orders<br /><b>{summary.total}</b></Card>
+          <Card className="summary-card">Tổng đơn hàng<br /><b>{summary.total}</b></Card>
         </Col>
         <Col span={6}>
-          <Card className="summary-card yellow">Pending<br /><b>{summary.pending}</b></Card>
+          <Card className="summary-card yellow">Chờ xử lý<br /><b>{summary.pending}</b></Card>
         </Col>
         <Col span={6}>
-          <Card className="summary-card blue">Shipped<br /><b>{summary.shipped}</b></Card>
+          <Card className="summary-card blue">Đang giao<br /><b>{summary.shipped}</b></Card>
         </Col>
         <Col span={6}>
-          <Card className="summary-card delivered">Delivered<br /><b>{summary.delivered}</b></Card>
+          <Card className="summary-card delivered">Đã giao<br /><b>{summary.delivered}</b></Card>
         </Col>
       </Row>
 
@@ -214,7 +221,7 @@ const Orders = () => {
       <div className="top-bar">
         <Input
           prefix={<SearchOutlined />}
-          placeholder="Search by order ID or user..."
+          placeholder="Tìm theo mã đơn hàng hoặc người dùng..."
           onChange={(e) => setSearchText(e.target.value)}
         />
         <Select
@@ -222,13 +229,13 @@ const Orders = () => {
           onChange={setFilterStatus}
           style={{ width: 150 }}
         >
-          <Option value="All">All Orders</Option>
-          <Option value="Processing">Processing</Option>
-          <Option value="Shipped">Shipped</Option>
-          <Option value="Delivered">Delivered</Option>
-          <Option value="Cancelled">Cancelled</Option>
+          <Option value="All">Tất cả đơn hàng</Option>
+          <Option value="Processing">Đang xử lý</Option>
+          <Option value="Shipped">Đang giao</Option>
+          <Option value="Delivered">Đã giao</Option>
+          <Option value="Cancelled">Đã hủy</Option>
         </Select>
-        <Button onClick={fetchOrders}>Refresh</Button>
+        <Button onClick={fetchOrders}>Làm mới</Button>
       </div>
 
       <Spin spinning={loading}>
@@ -240,37 +247,37 @@ const Orders = () => {
         open={isViewOpen}
         footer={null}
         onCancel={() => setIsViewOpen(false)}
-        title="Order Details"
+        title="Chi tiết đơn hàng"
       >
         {selectedOrder && (
           <>
-            <p><b>Order ID:</b> {selectedOrder._id}</p>
+            <p><b>Mã ĐH:</b> {selectedOrder._id}</p>
             <p>
-              <b>User:</b>{" "}
+              <b>Người dùng:</b>{" "}
               {typeof selectedOrder.user_id === "object"
                 ? selectedOrder.user_id?.name || selectedOrder.user_id?.email
                 : selectedOrder.user_id}
             </p>
             <p>
-              <b>Status:</b>{" "}
+              <b>Trạng thái:</b>{" "}
               <Tag color={getStatusColor(selectedOrder.order_status)}>
-                {selectedOrder.order_status}
+                {orderStatusMap[selectedOrder.order_status] || selectedOrder.order_status}
               </Tag>
             </p>
             <p>
-              <b>Payment:</b>{" "}
+              <b>Thanh toán:</b>{" "}
               <Tag color={selectedOrder.payment_status === "Paid" ? "green" : "volcano"}>
-                {selectedOrder.payment_status || "Unpaid"}
+                {selectedOrder.payment_status || "Chưa TT"}
               </Tag>
             </p>
             <p>
-              <b>Date:</b>{" "}
+              <b>Ngày đặt:</b>{" "}
               {selectedOrder.created_at
                 ? new Date(selectedOrder.created_at).toLocaleString("vi-VN")
                 : "—"}
             </p>
             <p>
-              <b>Total:</b> {(selectedOrder.total_amount || 0).toLocaleString("vi-VN")} đ
+              <b>Tổng tiền:</b> {(selectedOrder.total_amount || 0).toLocaleString("vi-VN")} đ
             </p>
             <hr />
             <b>Items:</b>

@@ -48,7 +48,7 @@ export default function Profile() {
             const data = await res.json();
 
             if (!res.ok) {
-                throw new Error(data.message || "Failed to load profile");
+                throw new Error(data.message || "Tải thông tin hồ sơ thất bại");
             }
 
             setProfile(data.data);
@@ -71,7 +71,7 @@ export default function Profile() {
                 console.error("Failed to fetch purchase summary", summaryErr);
             }
         } catch (err) {
-            message.error(err.message || "Failed to load profile");
+            message.error(err.message || "Tải thông tin hồ sơ thất bại");
             if (err.message?.includes("Unauthorized") || err.message?.includes("token")) {
                 navigate("/login");
             }
@@ -95,10 +95,10 @@ export default function Profile() {
             const data = await res.json();
 
             if (!res.ok) {
-                throw new Error(data.message || "Failed to update profile");
+                throw new Error(data.message || "Cập nhật hồ sơ thất bại");
             }
 
-            message.success("Profile updated successfully!");
+            message.success("Cập nhật hồ sơ thành công!");
             setEditing(false);
 
             // Refresh profile data
@@ -116,7 +116,7 @@ export default function Profile() {
                 })
             );
         } catch (err) {
-            message.error(err.message || "Failed to update profile");
+            message.error(err.message || "Cập nhật hồ sơ thất bại");
         } finally {
             setSaving(false);
         }
@@ -144,7 +144,7 @@ export default function Profile() {
                 <Header />
                 <div className="profile-page">
                     <div className="profile-card" style={{ textAlign: "center", padding: 60 }}>
-                        Loading...
+                        Đang tải...
                     </div>
                 </div>
                 <Footer />
@@ -158,10 +158,10 @@ export default function Profile() {
                 <Header />
                 <div className="profile-page">
                     <div className="profile-card" style={{ textAlign: "center" }}>
-                        <h1>Error</h1>
-                        <p>Could not load profile.</p>
+                        <h1>Lỗi</h1>
+                        <p>Không thể tải hồ sơ.</p>
                         <Button type="primary" onClick={() => navigate("/")}>
-                            Go Home
+                            Về trang chủ
                         </Button>
                     </div>
                 </div>
@@ -202,15 +202,15 @@ export default function Profile() {
                         <div className="purchase-summary">
                             <div className="summary-item">
                                 <strong>{(purchaseSummary.total_spent || 0).toLocaleString("vi-VN")} VND</strong>
-                                <span>Total Spent</span>
+                                <span>Tổng chi tiêu</span>
                             </div>
                             <div className="summary-item">
                                 <strong>{purchaseSummary.total_items}</strong>
-                                <span>Items Bought</span>
+                                <span>Sản phẩm đã mua</span>
                             </div>
                             <div className="summary-item">
                                 <strong>{purchaseSummary.total_orders}</strong>
-                                <span>Orders</span>
+                                <span>Đơn hàng</span>
                             </div>
                         </div>
                     )}
@@ -218,26 +218,26 @@ export default function Profile() {
                     {/* FORM */}
                     <div className="profile-row">
                         <div>
-                            <label>First Name</label>
+                            <label>Tên</label>
                             <div className={`profile-input-box ${!editing ? "disabled" : ""}`}>
                                 <UserOutlined />
                                 <input
                                     value={form.first_name}
                                     onChange={(e) => handleChange("first_name", e.target.value)}
                                     disabled={!editing}
-                                    placeholder="First name"
+                                    placeholder="Tên"
                                 />
                             </div>
                         </div>
                         <div>
-                            <label>Last Name</label>
+                            <label>Họ</label>
                             <div className={`profile-input-box ${!editing ? "disabled" : ""}`}>
                                 <UserOutlined />
                                 <input
                                     value={form.last_name}
                                     onChange={(e) => handleChange("last_name", e.target.value)}
                                     disabled={!editing}
-                                    placeholder="Last name"
+                                    placeholder="Họ"
                                 />
                             </div>
                         </div>
@@ -249,25 +249,25 @@ export default function Profile() {
                         <input value={profile.email} disabled />
                     </div>
 
-                    <label>Username</label>
+                    <label>Tên đăng nhập</label>
                     <div className={`profile-input-box ${!editing ? "disabled" : ""}`}>
                         <UserOutlined />
                         <input
                             value={form.username}
                             onChange={(e) => handleChange("username", e.target.value)}
                             disabled={!editing}
-                            placeholder="Username"
+                            placeholder="Tên đăng nhập"
                         />
                     </div>
 
-                    <label>Phone</label>
+                    <label>Số điện thoại</label>
                     <div className={`profile-input-box ${!editing ? "disabled" : ""}`}>
                         <PhoneOutlined />
                         <input
                             value={form.phone}
                             onChange={(e) => handleChange("phone", e.target.value)}
                             disabled={!editing}
-                            placeholder="Phone number"
+                            placeholder="Số điện thoại"
                         />
                     </div>
 
@@ -280,7 +280,7 @@ export default function Profile() {
                                 className="profile-save-btn"
                                 onClick={() => setEditing(true)}
                             >
-                                Edit Profile
+                                Chỉnh sửa hồ sơ
                             </Button>
                         ) : (
                             <>
@@ -289,7 +289,7 @@ export default function Profile() {
                                     className="profile-cancel-btn"
                                     onClick={handleCancel}
                                 >
-                                    Cancel
+                                    Hủy
                                 </Button>
                                 <Button
                                     type="primary"
@@ -298,7 +298,7 @@ export default function Profile() {
                                     loading={saving}
                                     onClick={handleSave}
                                 >
-                                    Save Changes
+                                    Lưu thay đổi
                                 </Button>
                             </>
                         )}
@@ -306,7 +306,7 @@ export default function Profile() {
 
                     {/* META */}
                     <div className="profile-meta">
-                        Member since {new Date(profile.created_at).toLocaleDateString("en-US", {
+                        Thành viên từ ngày {new Date(profile.created_at).toLocaleDateString("vi-VN", {
                             year: "numeric",
                             month: "long",
                             day: "numeric",

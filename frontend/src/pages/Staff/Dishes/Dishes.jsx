@@ -166,7 +166,7 @@ const Dishes = () => {
 
     const columns = [
         {
-            title: "Name",
+            title: "Tên món ăn",
             dataIndex: "name",
             render: (name, record) => (
                 <Space>
@@ -182,27 +182,27 @@ const Dishes = () => {
             ),
         },
         {
-            title: "Active",
+            title: "Trạng thái",
             render: (_, record) =>
                 record.is_active ? (
-                    <Tag color="blue">Active</Tag>
+                    <Tag color="blue">Hoạt động</Tag>
                 ) : (
-                    <Tag color="red">Inactive</Tag>
+                    <Tag color="red">Ngừng hoạt động</Tag>
                 ),
         },
         {
-            title: "Action",
+            title: "Thao tác",
             render: (_, record) => (
                 <Space>
                     <Button icon={<EditOutlined />} size="small" onClick={() => handleEdit(record)}>
-                        Edit
+                        Sửa
                     </Button>
                     <Popconfirm
                         title="Xóa món ăn này?"
                         onConfirm={() => handleDelete(record._id)}
                     >
                         <Button icon={<DeleteOutlined />} size="small" danger>
-                            Delete
+                            Xóa
                         </Button>
                     </Popconfirm>
                 </Space>
@@ -214,14 +214,14 @@ const Dishes = () => {
         <Card className="dishes-card">
             <div className="dishes-header">
                 <Search
-                    placeholder="Search dishes..."
+                    placeholder="Tìm kiếm món ăn..."
                     style={{ width: 300 }}
                     onChange={(e) => setSearchText(e.target.value)}
                     onSearch={(val) => fetchDishes(val)}
                     allowClear
                 />
                 <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-                    Add Dish
+                    Thêm món ăn
                 </Button>
             </div>
 
@@ -230,11 +230,11 @@ const Dishes = () => {
             </Spin>
 
             <Modal
-                title={editingDish ? "Edit Dish" : "Add Dish"}
+                title={editingDish ? "Sửa món ăn" : "Thêm món ăn"}
                 open={isModalOpen}
                 onOk={handleSubmit}
                 onCancel={() => setIsModalOpen(false)}
-                okText={editingDish ? "Update" : "Create"}
+                okText={editingDish ? "Cập nhật" : "Tạo mới"}
                 width={700}
             >
                 <Form layout="vertical" form={form}>
@@ -242,34 +242,34 @@ const Dishes = () => {
                         <Col span={24}>
                             <Form.Item
                                 name="name"
-                                label="Dish Name"
-                                rules={[{ required: true, message: "Enter dish name" }]}
+                                label="Tên món ăn"
+                                rules={[{ required: true, message: "Nhập tên món ăn" }]}
                             >
-                                <Input placeholder="Enter dish name" />
+                                <Input placeholder="Nhập tên món ăn" />
                             </Form.Item>
                         </Col>
                     </Row>
 
                     <Form.Item
                         name="description"
-                        label="Description"
+                        label="Mô tả"
                     >
-                        <TextArea rows={3} placeholder="Dish description..." />
+                        <TextArea rows={3} placeholder="Mô tả món ăn..." />
                     </Form.Item>
 
                     {/* Dynamic Product List */}
                     <Form.List name="products">
                         {(fields, { add, remove }) => (
                             <>
-                                <div style={{ marginBottom: 8 }}>Included Products</div>
+                                <div style={{ marginBottom: 8 }}>Sản phẩm đi kèm</div>
                                 {fields.map(({ key, name, ...restField }) => (
                                     <Space key={key} style={{ display: "flex", marginBottom: 8 }} align="baseline">
                                         <Form.Item
                                             {...restField}
                                             name={[name, "product"]}
-                                            rules={[{ required: true, message: "Missing product" }]}
+                                            rules={[{ required: true, message: "Thiếu sản phẩm" }]}
                                         >
-                                            <Select placeholder="Select a product" style={{ width: 300 }}>
+                                            <Select placeholder="Chọn sản phẩm" style={{ width: 300 }}>
                                                 {products.map((p) => (
                                                     <Option key={p._id} value={p._id}>
                                                         {p.name}
@@ -280,16 +280,16 @@ const Dishes = () => {
                                         <Form.Item
                                             {...restField}
                                             name={[name, "quantity"]}
-                                            rules={[{ required: true, message: "Missing quantity" }]}
+                                            rules={[{ required: true, message: "Thiếu lượng" }]}
                                         >
-                                            <InputNumber placeholder="Qty" min={1} />
+                                            <InputNumber placeholder="SL" min={1} />
                                         </Form.Item>
                                         <MinusCircleOutlined onClick={() => remove(name)} />
                                     </Space>
                                 ))}
                                 <Form.Item>
                                     <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                        Add Product Item
+                                        Thêm sản phẩm
                                     </Button>
                                 </Form.Item>
                             </>
@@ -298,14 +298,14 @@ const Dishes = () => {
 
                     <Form.Item
                         name="is_active"
-                        label="Active Status"
+                        label="Trạng thái hoạt động"
                         valuePropName="checked"
                         initialValue={true}
                     >
                         <Switch />
                     </Form.Item>
 
-                    <Form.Item label="Images">
+                    <Form.Item label="Hình ảnh">
                         <Upload
                             listType="picture"
                             fileList={fileList}
@@ -313,7 +313,7 @@ const Dishes = () => {
                             beforeUpload={() => false}
                             multiple
                         >
-                            <Button icon={<UploadOutlined />}>Select Images</Button>
+                            <Button icon={<UploadOutlined />}>Chọn hình ảnh</Button>
                         </Upload>
                     </Form.Item>
                 </Form>

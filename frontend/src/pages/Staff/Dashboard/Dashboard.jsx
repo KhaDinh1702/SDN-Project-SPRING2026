@@ -22,7 +22,7 @@ export default function Dashboard() {
                 const json = await res.json();
                 setOrders(json.data || json || []);
             } catch (err) {
-                message.error("Không thể tải dữ liệu orders: " + err.message);
+                message.error("Không thể tải dữ liệu đơn hàng: " + err.message);
             } finally {
                 setLoading(false);
             }
@@ -74,29 +74,29 @@ export default function Dashboard() {
 
     const orderColumns = [
         {
-            title: "Order ID",
+            title: "Mã ĐH",
             dataIndex: "_id",
             render: (id) => `#${id?.slice(-6).toUpperCase()}`,
         },
         {
-            title: "Customer",
+            title: "Khách hàng",
             render: (_, record) => {
                 const u = record.user_id;
                 return typeof u === "object" ? (u?.name || u?.email || "—") : (u || "—");
             },
         },
         {
-            title: "Amount",
+            title: "Tổng tiền",
             dataIndex: "total_amount",
             render: (val) => (val || 0).toLocaleString("vi-VN") + " đ",
         },
         {
-            title: "Date",
+            title: "Ngày đặt",
             dataIndex: "created_at",
             render: (val) => val ? new Date(val).toLocaleDateString("vi-VN") : "—",
         },
         {
-            title: "Status",
+            title: "Trạng thái",
             render: (_, record) => (
                 <Tag color={getStatusColor(record.order_status)}>{record.order_status}</Tag>
             ),
@@ -105,14 +105,14 @@ export default function Dashboard() {
 
     return (
         <div className="dashboard-container">
-            <h2>Staff Dashboard</h2>
+            <h2>Bảng điều khiển Nhân viên</h2>
             <Spin spinning={loading}>
                 {/* Stats */}
                 <Row gutter={16}>
                     <Col span={6}>
                         <Card className="stat-card">
                             <Statistic
-                                title="Total Orders"
+                                title="Tổng đơn hàng"
                                 value={totalOrders}
                                 prefix={<ShoppingCartOutlined />}
                             />
@@ -121,7 +121,7 @@ export default function Dashboard() {
                     <Col span={6}>
                         <Card className="stat-card">
                             <Statistic
-                                title="Processing"
+                                title="Đang xử lý"
                                 value={pendingOrders}
                                 prefix={<SyncOutlined spin />}
                                 valueStyle={{ color: '#faad14' }}
@@ -131,7 +131,7 @@ export default function Dashboard() {
                     <Col span={6}>
                         <Card className="stat-card">
                             <Statistic
-                                title="Delivered"
+                                title="Đã giao"
                                 value={deliveredOrders}
                                 prefix={<CheckCircleOutlined />}
                                 valueStyle={{ color: '#52c41a' }}
@@ -141,7 +141,7 @@ export default function Dashboard() {
                     <Col span={6}>
                         <Card className="stat-card">
                             <Statistic
-                                title="Total Revenue"
+                                title="Tổng doanh thu"
                                 value={totalRevenue}
                                 prefix={<DollarOutlined />}
                                 suffix="đ"
@@ -154,13 +154,13 @@ export default function Dashboard() {
                 {/* Charts */}
                 <Row gutter={16} style={{ marginTop: 30 }}>
                     <Col span={10}>
-                        <Card title="Monthly Revenue" className="chart-card">
+                        <Card title="Doanh thu theo tháng" className="chart-card">
                             <Line {...revenueConfig} />
                         </Card>
                     </Col>
                     <Col span={14}>
                         {/* Recent Orders */}
-                        <Card title="Recent Orders" className="table-card">
+                        <Card title="Đơn hàng gần đây" className="table-card">
                             <Table
                                 columns={orderColumns}
                                 dataSource={recentOrders}

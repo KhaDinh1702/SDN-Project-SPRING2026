@@ -71,7 +71,7 @@ const AdminCategory = () => {
       }));
       setCategories(normalized);
     } catch (err) {
-      message.error("Failed to load categories: " + err.message);
+      message.error("Không thể tải danh mục: " + err.message);
     } finally {
       setLoading(false);
     }
@@ -118,10 +118,10 @@ const AdminCategory = () => {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
-      message.success("Category deleted");
+      message.success("Đã xóa danh mục");
       fetchCategories();
     } catch (err) {
-      message.error("Delete failed: " + err.message);
+      message.error("Xóa thất bại: " + err.message);
     }
   };
 
@@ -163,13 +163,13 @@ const AdminCategory = () => {
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
-      message.success(isEdit ? "Category updated successfully" : "Category created successfully");
+      message.success(isEdit ? "Cập nhật danh mục thành công" : "Tạo danh mục thành công");
       setIsModalOpen(false);
       form.resetFields();
       resetImageState();
       fetchCategories();
     } catch (err) {
-      message.error("Operation failed: " + err.message);
+      message.error("Thao tác thất bại: " + err.message);
     }
   };
 
@@ -185,7 +185,7 @@ const AdminCategory = () => {
 
   const columns = [
     {
-      title: "Category",
+      title: "Danh mục",
       dataIndex: "name",
       render: (_, record) => (
         <Space>
@@ -228,12 +228,12 @@ const AdminCategory = () => {
       ),
     },
     {
-      title: "Actions",
+      title: "Thao tác",
       render: (_, record) => (
         <Space>
           <Button icon={<EditOutlined />} onClick={() => openEditModal(record)} />
           <Popconfirm
-            title="Are you sure you want to delete this category?"
+            title="Bạn có chắc chắn muốn xóa danh mục này?"
             onConfirm={() => handleDelete(record._id)}
           >
             <Button danger icon={<DeleteOutlined />} />
@@ -248,7 +248,7 @@ const AdminCategory = () => {
       key: "url",
       label: (
         <span>
-          <LinkOutlined /> Paste URL
+          <LinkOutlined /> Dán URL
         </span>
       ),
       children: (
@@ -279,7 +279,7 @@ const AdminCategory = () => {
       key: "upload",
       label: (
         <span>
-          <UploadOutlined /> Upload File
+          <UploadOutlined /> Tải file lên
         </span>
       ),
       children: (
@@ -290,7 +290,7 @@ const AdminCategory = () => {
             onChange={handleFileChange}
             accept="image/*"
           >
-            <Button icon={<UploadOutlined />}>Choose Image</Button>
+            <Button icon={<UploadOutlined />}>Chọn hình ảnh</Button>
           </Upload>
           {imagePreview && imageTab === "upload" && (
             <div style={{ marginTop: 10, textAlign: "center" }}>
@@ -311,10 +311,10 @@ const AdminCategory = () => {
       <Card style={{ borderRadius: 20, boxShadow: "0 10px 40px rgba(0,0,0,0.05)" }}>
         <Space style={{ width: "100%", justifyContent: "space-between", marginBottom: 20 }}>
           <Title level={3} style={{ margin: 0 }}>
-            Category Management
+            Quản lý Danh mục
           </Title>
           <Button type="primary" icon={<PlusOutlined />} size="large" onClick={openAddModal}>
-            Add Category
+            Thêm danh mục
           </Button>
         </Space>
 
@@ -324,7 +324,7 @@ const AdminCategory = () => {
       </Card>
 
       <Modal
-        title={editingCategory ? "Edit Category" : "Add Category"}
+        title={editingCategory ? "Sửa danh mục" : "Thêm danh mục"}
         open={isModalOpen}
         onOk={handleSubmit}
         onCancel={() => {
@@ -334,13 +334,13 @@ const AdminCategory = () => {
         width={520}
       >
         <Form form={form} layout="vertical">
-          <Form.Item name="name" label="Category Name" rules={[{ required: true, message: "Please enter a category name" }]}>
+          <Form.Item name="name" label="Tên danh mục" rules={[{ required: true, message: "Vui lòng nhập tên danh mục" }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="description" label="Description">
+          <Form.Item name="description" label="Mô tả">
             <Input />
           </Form.Item>
-          <Form.Item label="Image (optional)">
+          <Form.Item label="Hình ảnh (Không bắt buộc)">
             <Tabs
               activeKey={imageTab}
               onChange={(key) => {

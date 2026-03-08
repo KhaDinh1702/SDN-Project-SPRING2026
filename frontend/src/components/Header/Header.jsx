@@ -42,7 +42,7 @@ export default function Header() {
     localStorage.removeItem("fm_cart"); // clear cart storage
     clearCart(); // clear cart context
     setUser(null);
-    message.success("Logged out successfully");
+    message.success("Đăng xuất thành công");
     navigate("/login");
   };
 
@@ -50,13 +50,13 @@ export default function Header() {
     {
       key: "profile",
       icon: <UserOutlined />,
-      label: "My Profile",
+      label: "Hồ sơ của tôi",
       onClick: () => navigate("/profile"),
     },
     {
       key: "history",
       icon: <ShoppingCartOutlined />,
-      label: "Purchase History",
+      label: "Lịch sử mua hàng",
       onClick: () => navigate("/history"),
     },
     {
@@ -65,7 +65,7 @@ export default function Header() {
     {
       key: "logout",
       icon: <LogoutOutlined />,
-      label: "Logout",
+      label: "Đăng xuất",
       danger: true,
       onClick: handleLogout,
     },
@@ -81,11 +81,11 @@ export default function Header() {
 
       {/* CENTER */}
       <nav className="fm-menu">
-        <a onClick={() => navigate("/category")}>Categories</a>
-        <a onClick={() => navigate("/ingredients")}>Food</a>
-        <a onClick={() => navigate("/about")}>About</a>
-        <a onClick={() => navigate("/blog")}>Blog</a>
-        <a onClick={() => navigate("/contact")}>Contact</a>
+        <a onClick={() => navigate("/category")}>Danh mục</a>
+        <a onClick={() => navigate("/ingredients")}>Món ăn</a>
+        <a onClick={() => navigate("/about")}>Giới thiệu</a>
+        <a onClick={() => navigate("/blog")}>Bài viết</a>
+        <a onClick={() => navigate("/contact")}>Liên hệ</a>
       </nav>
 
       {/* RIGHT */}
@@ -110,7 +110,7 @@ export default function Header() {
                 src={user.avatar}
               />
               <span className="user-name">
-                Hello, <strong>{user.fullName || user.email}</strong>
+                Xin chào, <strong>{user.fullName || user.email}</strong>
               </span>
             </div>
           </Dropdown>
@@ -120,7 +120,7 @@ export default function Header() {
               className="btn-signin"
               onClick={() => navigate("/login")}
             >
-              Sign In
+              Đăng nhập
             </Button>
 
             <Button
@@ -128,7 +128,7 @@ export default function Header() {
               className="btn-signup"
               onClick={() => navigate("/register")}
             >
-              Sign Up
+              Đăng ký
             </Button>
           </>
         )}

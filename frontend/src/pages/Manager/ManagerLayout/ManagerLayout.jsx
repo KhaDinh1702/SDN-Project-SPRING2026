@@ -35,7 +35,7 @@ const ManagerLayout = () => {
 
         localStorage.removeItem("accessToken");
         localStorage.removeItem("user");
-        message.success("Logged out successfully");
+        message.success("Đăng xuất thành công");
         navigate("/login");
     };
 
@@ -43,7 +43,7 @@ const ManagerLayout = () => {
         {
             key: "logout",
             icon: <LogoutOutlined />,
-            label: "Logout",
+            label: "Đăng xuất",
             danger: true,
             onClick: handleLogout,
         }
@@ -53,7 +53,7 @@ const ManagerLayout = () => {
         <Layout className="manager-layout">
             {/* Sidebar */}
             <Sider width={240} className="sidebar">
-                <div className="logo">FreshMart Manager</div>
+                <div className="logo">Quản lý FreshMart</div>
 
                 <Menu
                     theme="dark"
@@ -62,19 +62,19 @@ const ManagerLayout = () => {
                     className="menu"
                 >
                     <Menu.Item key="/manager/dashboard" icon={<DashboardOutlined />}>
-                        <Link to="/manager/dashboard">Dashboard</Link>
+                        <Link to="/manager/dashboard">Bảng điều khiển</Link>
                     </Menu.Item>
 
                     <Menu.Item key="/manager/products" icon={<ShoppingOutlined />}>
-                        <Link to="/manager/products">Products</Link>
+                        <Link to="/manager/products">Sản phẩm</Link>
                     </Menu.Item>
 
                     <Menu.Item key="/manager/dishes" icon={<CoffeeOutlined />}>
-                        <Link to="/manager/dishes">Dishes</Link>
+                        <Link to="/manager/dishes">Món ăn</Link>
                     </Menu.Item>
 
                     <Menu.Item key="/manager/inventory" icon={<AppstoreOutlined />}>
-                        <Link to="/manager/inventory">Inventory</Link>
+                        <Link to="/manager/inventory">Kho hàng</Link>
                     </Menu.Item>
                 </Menu>
             </Sider>
@@ -82,7 +82,7 @@ const ManagerLayout = () => {
             {/* Main */}
             <Layout>
                 <Header className="manager-header">
-                    <h2>Manager Dashboard</h2>
+                    <h2>Bảng điều khiển Quản lý</h2>
 
                     <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
                         <Space className="user-dropdown">

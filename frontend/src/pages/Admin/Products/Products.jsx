@@ -204,7 +204,7 @@ const Products = () => {
 
   const columns = [
     {
-      title: "Name",
+      title: "Tên sản phẩm",
       dataIndex: "name",
       render: (name, record) => (
         <Space>
@@ -220,38 +220,38 @@ const Products = () => {
       ),
     },
     {
-      title: "Category",
+      title: "Danh mục",
       render: (_, r) => r.category?.name || r.category || "—",
     },
     {
-      title: "Price (VND)",
+      title: "Giá bán (VND)",
       dataIndex: "price",
       render: (price) => (price || 0).toLocaleString("vi-VN"),
     },
     {
-      title: "Stock",
+      title: "Tồn kho",
       dataIndex: "stock_quantity",
     },
     {
-      title: "Status",
+      title: "Trạng thái",
       render: (_, record) =>
         (record.stock_quantity || 0) < 10 ? (
-          <Tag color="red">Low Stock</Tag>
+          <Tag color="red">Sắp hết hàng</Tag>
         ) : (
-          <Tag color="green">In Stock</Tag>
+          <Tag color="green">Còn hàng</Tag>
         ),
     },
     {
-      title: "Active",
+      title: "Hoạt động",
       render: (_, record) =>
         record.is_active ? (
-          <Tag color="blue">Active</Tag>
+          <Tag color="blue">Hoạt động</Tag>
         ) : (
-          <Tag>Inactive</Tag>
+          <Tag>Ngừng hoạt động</Tag>
         ),
     },
     {
-      title: "Action",
+      title: "Thao tác",
       render: (_, record) => {
         let role = "";
         try {
@@ -266,18 +266,18 @@ const Products = () => {
           <Space>
             {role === "manager" && (
               <Button icon={<PlusOutlined />} size="small" type="primary" onClick={() => handleAddStock(record)}>
-                Add Stock
+                Nhập kho
               </Button>
             )}
             <Button icon={<EditOutlined />} size="small" onClick={() => handleEdit(record)}>
-              Edit
+              Sửa
             </Button>
             <Popconfirm
               title="Xóa sản phẩm này?"
               onConfirm={() => handleDelete(record._id)}
             >
               <Button icon={<DeleteOutlined />} size="small" danger>
-                Delete
+                Xóa
               </Button>
             </Popconfirm>
           </Space>
@@ -290,14 +290,14 @@ const Products = () => {
     <Card className="product-card">
       <div className="product-header">
         <Search
-          placeholder="Search products..."
+          placeholder="Tìm kiếm sản phẩm..."
           style={{ width: 300 }}
           onChange={(e) => setSearchText(e.target.value)}
           onSearch={(val) => fetchProducts(val)}
           allowClear
         />
         <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-          Add Product
+          Thêm sản phẩm
         </Button>
       </div>
 
@@ -307,11 +307,11 @@ const Products = () => {
 
       {/* ===== MODAL ===== */}
       <Modal
-        title={editingProduct ? "Edit Product" : "Add Product"}
+        title={editingProduct ? "Sửa sản phẩm" : "Thêm sản phẩm"}
         open={isModalOpen}
         onOk={handleSubmit}
         onCancel={() => setIsModalOpen(false)}
-        okText={editingProduct ? "Update" : "Create"}
+        okText={editingProduct ? "Cập nhật" : "Tạo mới"}
         width={700}
       >
         <Form layout="vertical" form={form}>
@@ -319,19 +319,19 @@ const Products = () => {
             <Col span={12}>
               <Form.Item
                 name="name"
-                label="Product Name"
-                rules={[{ required: true, message: "Enter product name" }]}
+                label="Tên sản phẩm"
+                rules={[{ required: true, message: "Nhập tên sản phẩm" }]}
               >
-                <Input placeholder="Enter product name" />
+                <Input placeholder="Nhập tên sản phẩm" />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
                 name="category"
-                label="Category"
-                rules={[{ required: true, message: "Select category" }]}
+                label="Danh mục"
+                rules={[{ required: true, message: "Chọn danh mục" }]}
               >
-                <Select placeholder="Select category">
+                <Select placeholder="Chọn danh mục">
                   {categories.map((c) => (
                     <Option key={c._id} value={c._id}>
                       {c.name}
@@ -346,8 +346,8 @@ const Products = () => {
             <Col span={12}>
               <Form.Item
                 name="price"
-                label="Price (VND)"
-                rules={[{ required: true, message: "Enter price" }]}
+                label="Giá bán (VND)"
+                rules={[{ required: true, message: "Nhập giá bán" }]}
               >
                 <InputNumber style={{ width: "100%" }} min={0} />
               </Form.Item>
@@ -356,22 +356,22 @@ const Products = () => {
 
           <Form.Item
             name="description"
-            label="Description"
-            rules={[{ required: true, message: "Enter description" }]}
+            label="Mô tả"
+            rules={[{ required: true, message: "Nhập mô tả" }]}
           >
-            <TextArea rows={4} placeholder="Product description..." />
+            <TextArea rows={4} placeholder="Mô tả sản phẩm..." />
           </Form.Item>
 
           <Form.Item
             name="is_active"
-            label="Active Status"
+            label="Trạng thái hoạt động"
             valuePropName="checked"
             initialValue={true}
           >
             <Switch />
           </Form.Item>
 
-          <Form.Item label="Images">
+          <Form.Item label="Hình ảnh">
             <Upload
               listType="picture"
               fileList={fileList}
@@ -379,7 +379,7 @@ const Products = () => {
               beforeUpload={() => false}
               multiple
             >
-              <Button icon={<UploadOutlined />}>Select Images</Button>
+              <Button icon={<UploadOutlined />}>Chọn hình ảnh</Button>
             </Upload>
           </Form.Item>
         </Form>
@@ -387,26 +387,26 @@ const Products = () => {
 
       {/* ===== STOCK ADD MODAL ===== */}
       <Modal
-        title={`Add Stock: ${selectedStockProduct?.name || ''}`}
+        title={`Nhập kho: ${selectedStockProduct?.name || ''}`}
         open={isStockModalOpen}
         onOk={handleStockSubmit}
         onCancel={() => setIsStockModalOpen(false)}
-        okText="Add Stock"
+        okText="Nhập kho"
         width={400}
       >
         <Form layout="vertical" form={stockForm}>
           <Form.Item
             name="quantity"
-            label="Quantity to Add"
-            rules={[{ required: true, message: "Enter quantity" }]}
+            label="Số lượng nhập"
+            rules={[{ required: true, message: "Nhập số lượng" }]}
           >
             <InputNumber style={{ width: "100%" }} min={1} />
           </Form.Item>
           <Form.Item
             name="note"
-            label="Note (Optional)"
+            label="Ghi chú (Không bắt buộc)"
           >
-            <TextArea rows={2} placeholder="Reason for adding stock..." />
+            <TextArea rows={2} placeholder="Lý do nhập kho..." />
           </Form.Item>
         </Form>
       </Modal>

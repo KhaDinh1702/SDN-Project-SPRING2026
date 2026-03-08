@@ -61,14 +61,13 @@ export default function HomePage() {
         {/* ===== HERO (GIỮ NGUYÊN) ===== */}
         <section className="hero">
           <div className="hero-text">
-            <h1>Fresh from Farm to Your Table</h1>
+            <h1>Nông sản sạch từ nông trại đến bàn ăn</h1>
             <p>
-              Premium quality vegetables, meat, and fish delivered fresh to your
-              doorstep.
+              Rau củ, thịt và cá chất lượng cao được giao tươi mới đến tận cửa nhà bạn.
             </p>
             <div className="hero-actions">
-              <Button type="primary" onClick={() => navigate('/category')}>Shop Now</Button>
-              <Button>Learn More</Button>
+              <Button type="primary" onClick={() => navigate('/category')}>Mua sắm ngay</Button>
+              <Button>Tìm hiểu thêm</Button>
             </div>
           </div>
 
@@ -79,8 +78,8 @@ export default function HomePage() {
         </section>
         <section className="section-category">
           <div className="category-container">
-            <h2 className="section-title">Shop by Category</h2>
-            <p className="section-subtitle">Browse our premium selection</p>
+            <h2 className="section-title">Mua sắm theo danh mục</h2>
+            <p className="section-subtitle">Khám phá các sản phẩm cao cấp của chúng tôi</p>
 
             <div className="category-grid">
               {categories.map((c) => {
@@ -117,9 +116,9 @@ export default function HomePage() {
 
         {/* ===== FEATURED PRODUCTS (SỬA ẢNH + TITLE) ===== */}
         <section className="section section-featured">
-          <h2 className="section-title">Featured Products</h2>
+          <h2 className="section-title">Sản phẩm nổi bật</h2>
           <p className="section-subtitle">
-            Our most popular items this week
+            Các mặt hàng được ưa chuộng nhất tuần này
           </p>
 
           <div className="product-grid">
@@ -166,7 +165,7 @@ export default function HomePage() {
                         addToCart(p);
                       }}
                     >
-                      Add
+                      Thêm
                     </Button>
                   </div>
                 </div>
@@ -184,10 +183,10 @@ export default function HomePage() {
           }}
         >
           <h2 style={{ fontSize: 34, fontWeight: 700 }}>
-            Why Choose FreshMart?
+            Tại sao chọn FreshMart?
           </h2>
           <p style={{ color: "#666", marginBottom: 60 }}>
-            Quality, freshness, and sustainability in every order
+            Chất lượng, sự tươi mới và bền vững trong từng đơn hàng
           </p>
 
           <div
@@ -198,10 +197,10 @@ export default function HomePage() {
             }}
           >
             {[
-              { icon: "🌿", title: "Farm Fresh", desc: "Sourced directly from trusted farms daily." },
-              { icon: "🚚", title: "Fast Delivery", desc: "Same-day delivery for maximum freshness." },
-              { icon: "🛡️", title: "Quality Guaranteed", desc: "Strict inspection before shipping." },
-              { icon: "🏅", title: "Certified Organic", desc: "90% of products are organic certified." },
+              { icon: "🌿", title: "Nông sản tươi", desc: "Lấy trực tiếp từ các nông trại uy tín mỗi ngày." },
+              { icon: "🚚", title: "Giao hàng nhanh chóng", desc: "Giao hàng trong ngày để đảm bảo độ tươi ngon nhất." },
+              { icon: "🛡️", title: "Đảm bảo chất lượng", desc: "Kiểm tra nghiêm ngặt trước khi giao hàng." },
+              { icon: "🏅", title: "Chứng nhận hữu cơ", desc: "90% sản phẩm có chứng nhận hữu cơ." },
             ].map((item, index) => (
               <div
                 key={index}
@@ -244,10 +243,10 @@ export default function HomePage() {
             }}
           >
             <h2 style={{ fontSize: 32, fontWeight: 700 }}>
-              Stay Updated
+              Đăng ký nhận tin
             </h2>
             <p style={{ margin: "20px 0 40px" }}>
-              Subscribe to get exclusive deals & fresh market updates
+              Đăng ký nhận ưu đãi độc quyền & tin tức từ siêu thị
             </p>
 
             <div
@@ -259,7 +258,7 @@ export default function HomePage() {
             >
               <input
                 type="email"
-                placeholder="Enter your email"
+                placeholder="Nhập email của bạn"
                 style={{
                   padding: "14px 18px",
                   borderRadius: 12,
@@ -280,7 +279,7 @@ export default function HomePage() {
                   cursor: "pointer",
                 }}
               >
-                Subscribe
+                Đăng ký
               </button>
             </div>
           </div>

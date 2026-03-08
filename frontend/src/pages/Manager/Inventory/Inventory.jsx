@@ -40,7 +40,7 @@ export default function Inventory() {
             if (res.ok) {
                 setStockHistory(data.data || []);
             } else {
-                message.error(data.message || "Failed to fetch stock history");
+                message.error(data.message || "Không thể tải lịch sử kho");
             }
         } catch (error) {
             console.error(error);
@@ -90,12 +90,12 @@ export default function Inventory() {
 
             const data = await res.json();
             if (res.ok) {
-                message.success("Transaction created successfully");
+                message.success("Tạo giao dịch thành công");
                 setIsModalOpen(false);
                 form.resetFields();
                 fetchStockHistory();
             } else {
-                message.error(data.message || "Failed to create transaction");
+                message.error(data.message || "Tạo giao dịch thất bại");
             }
         } catch (error) {
             console.error(error);
@@ -115,7 +115,7 @@ export default function Inventory() {
                 setSelectedTx(data.data);
                 setIsViewOpen(true);
             } else {
-                message.error(data.message || "Failed to fetch details");
+                message.error(data.message || "Không thể tải chi tiết");
             }
         } catch (error) {
             console.error(error);
@@ -125,24 +125,24 @@ export default function Inventory() {
 
     const columns = [
         {
-            title: "Transaction ID",
+            title: "Mã giao dịch",
             dataIndex: "id",
             key: "id",
             render: (id) => `#${id?.slice(-6).toUpperCase()}`,
         },
         {
-            title: "Date",
+            title: "Ngày",
             dataIndex: "createdAt",
             key: "createdAt",
             render: (date) => new Date(date).toLocaleString(),
         },
         {
-            title: "Created By",
+            title: "Người tạo",
             key: "user",
-            render: (_, record) => record.user?.email || "System",
+            render: (_, record) => record.user?.email || "Hệ thống",
         },
         {
-            title: "Type",
+            title: "Loại",
             dataIndex: "type",
             key: "type",
             render: (type) => (
@@ -152,22 +152,22 @@ export default function Inventory() {
             ),
         },
         {
-            title: "Total Value",
+            title: "Tổng giá trị",
             dataIndex: "totalPrice",
             key: "totalPrice",
             render: (val) => (val || 0).toLocaleString("vi-VN") + " đ",
         },
         {
-            title: "Note",
+            title: "Ghi chú",
             dataIndex: "note",
             key: "note",
         },
         {
-            title: "Action",
+            title: "Thao tác",
             key: "action",
             render: (_, record) => (
                 <Button type="link" onClick={() => handleViewDetail(record.id)}>
-                    View Details
+                    Xem chi tiết
                 </Button>
             ),
         }
@@ -176,7 +176,7 @@ export default function Inventory() {
     return (
         <div>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
-                <Title level={3}>Inventory Management</Title>
+                <Title level={3}>Quản lý Kho hàng</Title>
                 <Button
                     type="primary"
                     icon={<PlusOutlined />}
@@ -185,7 +185,7 @@ export default function Inventory() {
                         form.setFieldsValue({ items: [{}] });
                     }}
                 >
-                    New Transaction
+                    Giao dịch mới
                 </Button>
             </div>
 
@@ -197,7 +197,7 @@ export default function Inventory() {
             />
 
             <Modal
-                title="Create Stock Transaction"
+                title="Tạo giao dịch kho"
                 open={isModalOpen}
                 onCancel={() => {
                     setIsModalOpen(false);
@@ -210,10 +210,10 @@ export default function Inventory() {
                     initialValues={{ type: 'IN', items: [{}] }}>
                     <Form.Item
                         name="type"
-                        label="Transaction Type"
-                        rules={[{ required: true, message: "Please select transaction type" }]}
+                        label="Loại giao dịch"
+                        rules={[{ required: true, message: "Vui lòng chọn loại giao dịch" }]}
                     >
-                        <Select placeholder="Select type">
+                        <Select placeholder="Chọn loại">
                             <Option value="IN">IN (Nhập kho)</Option>
                             <Option value="OUT">OUT (Xuất kho)</Option>
                         </Select>
@@ -227,9 +227,9 @@ export default function Inventory() {
                                         <Form.Item
                                             {...restField}
                                             name={[name, 'product_id']}
-                                            rules={[{ required: true, message: 'Missing product' }]}
+                                            rules={[{ required: true, message: 'Thiếu sản phẩm' }]}
                                         >
-                                            <Select placeholder="Select product" style={{ width: 250 }}>
+                                            <Select placeholder="Chọn sản phẩm" style={{ width: 250 }}>
                                                 {products.map((p) => (
                                                     <Option key={p._id} value={p._id}>{p.name}</Option>
                                                 ))}
@@ -239,41 +239,41 @@ export default function Inventory() {
                                         <Form.Item
                                             {...restField}
                                             name={[name, 'quantity']}
-                                            rules={[{ required: true, message: 'Missing quantity' }]}
+                                            rules={[{ required: true, message: 'Thiếu số lượng' }]}
                                         >
-                                            <InputNumber placeholder="Quantity" min={1} />
+                                            <InputNumber placeholder="Số lượng" min={1} />
                                         </Form.Item>
 
                                         <Form.Item
                                             {...restField}
                                             name={[name, 'unit_price']}
-                                            rules={[{ required: true, message: 'Missing price' }]}
+                                            rules={[{ required: true, message: 'Thiếu giá' }]}
                                         >
-                                            <InputNumber placeholder="Unit Price" min={0} />
+                                            <InputNumber placeholder="Đơn giá" min={0} />
                                         </Form.Item>
 
                                         <Button type="dashed" onClick={() => remove(name)} danger>
-                                            Remove
+                                            Xóa
                                         </Button>
                                     </Space>
                                 ))}
                                 <Form.Item>
                                     <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                        Add Product
+                                        Thêm sản phẩm
                                     </Button>
                                 </Form.Item>
                             </>
                         )}
                     </Form.List>
 
-                    <Form.Item name="note" label="Note">
-                        <Input.TextArea rows={3} placeholder="Optional notes" />
+                    <Form.Item name="note" label="Ghi chú">
+                        <Input.TextArea rows={3} placeholder="Ghi chú (Không bắt buộc)" />
                     </Form.Item>
                 </Form>
             </Modal>
 
             <Modal
-                title="Transaction Details"
+                title="Chi tiết Giao dịch"
                 open={isViewOpen}
                 onCancel={() => setIsViewOpen(false)}
                 footer={null}
@@ -282,26 +282,26 @@ export default function Inventory() {
                 {selectedTx && (
                     <div>
                         <Space direction="vertical" style={{ width: '100%', marginBottom: 24 }}>
-                            <Typography.Text><b>Transaction ID:</b> #{selectedTx.id?.slice(-6).toUpperCase()}</Typography.Text>
-                            <Typography.Text><b>Date:</b> {new Date(selectedTx.createdAt).toLocaleString()}</Typography.Text>
-                            <Typography.Text><b>Created By:</b> {selectedTx.createdBy || "System"}</Typography.Text>
+                            <Typography.Text><b>Mã giao dịch:</b> #{selectedTx.id?.slice(-6).toUpperCase()}</Typography.Text>
+                            <Typography.Text><b>Ngày:</b> {new Date(selectedTx.createdAt).toLocaleString()}</Typography.Text>
+                            <Typography.Text><b>Người tạo:</b> {selectedTx.createdBy || "Hệ thống"}</Typography.Text>
                             <Typography.Text>
-                                <b>Type:</b> <Tag color={selectedTx.type === "IN" ? "green" : "red"}>{selectedTx.type === "IN" ? "IN (Nhập)" : "OUT (Xuất)"}</Tag>
+                                <b>Loại:</b> <Tag color={selectedTx.type === "IN" ? "green" : "red"}>{selectedTx.type === "IN" ? "IN (Nhập)" : "OUT (Xuất)"}</Tag>
                             </Typography.Text>
-                            <Typography.Text><b>Total Value:</b> {(selectedTx.totalPrice || 0).toLocaleString("vi-VN")} đ</Typography.Text>
-                            <Typography.Text><b>Note:</b> {selectedTx.note || "—"}</Typography.Text>
+                            <Typography.Text><b>Tổng giá trị:</b> {(selectedTx.totalPrice || 0).toLocaleString("vi-VN")} đ</Typography.Text>
+                            <Typography.Text><b>Ghi chú:</b> {selectedTx.note || "—"}</Typography.Text>
                         </Space>
 
-                        <Title level={5}>Items</Title>
+                        <Title level={5}>Sản phẩm</Title>
                         <Table
                             dataSource={selectedTx.items}
                             rowKey="productId"
                             pagination={false}
                             columns={[
-                                { title: 'Product', dataIndex: 'productName' },
-                                { title: 'Quantity', dataIndex: 'quantity' },
-                                { title: 'Unit Price', dataIndex: 'unitPrice', render: (val) => (val || 0).toLocaleString("vi-VN") + " đ" },
-                                { title: 'Total', dataIndex: 'totalPrice', render: (val) => (val || 0).toLocaleString("vi-VN") + " đ" },
+                                { title: 'Sản phẩm', dataIndex: 'productName' },
+                                { title: 'Số lượng', dataIndex: 'quantity' },
+                                { title: 'Đơn giá', dataIndex: 'unitPrice', render: (val) => (val || 0).toLocaleString("vi-VN") + " đ" },
+                                { title: 'Tổng', dataIndex: 'totalPrice', render: (val) => (val || 0).toLocaleString("vi-VN") + " đ" },
                             ]}
                         />
                     </div>

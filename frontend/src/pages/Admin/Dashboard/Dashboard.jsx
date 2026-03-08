@@ -36,7 +36,7 @@ const Dashboard = () => {
         setCategories(catJson.data || catJson || []);
         setOrders(ordJson.data || ordJson || []);
       } catch (err) {
-        message.error("Không thể tải dữ liệu dashboard: " + err.message);
+        message.error("Không thể tải dữ liệu bảng điều khiển: " + err.message);
       } finally {
         setLoading(false);
       }
@@ -98,24 +98,24 @@ const Dashboard = () => {
 
   // ===== Recent Products table =====
   const productColumns = [
-    { title: "Product", dataIndex: "name" },
+    { title: "Sản phẩm", dataIndex: "name" },
     {
-      title: "Category",
+      title: "Danh mục",
       render: (_, r) => r.category?.name || r.category || "—",
     },
     {
-      title: "Price",
+      title: "Giá bán",
       dataIndex: "price",
       render: (p) => (p || 0).toLocaleString("vi-VN") + " đ",
     },
-    { title: "Stock", dataIndex: "stock_quantity" },
+    { title: "Tồn kho", dataIndex: "stock_quantity" },
     {
-      title: "Status",
+      title: "Trạng thái",
       render: (_, record) =>
         (record.stock_quantity || 0) < 10 ? (
-          <Tag color="red">Low Stock</Tag>
+          <Tag color="red">Sắp hết hàng</Tag>
         ) : (
-          <Tag color="green">In Stock</Tag>
+          <Tag color="green">Còn hàng</Tag>
         ),
     },
   ];
@@ -132,7 +132,7 @@ const Dashboard = () => {
           <Col span={8}>
             <Card className="stat-card">
               <Statistic
-                title="Total Products"
+                title="Tổng sản phẩm"
                 value={products.length}
                 prefix={<AppstoreOutlined />}
               />
@@ -141,7 +141,7 @@ const Dashboard = () => {
           <Col span={8}>
             <Card className="stat-card">
               <Statistic
-                title="Total Revenue (Delivered)"
+                title="Tổng thu nhập (Đã giao)"
                 value={totalRevenue}
                 prefix={<DollarOutlined />}
                 suffix="đ"
@@ -152,7 +152,7 @@ const Dashboard = () => {
           <Col span={8}>
             <Card className="stat-card">
               <Statistic
-                title="Total Orders"
+                title="Tổng đơn hàng"
                 value={orders.length}
                 prefix={<ShoppingCartOutlined />}
               />
@@ -163,19 +163,19 @@ const Dashboard = () => {
         {/* Charts */}
         <Row gutter={16} style={{ marginTop: 30 }}>
           <Col span={12}>
-            <Card title="Monthly Revenue" className="chart-card">
+            <Card title="Doanh thu theo tháng" className="chart-card">
               <Line {...revenueConfig} />
             </Card>
           </Col>
           <Col span={12}>
-            <Card title="Product Categories" className="chart-card">
+            <Card title="Danh mục sản phẩm" className="chart-card">
               <Pie {...pieConfig} />
             </Card>
           </Col>
         </Row>
 
         {/* Recent Products */}
-        <Card title="Recent Products" className="table-card" style={{ marginTop: 30 }}>
+        <Card title="Sản phẩm mới" className="table-card" style={{ marginTop: 30 }}>
           <Table
             columns={productColumns}
             dataSource={recentProducts}

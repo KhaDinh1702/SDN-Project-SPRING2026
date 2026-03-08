@@ -32,7 +32,7 @@ const StaffLayout = () => {
 
         localStorage.removeItem("accessToken");
         localStorage.removeItem("user");
-        message.success("Logged out successfully");
+        message.success("Đăng xuất thành công");
         navigate("/login");
     };
 
@@ -40,7 +40,7 @@ const StaffLayout = () => {
         {
             key: "logout",
             icon: <LogoutOutlined />,
-            label: "Logout",
+            label: "Đăng xuất",
             danger: true,
             onClick: handleLogout,
         }
@@ -50,7 +50,7 @@ const StaffLayout = () => {
         <Layout className="staff-layout">
             {/* Sidebar */}
             <Sider width={240} className="sidebar">
-                <div className="logo">FreshMart Staff</div>
+                <div className="logo">Nhân viên FreshMart</div>
 
                 <Menu
                     theme="dark"
@@ -59,15 +59,15 @@ const StaffLayout = () => {
                     className="menu"
                 >
                     <Menu.Item key="/staff/dashboard" icon={<DashboardOutlined />}>
-                        <Link to="/staff/dashboard">Dashboard</Link>
+                        <Link to="/staff/dashboard">Bảng điều khiển</Link>
                     </Menu.Item>
 
                     <Menu.Item key="/staff/orders" icon={<ShoppingCartOutlined />}>
-                        <Link to="/staff/orders">Orders</Link>
+                        <Link to="/staff/orders">Đơn hàng</Link>
                     </Menu.Item>
 
                     <Menu.Item key="/staff/dishes" icon={<CoffeeOutlined />}>
-                        <Link to="/staff/dishes">Dishes</Link>
+                        <Link to="/staff/dishes">Món ăn</Link>
                     </Menu.Item>
                 </Menu>
             </Sider>
@@ -75,7 +75,7 @@ const StaffLayout = () => {
             {/* Main */}
             <Layout>
                 <Header className="staff-header">
-                    <h2>Staff Dashboard</h2>
+                    <h2>Bảng điều khiển Nhân viên</h2>
 
                     <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
                         <Space className="user-dropdown">
