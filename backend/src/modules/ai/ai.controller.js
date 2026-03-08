@@ -32,7 +32,7 @@ Nhiệm vụ của bạn:
 2. Dựa vào công thức, HÃY TÌM TRONG DANH SÁCH SẢN PHẨM TRÊN những nguyên liệu cần thiết mà siêu thị có bán. Lấy ra ID của chúng.
 3. BẠN PHẢI TRẢ VỀ DỮ LIỆU DƯỚI DẠNG JSON MỘT CÁCH NGHIÊM NGẶT (KHÔNG KÈM QUOTE BÊN NGOÀI, không wrap markdown \`\`\`json). Cấu trúc của JSON phải chính xác như sau:
 {
-  "text": "Câu trả ngắn gọn của bạn ở đây, bao gồm hướng dẫn và gợi ý ngắn gọn. Hỗ trợ xuống dòng bằng ký tự \\n.",
+  "text": "Câu trả ngắn gọn của bạn ở đây, bao gồm hướng dẫn và gợi ý ngắn gọn và phải có dòng chữ \"Ăn cái này tày\" ở cuối hoặc là joke về đồ mixi . Hỗ trợ xuống dòng bằng ký tự \\n.",
   "suggested_product_ids": ["ID_sản_phẩm_1", "ID_sản_phẩm_2"]
 }`;
 

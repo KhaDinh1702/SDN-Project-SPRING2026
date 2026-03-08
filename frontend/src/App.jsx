@@ -47,6 +47,7 @@ const ManagerInventory = lazy(() => import('./pages/Manager/Inventory/Inventory'
 const StaffLayout = lazy(() => import('./pages/Staff/StaffLayout/StaffLayout'));
 const StaffDashboard = lazy(() => import('./pages/Staff/Dashboard/Dashboard'));
 const StaffOrders = lazy(() => import('./pages/Staff/Orders/Orders'));
+const Dishes = lazy(() => import('./pages/Staff/Dishes/Dishes'));
 
 function App() {
   return (
@@ -181,6 +182,10 @@ function App() {
               element={<ManagerProducts />}
             />
             <Route
+              path='dishes'
+              element={<Dishes />}
+            />
+            <Route
               path='inventory'
               element={<ManagerInventory />}
             />
@@ -202,6 +207,10 @@ function App() {
             <Route
               path='orders'
               element={<StaffOrders />}
+            />
+            <Route
+              path='dishes'
+              element={<Dishes />}
             />
           </Route>
         </Routes>

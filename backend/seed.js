@@ -38,6 +38,8 @@ const seedDatabase = async () => {
     ]);
     const adminRole = roles.find((r) => r.name === 'admin');
     const customerRole = roles.find((r) => r.name === 'customer');
+    const managerRole = roles.find((r) => r.name === 'manager');
+    const staffRole = roles.find((r) => r.name === 'staff');
 
     // 3. Users
 
@@ -63,6 +65,28 @@ const seedDatabase = async () => {
       is_active: true,
       role_id: customerRole._id,
       username: 'johndoe',
+    });
+
+    const manager = await User.create({
+      first_name: 'Manager',
+      last_name: 'Test',
+      email: 'manager@freshmart.com',
+      password_hash: hashedPassword, // 'admin@123'
+      phone: '0912345678',
+      is_active: true,
+      role_id: managerRole._id,
+      username: 'manager_test',
+    });
+
+    const staff = await User.create({
+      first_name: 'Staff',
+      last_name: 'Test',
+      email: 'staff@freshmart.com',
+      password_hash: hashedPassword, // 'admin@123'
+      phone: '0988888888',
+      is_active: true,
+      role_id: staffRole._id,
+      username: 'staff_test',
     });
 
     // 4. Categories

@@ -5,6 +5,7 @@ import {
     ShoppingCartOutlined,
     UserOutlined,
     LogoutOutlined,
+    CoffeeOutlined,
 } from "@ant-design/icons";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { API_URL } from "../../../config";
@@ -63,6 +64,10 @@ const StaffLayout = () => {
 
                     <Menu.Item key="/staff/orders" icon={<ShoppingCartOutlined />}>
                         <Link to="/staff/orders">Orders</Link>
+                    </Menu.Item>
+
+                    <Menu.Item key="/staff/dishes" icon={<CoffeeOutlined />}>
+                        <Link to="/staff/dishes">Dishes</Link>
                     </Menu.Item>
                 </Menu>
             </Sider>

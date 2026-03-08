@@ -6,6 +6,7 @@ import {
     AppstoreOutlined,
     UserOutlined,
     LogoutOutlined,
+    CoffeeOutlined,
 } from "@ant-design/icons";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { API_URL } from "../../../config";
@@ -66,6 +67,10 @@ const ManagerLayout = () => {
 
                     <Menu.Item key="/manager/products" icon={<ShoppingOutlined />}>
                         <Link to="/manager/products">Products</Link>
+                    </Menu.Item>
+
+                    <Menu.Item key="/manager/dishes" icon={<CoffeeOutlined />}>
+                        <Link to="/manager/dishes">Dishes</Link>
                     </Menu.Item>
 
                     <Menu.Item key="/manager/inventory" icon={<AppstoreOutlined />}>
