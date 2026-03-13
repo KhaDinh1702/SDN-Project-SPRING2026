@@ -8,34 +8,43 @@ import {
   View,
   TextInput,
   Text,
+  RefreshControl,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { productService } from '../services/productService';
+import { productService } from '@/services/productService';
 import { CartContext } from '@/context/CartContext';
 
 export default function CategoryScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const { addToCart } = useContext(CartContext);
   const router = useRouter();
 
+  const loadProducts = async (isRefreshing = false) => {
+    try {
+      if (!isRefreshing) setLoading(true);
+      const data = await productService.getAll({ categoryId: id as string });
+      setProducts(data);
+    } catch (err) {
+      console.warn('Failed to load products:', err);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
   useEffect(() => {
-    if (!id) return;
+    if (id) {
+      loadProducts();
+    }
+  }, [id]);
 
-    const loadProducts = async () => {
-      try {
-        const data = await productService.getAll({ categoryId: id as string });
-        setProducts(data);
-      } catch (err) {
-        console.warn('Failed to load products:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadProducts();
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    loadProducts(true);
   }, [id]);
 
   const filteredProducts = products.filter((p) =>
@@ -57,6 +66,9 @@ export default function CategoryScreen() {
       keyExtractor={(item) => item._id}
       contentContainerStyle={styles.list}
       showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
       ListHeaderComponent={
         <TextInput
           placeholder="Search products..."
@@ -86,7 +98,7 @@ export default function CategoryScreen() {
           </Text>
 
           <Text style={styles.price}>
-            ${item.price?.toFixed(2)}
+            {item.price?.toLocaleString()}đ
           </Text>
 
           <TouchableOpacity

@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { authService } from './services/authService';
+import { authService } from '@/services/authService';
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();

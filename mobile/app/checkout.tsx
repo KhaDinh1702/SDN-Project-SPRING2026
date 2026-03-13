@@ -117,14 +117,14 @@ export default function CheckoutScreen() {
               {item.name} x{item.quantity}
             </Text>
             <Text style={styles.summaryItemPrice}>
-              ${(item.price * item.quantity).toFixed(2)}
+              {(item.price * item.quantity).toLocaleString()}đ
             </Text>
           </View>
         ))}
 
         <View style={styles.totalSection}>
           <Text style={styles.totalText}>
-            Total: ${totalPrice.toFixed(2)}
+            Total: {totalPrice.toLocaleString()}đ
           </Text>
         </View>
       </View>

@@ -9,7 +9,7 @@ import {
   Text,
 } from 'react-native';
 import { Link } from 'expo-router';
-import { categoryService } from '../services/categoryService';
+import { categoryService } from '@/services/categoryService';
 
 export default function CategoriesScreen() {
   const [categories, setCategories] = useState<any[]>([]);

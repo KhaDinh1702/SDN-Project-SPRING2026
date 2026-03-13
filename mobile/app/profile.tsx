@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { AuthContext } from '@/context/AuthContext';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 
 const API_URL =
   process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.74:5001';
@@ -100,6 +101,17 @@ export default function ProfileScreen() {
       </View>
 
       <TouchableOpacity
+        style={styles.menuItem}
+        onPress={() => router.push('/orders')}
+      >
+        <View style={styles.menuItemContent}>
+          <Ionicons name="receipt-outline" size={24} color="#ff6b35" />
+          <Text style={styles.menuItemText}>My Orders</Text>
+        </View>
+        <Ionicons name="chevron-forward" size={20} color="#ccc" />
+      </TouchableOpacity>
+
+      <TouchableOpacity
         style={styles.logoutBtn}
         onPress={async () => {
           await logout();
@@ -178,6 +190,30 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     padding: 20,
     elevation: 5,
+  },
+
+  menuItem: {
+    backgroundColor: '#fff',
+    marginHorizontal: 20,
+    marginBottom: 12,
+    borderRadius: 15,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    elevation: 3,
+  },
+
+  menuItemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+
+  menuItemText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
   },
 
   infoRow: {
