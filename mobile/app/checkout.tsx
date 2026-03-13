@@ -10,7 +10,7 @@ import {
   Text,
 } from 'react-native';
 import { CartContext } from '@/context/CartContext';
-import { orderService } from '@/app/services/orderService';
+import { orderService } from '@/services/orderService';
 import { useRouter } from 'expo-router';
 import { AuthContext } from '@/context/AuthContext';
 import * as WebBrowser from 'expo-web-browser';

@@ -182,7 +182,7 @@ export default function Inventory() {
                     icon={<PlusOutlined />}
                     onClick={() => {
                         setIsModalOpen(true);
-                        form.setFieldsValue({ items: [{}] });
+                        form.setFieldsValue({ type: 'IN', items: [{}] });
                     }}
                 >
                     Giao dịch mới
@@ -307,6 +307,6 @@ export default function Inventory() {
                     </div>
                 )}
             </Modal>
-        </div>
+        </div >
     );
 }
