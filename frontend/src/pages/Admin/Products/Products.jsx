@@ -286,6 +286,8 @@ const Products = () => {
     },
   ];
 
+  const lowStockProducts = data.filter((p) => (p.stock_quantity || 0) < 10);
+
   return (
     <Card className="product-card">
       <div className="product-header">
@@ -300,6 +302,54 @@ const Products = () => {
           Thêm sản phẩm
         </Button>
       </div>
+
+      {lowStockProducts.length > 0 && (
+        <div style={{ marginBottom: 24, padding: '16px 20px', backgroundColor: '#fafafa', border: '1px solid #f0f0f0', borderRadius: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
+            <span style={{ color: '#595959', fontSize: 16, fontWeight: 500 }}>
+              Sản phẩm sắp hết hàng ({lowStockProducts.length})
+            </span>
+          </div>
+          <div style={{ maxHeight: '180px', overflowY: 'auto', paddingRight: 8 }}>
+            <Space size={[8, 12]} wrap>
+              {lowStockProducts.map(p => {
+                let role = "";
+                try {
+                  const userStr = localStorage.getItem("user");
+                  if (userStr) {
+                    const user = JSON.parse(userStr);
+                    role = user.role;
+                  }
+                } catch (e) { }
+
+                return (
+                  <div
+                    key={p._id}
+                    style={{
+                      padding: '6px 12px',
+                      fontSize: 14,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 12,
+                      backgroundColor: '#ffffff',
+                      border: '1px solid #d9d9d9',
+                      borderRadius: 6
+                    }}
+                  >
+                    <span style={{ color: '#262626' }}>{p.name}</span>
+                    <Tag color="error" style={{ margin: 0 }}>Còn {p.stock_quantity || 0}</Tag>
+                    {role === "manager" && (
+                      <Button size="small" type="default" onClick={() => handleAddStock(p)}>
+                        Nhập kho
+                      </Button>
+                    )}
+                  </div>
+                );
+              })}
+            </Space>
+          </div>
+        </div>
+      )}
 
       <Spin spinning={loading}>
         <Table columns={columns} dataSource={filteredData} />

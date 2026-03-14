@@ -10,7 +10,7 @@ import {
   Text,
 } from 'react-native';
 import { CartContext } from '@/context/CartContext';
-import { orderService } from '@/app/services/orderService';
+import { orderService } from '@/services/orderService';
 import { useRouter } from 'expo-router';
 import { AuthContext } from '@/context/AuthContext';
 import * as WebBrowser from 'expo-web-browser';
@@ -117,14 +117,14 @@ export default function CheckoutScreen() {
               {item.name} x{item.quantity}
             </Text>
             <Text style={styles.summaryItemPrice}>
-              ${(item.price * item.quantity).toFixed(2)}
+              {(item.price * item.quantity).toLocaleString()}đ
             </Text>
           </View>
         ))}
 
         <View style={styles.totalSection}>
           <Text style={styles.totalText}>
-            Total: ${totalPrice.toFixed(2)}
+            Total: {totalPrice.toLocaleString()}đ
           </Text>
         </View>
       </View>

@@ -91,11 +91,11 @@ const seedDatabase = async () => {
 
     // 4. Categories
     const categories = await Category.insertMany([
-      { name: 'Fish' },
-      { name: 'Meat' },
-      { name: 'Vegetables' },
-      { name: 'Spices' },
-      { name: 'Fruits' },
+      { name: 'Fish', image: 'https://cdn-icons-png.flaticon.com/512/2970/2970034.png' },
+      { name: 'Meat', image: 'https://cdn-icons-png.flaticon.com/512/3082/3082042.png' },
+      { name: 'Vegetables', image: 'https://cdn-icons-png.flaticon.com/512/2329/2329903.png' },
+      { name: 'Spices', image: 'https://cdn-icons-png.flaticon.com/512/3229/3229074.png' },
+      { name: 'Fruits', image: 'https://cdn-icons-png.flaticon.com/512/3194/3194766.png' },
     ]);
 
     const getCategoryId = (name) =>

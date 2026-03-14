@@ -7,11 +7,48 @@ import {
   View,
   ActivityIndicator,
   Text,
+  TextInput,
+  RefreshControl,
+  Animated,
 } from 'react-native';
 import { Link } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+
+const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
+
+const ScaleButton = ({ onPress, children, style }: any) => {
+  const scale = React.useRef(new Animated.Value(1)).current;
+
+  const onPressIn = () => {
+    Animated.spring(scale, {
+      toValue: 0.95,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const onPressOut = () => {
+    Animated.spring(scale, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  return (
+    <AnimatedTouchableOpacity
+      activeOpacity={0.8}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
+      onPress={onPress}
+      style={[style, { transform: [{ scale }] }]}
+    >
+      {children}
+    </AnimatedTouchableOpacity>
+  );
+};
+
 import Header from '@/components/Header';
-import { productService } from '../services/productService';
-import { categoryService } from '../services/categoryService';
+import { productService } from '@/services/productService';
+import { categoryService } from '@/services/categoryService';
 import { CartContext } from '@/context/CartContext';
 
 
@@ -19,30 +56,51 @@ import { CartContext } from '@/context/CartContext';
 export default function HomeScreen() {
   const [categories, setCategories] = useState<any[]>([]);
   const [featured, setFeatured] = useState<any[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [addedId, setAddedId] = useState<string | null>(null);
 
   const { addToCart } = useContext(CartContext);
 
+  const loadData = async () => {
+    try {
+      const [cats, prods] = await Promise.all([
+        categoryService.getAll(),
+        productService.getAll(),
+      ]);
+
+      setCategories(cats || []);
+      setFeatured(prods || []);
+      setFilteredProducts(prods?.slice(0, 10) || []);
+    } catch (e) {
+      console.warn('Load home failed:', e);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const [cats, prods] = await Promise.all([
-          categoryService.getAll(),
-          productService.getAll(),
-        ]);
-
-        setCategories(cats?.slice(0, 5) || []);
-        setFeatured(prods?.slice(0, 10) || []);
-      } catch (e) {
-        console.warn('Load home failed:', e);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadData();
   }, []);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    loadData();
+  }, []);
+
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setFilteredProducts(featured.slice(0, 10));
+    } else {
+      const filtered = featured.filter(p =>
+        p.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredProducts(filtered);
+    }
+  }, [searchQuery, featured]);
 
   const handleAdd = (p: any) => {
     addToCart({
@@ -66,10 +124,35 @@ export default function HomeScreen() {
   }
 
   return (
-    <ScrollView style={styles.screen} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.screen}
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
 
       {/* ✅ HEADER COMPONENT */}
       <Header title="Home" />
+
+      {/* SEARCH BAR */}
+      <View style={styles.searchContainer}>
+        <View style={styles.searchBar}>
+          <Ionicons name="search-outline" size={20} color="#888" />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search fresh products..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholderTextColor="#888"
+          />
+          {searchQuery !== '' && (
+            <TouchableOpacity onPress={() => setSearchQuery('')}>
+              <Ionicons name="close-circle" size={18} color="#888" />
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
 
       {/* BANNER */}
       <View style={styles.banner}>
@@ -88,38 +171,41 @@ export default function HomeScreen() {
       </View>
 
       {/* CATEGORY */}
-      <View style={styles.section}>
+      <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>Shop by Category</Text>
-
-        <View style={styles.categoryGrid}>
-          {categories.map((c) => (
-            <Link
-              key={c._id}
-              href={{ pathname: '/category/[id]', params: { id: c._id } }}
-              asChild
-            >
-              <TouchableOpacity style={styles.categoryItem}>
-                {c.image ? (
-                  <Image
-                    source={{ uri: c.image }}
-                    style={styles.categoryImage}
-                  />
-                ) : (
-                  <View style={[styles.categoryImage, styles.categoryImageFallback]} />
-                )}
-                <Text style={styles.categoryName}>{c.name}</Text>
-              </TouchableOpacity>
-            </Link>
-          ))}
-        </View>
       </View>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={true}
+        contentContainerStyle={styles.categoryScroll}
+      >
+        {categories.map((c) => (
+          <Link
+            key={c._id}
+            href={{ pathname: '/category/[id]', params: { id: c._id } }}
+            asChild
+          >
+            <TouchableOpacity style={styles.categoryItem} activeOpacity={0.7}>
+              {c.image ? (
+                <Image
+                  source={{ uri: c.image }}
+                  style={styles.categoryImage}
+                />
+              ) : (
+                <View style={[styles.categoryImage, styles.categoryImageFallback]} />
+              )}
+              <Text style={styles.categoryName} numberOfLines={1}>{c.name}</Text>
+            </TouchableOpacity>
+          </Link>
+        ))}
+      </ScrollView>
 
       {/* FEATURED */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Featured Products</Text>
 
         <View style={styles.featureGrid}>
-          {featured.map((p) => (
+          {filteredProducts.map((p) => (
             <View key={p._id} style={styles.featureCard}>
               <Link
                 href={{ pathname: '/product/[id]', params: { id: p._id } }}
@@ -135,12 +221,12 @@ export default function HomeScreen() {
 
                   <Text style={styles.featureName}>{p.name}</Text>
                   <Text style={styles.featurePrice}>
-                    ${p.price?.toFixed(2)}
+                    {p.price?.toLocaleString()}đ
                   </Text>
                 </TouchableOpacity>
               </Link>
 
-              <TouchableOpacity
+              <ScaleButton
                 style={[
                   styles.addBtn,
                   addedId === p._id && styles.addedBtn,
@@ -150,10 +236,15 @@ export default function HomeScreen() {
                 <Text style={styles.addBtnText}>
                   {addedId === p._id ? 'Added ✓' : 'Add to Cart'}
                 </Text>
-              </TouchableOpacity>
+              </ScaleButton>
             </View>
           ))}
         </View>
+        {filteredProducts.length === 0 && searchQuery !== '' && (
+          <View style={styles.noResults}>
+            <Text style={styles.noResultsText}>No products found for "{searchQuery}"</Text>
+          </View>
+        )}
       </View>
     </ScrollView>
   );
@@ -174,6 +265,34 @@ const styles = StyleSheet.create({
     padding: 20,
     margin: 16,
     borderRadius: 18,
+    marginTop: 0, // adjusted because of search bar
+  },
+  searchContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#fff',
+  },
+  searchBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f1f1f1',
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    height: 45,
+  },
+  searchInput: {
+    flex: 1,
+    marginLeft: 8,
+    fontSize: 15,
+    color: '#333',
+  },
+  noResults: {
+    padding: 40,
+    alignItems: 'center',
+  },
+  noResultsText: {
+    fontSize: 14,
+    color: '#888',
   },
   bannerTitle: {
     color: '#fff',
@@ -196,36 +315,47 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '600',
   },
+  sectionHeader: {
+    marginHorizontal: 20, // matching header/featured margins
+    marginBottom: 8,
+    marginTop: 20,
+  },
   section: {
     marginHorizontal: 16,
     marginBottom: 28,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '700',
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
   },
-  categoryGrid: {
+  categoryScroll: {
+    paddingHorizontal: 20,
+    paddingBottom: 10,
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginTop: 14,
   },
   categoryItem: {
-    width: '20%',
+    width: 80,
     alignItems: 'center',
-    marginBottom: 16,
+    marginRight: 15,
   },
   categoryImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    marginBottom: 6,
+    width: 65,
+    height: 65,
+    borderRadius: 32.5,
+    marginBottom: 8,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#eee',
   },
   categoryImageFallback: {
     backgroundColor: '#d0d0d0',
   },
   categoryName: {
-    fontSize: 12,
+    fontSize: 13,
     textAlign: 'center',
+    color: '#444',
+    fontWeight: '500',
   },
   featureGrid: {
     flexDirection: 'row',

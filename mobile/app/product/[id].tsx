@@ -11,8 +11,8 @@ import {
   Text,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { productService, Product } from '../services/productService';
-import { reviewService, Review } from '../services/reviewService';
+import { productService, Product } from '@/services/productService';
+import { reviewService, Review } from '@/services/reviewService';
 import { CartContext } from '@/context/CartContext';
 
 const { width } = Dimensions.get('window');

@@ -31,7 +31,7 @@ export default function OrderSuccess() {
 
         <TouchableOpacity
           style={styles.ordersBtn}
-          onPress={() => router.push('/')}
+          onPress={() => router.push('/orders')}
         >
           <Text style={styles.ordersBtnText}>View My Orders</Text>
         </TouchableOpacity>

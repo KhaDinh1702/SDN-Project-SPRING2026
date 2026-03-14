@@ -60,33 +60,47 @@ export default function Header({ title }: HeaderProps) {
                 />
 
                 <View style={styles.dropdown}>
-  <TouchableOpacity
-    style={styles.dropdownItem}
-    activeOpacity={0.7}
-    onPress={() => {
-      setMenuVisible(false);
-      router.push('/profile');
-    }}
-  >
-    <Text style={styles.dropdownText}>Profile</Text>
-  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.dropdownItem}
+                    activeOpacity={0.7}
+                    onPress={() => {
+                      setMenuVisible(false);
+                      router.push('/profile');
+                    }}
+                  >
+                    <Text style={styles.dropdownText}>Profile</Text>
+                  </TouchableOpacity>
 
-  {/* Divider */}
-  <View style={{ height: 1, backgroundColor: '#f2f2f2' }} />
+                  {/* Divider */}
+                  <View style={{ height: 1, backgroundColor: '#f2f2f2' }} />
 
-  <TouchableOpacity
-    style={styles.dropdownItem}
-    activeOpacity={0.7}
-    onPress={async () => {
-      await logout();
-      setMenuVisible(false);
-    }}
-  >
-    <Text style={[styles.dropdownText, { color: '#e53935' }]}>
-      Logout
-    </Text>
-  </TouchableOpacity>
-</View>
+                  <TouchableOpacity
+                    style={styles.dropdownItem}
+                    activeOpacity={0.7}
+                    onPress={() => {
+                      setMenuVisible(false);
+                      router.push('/orders');
+                    }}
+                  >
+                    <Text style={styles.dropdownText}>My Orders</Text>
+                  </TouchableOpacity>
+
+                  {/* Divider */}
+                  <View style={{ height: 1, backgroundColor: '#f2f2f2' }} />
+
+                  <TouchableOpacity
+                    style={styles.dropdownItem}
+                    activeOpacity={0.7}
+                    onPress={async () => {
+                      await logout();
+                      setMenuVisible(false);
+                    }}
+                  >
+                    <Text style={[styles.dropdownText, { color: '#e53935' }]}>
+                      Logout
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </>
             )}
           </View>
@@ -112,16 +126,16 @@ export default function Header({ title }: HeaderProps) {
 }
 
 const styles = StyleSheet.create({
- header: {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  padding: 16,
-  backgroundColor: '#fff',
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#fff',
 
-  zIndex: 999,
-  elevation: 20, // Android
-},
+    zIndex: 999,
+    elevation: 20, // Android
+  },
 
   title: {
     fontSize: 22,
@@ -159,35 +173,35 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 
- dropdown: {
-  position: 'absolute',
-  top: 50,
-  right: 0,
-  backgroundColor: '#fff',
-  borderRadius: 16,
-  paddingVertical: 8,
-  width: 170,
+  dropdown: {
+    position: 'absolute',
+    top: 50,
+    right: 0,
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    paddingVertical: 8,
+    width: 170,
 
-  // 🔥 Shadow iOS
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 8 },
-  shadowOpacity: 0.12,
-  shadowRadius: 20,
+    // 🔥 Shadow iOS
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.12,
+    shadowRadius: 20,
 
-  // 🔥 Android
-  elevation: 25,
+    // 🔥 Android
+    elevation: 25,
 
-  // 🔥 Border nhẹ cho sắc nét
-  borderWidth: 1,
-  borderColor: '#f0f0f0',
+    // 🔥 Border nhẹ cho sắc nét
+    borderWidth: 1,
+    borderColor: '#f0f0f0',
 
-  zIndex: 1000,
-},
+    zIndex: 1000,
+  },
 
-dropdownItem: {
-  paddingVertical: 12,
-  paddingHorizontal: 16,
-},
+  dropdownItem: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+  },
 
   dropdownText: {
     fontSize: 14,
