@@ -1,5 +1,7 @@
 import Review from '../../models/Review.js';
 import Product from '../../models/Product.js';
+import Order from '../../models/Order.js';
+import OrderProduct from '../../models/OrderProduct.js';
 import { ErrorWithStatus } from '../../utils/error.js';
 import HTTP_STATUS from '../../constants/httpStatus.js';
 
@@ -13,11 +15,29 @@ export const createReview = async ({ userId, productId, rating, comment, isAnony
         });
     }
 
+    const paidOrderIds = await Order.find({
+        user_id: userId,
+        payment_status: 'Paid',
+        order_status: { $ne: 'Cancelled' },
+    }).select('_id').then(orders => orders.map(o => o._id));
+
+    const hasPurchased = await OrderProduct.findOne({
+        product_id: productId,
+        order_id: { $in: paidOrderIds },
+    });
+
+    if (!hasPurchased) {
+        throw new ErrorWithStatus({
+            status: HTTP_STATUS.FORBIDDEN,
+            message: 'Bạn chỉ có thể đánh giá sản phẩm đã mua và thanh toán',
+        });
+    }
+
     const existingReview = await Review.findOne({ user: userId, product: productId });
     if (existingReview) {
         throw new ErrorWithStatus({
             status: HTTP_STATUS.BAD_REQUEST,
-            message: 'You have already reviewed this product',
+            message: 'Bạn đã đánh giá sản phẩm này rồi',
         });
     }
 
@@ -56,7 +76,7 @@ export const deleteReview = async (reviewId, userId) => {
     if (review.user.toString() !== userId.toString()) {
         throw new ErrorWithStatus({
             status: HTTP_STATUS.FORBIDDEN,
-            message: 'You are not authorized to delete this review',
+            message: 'Bạn không có quyền xóa đánh giá này',
         });
     }
 
