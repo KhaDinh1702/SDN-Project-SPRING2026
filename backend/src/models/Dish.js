@@ -23,6 +23,7 @@ const dishSchema = new Schema(
         name: { type: String, required: true },
         description: { type: String },
         is_active: { type: Boolean, default: true },
+        is_vegetarian: { type: Boolean, default: false },
         images: [ImageSchema],
         products: [DishProductSchema],
     },
