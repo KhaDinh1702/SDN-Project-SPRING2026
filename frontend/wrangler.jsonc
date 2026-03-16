@@ -1,5 +1,5 @@
 {
-    "name": "sdn-frontend",
+    "name": "freshmart",
     "compatibility_date": "2026-02-24",
     "assets": {
         "directory": "./dist"
