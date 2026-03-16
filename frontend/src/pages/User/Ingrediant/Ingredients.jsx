@@ -107,32 +107,29 @@ export default function Ingredients() {
                   onClick={() => setSelectedDish(dish)}
                   className={`dish-card ${selectedDish?._id === dish._id ? "active-card" : ""}`}
                 >
-                  <Row gutter={15}>
-                    <Col span={6}>
+                  <Row gutter={20} align="middle">
+                    <Col span={8}>
                       <img src={dish.images?.[0]?.url || dish.images?.[0]} className="dish-img" alt={dish.name} />
                     </Col>
-                    <Col span={18}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                        <h4 style={{ margin: 0 }}>{dish.name}</h4>
+                    <Col span={16}>
+                      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                        <h4 style={{ margin: 0, fontSize: '18px' }}>{dish.name}</h4>
                         <span
                           style={{
-                            fontSize: 11,
-                            padding: "1px 8px",
+                            fontSize: 12,
+                            padding: "2px 10px",
                             borderRadius: 12,
                             fontWeight: 600,
                             backgroundColor: dish.is_vegetarian ? "#f6ffed" : "#fff7e6",
                             color: dish.is_vegetarian ? "#389e0d" : "#d46b08",
                             border: `1px solid ${dish.is_vegetarian ? "#b7eb8f" : "#ffd591"}`,
+                            whiteSpace: 'nowrap'
                           }}
                         >
                           {dish.is_vegetarian ? "🌿 Chay" : "🥩 Mặn"}
                         </span>
                       </div>
-                      <p className="dish-desc">{dish.description}</p>
-                      <div className="dish-meta">
-                        <ClockCircleOutlined /> 30 phút
-                        <UserOutlined style={{ marginLeft: 20 }} /> 2 phần ăn
-                      </div>
+                      <p className="dish-desc" style={{ margin: 0, lineHeight: '1.4' }}>{dish.description}</p>
                     </Col>
                   </Row>
                 </Card>
@@ -163,8 +160,6 @@ export default function Ingredients() {
                   <p className="main-desc">{selectedDish.description}</p>
 
                   <div className="detail-meta">
-                    <div><ClockCircleOutlined /> Thời gian chuẩn bị <strong>30 phút</strong></div>
-                    <div><UserOutlined /> Phần ăn <strong>2</strong></div>
                     <button
                       className="add-btn"
                       onClick={handleAddAllIngredients}
