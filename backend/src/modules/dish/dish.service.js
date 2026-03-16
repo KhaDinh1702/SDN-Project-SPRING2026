@@ -4,10 +4,13 @@ import Dish from '../../models/Dish.js';
 import Product from '../../models/Product.js';
 import { deleteImage, uploadImage } from '../../../services/storage.service.js';
 
-export const getAllDishes = async ({ keyword }) => {
+export const getAllDishes = async ({ keyword, is_vegetarian }) => {
     const filter = { is_active: true };
     if (keyword) {
         filter.name = { $regex: keyword, $options: 'i' };
+    }
+    if (is_vegetarian !== undefined && is_vegetarian !== null && is_vegetarian !== '') {
+        filter.is_vegetarian = is_vegetarian === 'true' || is_vegetarian === true;
     }
     return await Dish.find(filter)
         .populate('products.product', 'name images price')
@@ -44,6 +47,7 @@ export const createDish = async (payload, files = []) => {
             name: payload.name,
             description: payload.description,
             is_active: payload.is_active !== undefined ? payload.is_active : true,
+            is_vegetarian: payload.is_vegetarian !== undefined ? payload.is_vegetarian : false,
             products: payload.products || [],
             images: uploadedImages.map((key, index) => ({
                 url: `${process.env.CLOUDFLARE_R2_PUBLIC_URL}/${key}`,

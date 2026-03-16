@@ -8,9 +8,10 @@ import {
 
 export const getAllDishesController = async (req, res, next) => {
     try {
-        const { keyword } = req.query;
+        const { keyword, is_vegetarian } = req.query;
         const dishes = await getAllDishes({
             keyword,
+            is_vegetarian,
         });
         res.json({ success: true, data: dishes });
     } catch (error) {
