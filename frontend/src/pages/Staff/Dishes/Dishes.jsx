@@ -91,6 +91,7 @@ const Dishes = () => {
             name: record.name,
             description: record.description,
             is_active: record.is_active !== false,
+            is_vegetarian: record.is_vegetarian === true,
             products: record.products?.map((p) => ({
                 product: p.product._id || p.product,
                 quantity: p.quantity,
@@ -180,6 +181,15 @@ const Dishes = () => {
                     {name}
                 </Space>
             ),
+        },
+        {
+            title: "Loại",
+            render: (_, record) =>
+                record.is_vegetarian ? (
+                    <Tag color="green">🌿 Chay</Tag>
+                ) : (
+                    <Tag color="orange">🥩 Mặn</Tag>
+                ),
         },
         {
             title: "Trạng thái",
@@ -295,6 +305,16 @@ const Dishes = () => {
                             </>
                         )}
                     </Form.List>
+
+                    <Form.Item
+                        name="is_vegetarian"
+                        label="Phân loại"
+                        valuePropName="checked"
+                        initialValue={false}
+                        extra="Bật = Món chay 🌿 | Tắt = Món mặn 🥩 (mặc định)"
+                    >
+                        <Switch checkedChildren="🌿 Chay" unCheckedChildren="🥩 Mặn" />
+                    </Form.Item>
 
                     <Form.Item
                         name="is_active"

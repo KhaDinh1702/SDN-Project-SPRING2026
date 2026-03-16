@@ -22,6 +22,14 @@ const preprocessProducts = (val) => {
     return val;
 };
 
+// Helper to correctly parse boolean strings from FormData.
+// z.coerce.boolean() uses Boolean() which treats "false" as true (non-empty string).
+const preprocessBoolean = (val) => {
+    if (val === 'true') return true;
+    if (val === 'false') return false;
+    return val;
+};
+
 export const createDishSchema = z.object({
     name: z
         .string({
@@ -31,7 +39,9 @@ export const createDishSchema = z.object({
 
     description: z.string().optional(),
 
-    is_active: z.coerce.boolean().optional(),
+    is_active: z.preprocess(preprocessBoolean, z.boolean()).optional(),
+
+    is_vegetarian: z.preprocess(preprocessBoolean, z.boolean()).optional(),
 
     products: z.preprocess(preprocessProducts, productsSchema).optional(),
 });
@@ -51,12 +61,11 @@ export const updateDishSchema = z
             })
             .optional(),
 
-        is_active: z.coerce
-            .boolean({
-                invalid_type_error: 'is_active must be boolean',
-            })
-            .optional(),
+        is_active: z.preprocess(preprocessBoolean, z.boolean()).optional(),
+
+        is_vegetarian: z.preprocess(preprocessBoolean, z.boolean()).optional(),
 
         products: z.preprocess(preprocessProducts, productsSchema).optional(),
     })
     .strict();
+
