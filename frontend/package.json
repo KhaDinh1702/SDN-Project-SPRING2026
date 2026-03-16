@@ -8,8 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy": "wrangler pages deploy dist --project-name=sdn-frontend",
-    "build:deploy": "vite build && wrangler pages deploy dist --project-name=sdn-frontend"
+    "deploy": "wrangler pages deploy dist --project-name=freshmart",
+    "build:deploy": "vite build && wrangler pages deploy dist --project-name=freshmart"
   },
   "dependencies": {
     "@ant-design/icons": "^6.1.0",
