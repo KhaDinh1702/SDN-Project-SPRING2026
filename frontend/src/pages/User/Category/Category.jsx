@@ -7,6 +7,7 @@ import { CartContext } from "../../../context/CartContext";
 import "./Category.css";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
+import { API_URL } from "../../../config";
 
 const { Content } = Layout;
 const { Option } = Select;
@@ -29,7 +30,7 @@ export default function Category() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("http://localhost:5001/api/categories");
+        const res = await fetch(`${API_URL}/api/categories`);
         const data = await res.json();
 
         if (data.success) {
@@ -63,7 +64,7 @@ export default function Category() {
       try {
         setLoading(true);
 
-        let url = `http://localhost:5001/api/products?categoryId=${activeCategoryId}`;
+        let url = `${API_URL}/api/products?categoryId=${activeCategoryId}`;
 
         if (keyword) {
           url += `&keyword=${keyword}`;

@@ -7,6 +7,7 @@ import { CartContext } from "../../../context/CartContext";
 import "./HomePage.css";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
+import { API_URL } from "../../../config";
 
 const { Content } = Layout;
 
@@ -25,7 +26,7 @@ export default function HomePage() {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch("http://localhost:5001/api/categories");
+      const res = await fetch(`${API_URL}/api/categories`);
       const data = await res.json();
 
       setCategories(
@@ -40,7 +41,7 @@ export default function HomePage() {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch("http://localhost:5001/api/products");
+      const res = await fetch(`${API_URL}/api/products`);
       const data = await res.json();
 
       setProducts(

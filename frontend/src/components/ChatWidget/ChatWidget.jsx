@@ -4,6 +4,7 @@ import axios from 'axios';
 import './ChatWidget.css';
 import { CartContext } from '../../context/CartContext';
 import { message } from 'antd';
+import { API_URL } from '../../config';
 
 const ChatWidget = () => {
     const location = useLocation();
@@ -46,7 +47,7 @@ const ChatWidget = () => {
 
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/ai/suggest`,
+                `${API_URL}/api/ai/suggest`,
                 { ingredients: userMsg }
             );
 
