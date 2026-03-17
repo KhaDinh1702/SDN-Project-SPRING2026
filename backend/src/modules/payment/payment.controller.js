@@ -71,6 +71,14 @@ export const vnpayCallback = async (req, res) => {
         const vnpayParams = req.query;
         const { vnp_TxnRef, vnp_ResponseCode } = vnpayParams;
 
+        // Ensure CLIENT_URL is a valid absolute URL
+        let clientUrl = process.env.CLIENT_URL || 'http://localhost:3000';
+        if (!clientUrl.startsWith('http://') && !clientUrl.startsWith('https://')) {
+            clientUrl = `https://${clientUrl}`;
+        }
+        // Remove trailing slash if present to avoid double slashes
+        clientUrl = clientUrl.replace(/\/$/, '');
+
         const verify = verifyReturnUrlService(vnpayParams);
 
         // Luôn cập nhật trạng thái giao dịch kể cả khi thất bại
@@ -78,36 +86,40 @@ export const vnpayCallback = async (req, res) => {
 
         if (!verify.isVerified) {
             return res.redirect(
-                `${process.env.CLIENT_URL}/payment/failure?message=Invalid signature`,
+                `${clientUrl}/payment/failure?message=Invalid signature`,
             );
         }
 
         if (!verify.isSuccess) {
             // Mã 24: Khách hàng hủy giao dịch
             if (vnp_ResponseCode === '24') {
-                return res.redirect(`${process.env.CLIENT_URL}/cart`);
+                return res.redirect(`${clientUrl}/cart`);
             }
             return res.redirect(
-                `${process.env.CLIENT_URL}/payment/failure?message=${verify.message}`,
+                `${clientUrl}/payment/failure?message=${verify.message}`,
             );
         }
 
         if (!transaction) {
             return res.redirect(
-                `${process.env.CLIENT_URL}/payment/failure?message=Transaction not found`,
+                `${clientUrl}/payment/failure?message=Transaction not found`,
             );
         }
 
         const redirectUrl =
             vnp_ResponseCode === '00'
-                ? `${process.env.CLIENT_URL}/cart?payment_success=true&orderId=${transaction.order_id}`
-                : `${process.env.CLIENT_URL}/cart?payment_failed=true&message=${verify.message}`;
+                ? `${clientUrl}/cart?payment_success=true&orderId=${transaction.order_id}`
+                : `${clientUrl}/cart?payment_failed=true&message=${verify.message}`;
 
         return res.redirect(redirectUrl);
     } catch (error) {
         console.error('VNPay callback error:', error);
+        // Fallback sanitize if error occurs
+        let clientUrl = (process.env.CLIENT_URL || 'http://localhost:3000').replace(/\/$/, '');
+        if (!clientUrl.startsWith('http')) clientUrl = `https://${clientUrl}`;
+
         return res.redirect(
-            `${process.env.CLIENT_URL}/payment/failure?message=System error`,
+            `${clientUrl}/payment/failure?message=System error`,
         );
     }
 };
