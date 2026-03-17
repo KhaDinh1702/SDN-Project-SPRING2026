@@ -2,7 +2,8 @@
     "name": "freshmart",
     "compatibility_date": "2026-02-24",
     "assets": {
-        "directory": "./dist"
+        "directory": "./dist",
+        "not_found_handling": "single-page-application"
     },
     "pages_build_output_dir": "./dist"
 }
