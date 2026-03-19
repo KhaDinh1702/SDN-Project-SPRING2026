@@ -1,12 +1,12 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState, useContext } from "react";
-import { Rate, Button, Checkbox, Input } from "antd";
-import { CartContext } from "../../../context/CartContext";
-import Header from "../../../components/Header/Header";
-import Footer from "../../../components/Footer/Footer";
-import "./ProductDetail.css";
+import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState, useContext } from 'react';
+import { Rate, Button, Checkbox, Input } from 'antd';
+import { CartContext } from '../../../context/CartContext';
+import Header from '../../../components/Header/Header';
+import Footer from '../../../components/Footer/Footer';
+import './ProductDetail.css';
 
-import { API_URL } from "../../../config";
+import { API_URL } from '../../../config';
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -16,7 +16,7 @@ export default function ProductDetail() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const [feedback, setFeedback] = useState("");
+  const [feedback, setFeedback] = useState('');
   const [userRating, setUserRating] = useState(0);
   const [reviews, setReviews] = useState([]);
   const [isAnonymous, setIsAnonymous] = useState(false);
@@ -25,8 +25,8 @@ export default function ProductDetail() {
   const [token, setToken] = useState(null);
 
   useEffect(() => {
-    const userStr = localStorage.getItem("user");
-    const accessToken = localStorage.getItem("accessToken");
+    const userStr = localStorage.getItem('user');
+    const accessToken = localStorage.getItem('accessToken');
     if (userStr && accessToken) {
       setCurrentUser(JSON.parse(userStr));
       setToken(accessToken);
@@ -44,7 +44,7 @@ export default function ProductDetail() {
           setProduct(null);
         }
       } catch (err) {
-        console.error("Failed to fetch product", err);
+        console.error('Failed to fetch product', err);
         setProduct(null);
       } finally {
         setLoading(false);
@@ -61,7 +61,7 @@ export default function ProductDetail() {
         setReviews(data.data);
       }
     } catch (err) {
-      console.error("Failed to fetch reviews", err);
+      console.error('Failed to fetch reviews', err);
     }
   };
 
@@ -72,15 +72,15 @@ export default function ProductDetail() {
   const handleSubmitReview = async () => {
     if (!feedback || userRating === 0) return;
     if (!currentUser || !token) {
-      alert("Please log in to submit a review.");
+      alert('Please log in to submit a review.');
       return;
     }
 
     try {
       const res = await fetch(`${API_URL}/api/reviews`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
@@ -94,25 +94,25 @@ export default function ProductDetail() {
       const data = await res.json();
 
       if (res.ok) {
-        setFeedback("");
+        setFeedback('');
         setUserRating(0);
         setIsAnonymous(false);
         fetchReviews();
       } else {
-        alert(data.message || "Failed to submit review");
+        alert(data.message || 'Failed to submit review');
       }
     } catch (err) {
-      console.error("Submit review error:", err);
-      alert("An error occurred while submitting the review.");
+      console.error('Submit review error:', err);
+      alert('An error occurred while submitting the review.');
     }
   };
 
   const handleDeleteReview = async (reviewId) => {
-    if (!window.confirm("Are you sure you want to delete this review?")) return;
+    if (!window.confirm('Are you sure you want to delete this review?')) return;
 
     try {
       const res = await fetch(`${API_URL}/api/reviews/${reviewId}`, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -122,11 +122,11 @@ export default function ProductDetail() {
       if (res.ok) {
         fetchReviews();
       } else {
-        alert(data.message || "Failed to delete review");
+        alert(data.message || 'Failed to delete review');
       }
     } catch (err) {
-      console.error("Delete review error:", err);
-      alert("An error occurred while deleting the review.");
+      console.error('Delete review error:', err);
+      alert('An error occurred while deleting the review.');
     }
   };
 
@@ -137,30 +137,50 @@ export default function ProductDetail() {
     <>
       <Header />
 
-      <div className="product-detail">
-        <button className="back-btn" onClick={() => navigate(-1)}>
+      <div className='product-detail'>
+        <button
+          className='back-btn'
+          onClick={() => navigate(-1)}
+        >
           ← Về trang chủ
         </button>
 
-        <div className="detail-grid">
+        <div className='detail-grid'>
           {/* LEFT */}
           <div>
-            <div className="product-detail-image">
-              <img src={product.images?.[0]?.url || "https://via.placeholder.com/600"} alt={product.name} />
+            <div className='product-detail-image'>
+              <img
+                src={
+                  product.images?.[0]?.url || 'https://via.placeholder.com/600'
+                }
+                alt={product.name}
+              />
             </div>
 
             {/* FEEDBACK */}
-            <div className="feedback-section">
+            <div className='feedback-section'>
               <h3>Viết đánh giá</h3>
 
               {currentUser ? (
                 <>
-                  <div className="user-info">
-                    <img src={isAnonymous ? "https://i.pravatar.cc/100" : currentUser.avatar_url || "https://i.pravatar.cc/100"} alt="avatar" />
-                    <span>{isAnonymous ? "Ẩn danh" : `${currentUser.first_name} ${currentUser.last_name}`}</span>
+                  <div className='user-info'>
+                    <img
+                      src={
+                        isAnonymous
+                          ? 'https://i.pravatar.cc/100'
+                          : currentUser.avatar_url ||
+                            'https://i.pravatar.cc/100'
+                      }
+                      alt='avatar'
+                    />
+                    <span>
+                      {isAnonymous
+                        ? 'Ẩn danh'
+                        : `${currentUser.first_name} ${currentUser.last_name}`}
+                    </span>
                   </div>
 
-                  <div style={{ marginBottom: "1rem" }}>
+                  <div style={{ marginBottom: '1rem' }}>
                     <Checkbox
                       checked={isAnonymous}
                       onChange={(e) => setIsAnonymous(e.target.checked)}
@@ -169,94 +189,171 @@ export default function ProductDetail() {
                     </Checkbox>
                   </div>
 
-                  <Rate allowHalf value={userRating} onChange={setUserRating} style={{ marginBottom: "1rem" }} />
-
-                  <textarea
-                    placeholder="Chia sẻ trải nghiệm của bạn..."
-                    value={feedback}
-                    onChange={(e) => setFeedback(e.target.value)}
-                    style={{ border: "1px solid #ccc", padding: "10px", borderRadius: "5px", width: "100%", height: "80px", marginBottom: "1rem" }}
+                  <Rate
+                    allowHalf
+                    value={userRating}
+                    onChange={setUserRating}
+                    style={{ marginBottom: '1rem' }}
                   />
 
-                  <Button type="primary" block onClick={handleSubmitReview}>
+                  <textarea
+                    placeholder='Chia sẻ trải nghiệm của bạn...'
+                    value={feedback}
+                    onChange={(e) => setFeedback(e.target.value)}
+                    style={{
+                      border: '1px solid #ccc',
+                      padding: '10px',
+                      borderRadius: '5px',
+                      width: '100%',
+                      height: '80px',
+                      marginBottom: '1rem',
+                    }}
+                  />
+
+                  <Button
+                    type='primary'
+                    block
+                    onClick={handleSubmitReview}
+                  >
                     Gửi đánh giá
                   </Button>
                 </>
               ) : (
-                <div style={{ padding: "10px 0", color: "#666" }}>
-                  Vui lòng <a href="/login" style={{ color: "var(--primary-color)", fontWeight: "bold" }}>đăng nhập</a> để viết đánh giá.
+                <div style={{ padding: '10px 0', color: '#666' }}>
+                  Vui lòng{' '}
+                  <a
+                    href='/login'
+                    style={{
+                      color: 'var(--primary-color)',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    đăng nhập
+                  </a>{' '}
+                  để viết đánh giá.
                 </div>
               )}
             </div>
 
             {/* REVIEW LIST */}
-            <div className="review-list">
+            <div className='review-list'>
               <h3>Đánh giá từ khách hàng</h3>
 
               {reviews.length === 0 && (
-                <p className="no-review">Chưa có đánh giá nào.</p>
+                <p className='no-review'>Chưa có đánh giá nào.</p>
               )}
 
               {reviews.map((r) => (
-                <div key={r._id} className="review-item">
-                  <div className="review-header" style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <img src={r.isAnonymous ? "https://i.pravatar.cc/100" : r.user?.avatar_url || "https://i.pravatar.cc/100"} alt={r.isAnonymous ? "Ẩn danh" : r.user?.first_name || "Nội danh"} />
+                <div
+                  key={r._id}
+                  className='review-item'
+                >
+                  <div
+                    className='review-header'
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                      }}
+                    >
+                      <img
+                        src={
+                          r.isAnonymous
+                            ? 'https://i.pravatar.cc/100'
+                            : r.user?.avatar_url || 'https://i.pravatar.cc/100'
+                        }
+                        alt={
+                          r.isAnonymous
+                            ? 'Ẩn danh'
+                            : r.user?.first_name || 'Nội danh'
+                        }
+                      />
                       <div>
-                        <strong>{r.isAnonymous ? "Ẩn danh" : `${r.user?.first_name || ""} ${r.user?.last_name || ""}`.trim() || "Ẩn danh"}</strong>
-                        <Rate disabled allowHalf value={r.rating} />
+                        <strong>
+                          {r.isAnonymous
+                            ? 'Ẩn danh'
+                            : `${r.user?.first_name || ''} ${r.user?.last_name || ''}`.trim() ||
+                              'Ẩn danh'}
+                        </strong>
+                        <Rate
+                          disabled
+                          allowHalf
+                          value={r.rating}
+                        />
                       </div>
                     </div>
                     {currentUser && currentUser.id === r.user?._id && (
-                      <Button type="text" danger onClick={() => handleDeleteReview(r._id)}>
+                      <Button
+                        type='text'
+                        danger
+                        onClick={() => handleDeleteReview(r._id)}
+                      >
                         Xóa
                       </Button>
                     )}
                   </div>
 
                   <p>{r.comment}</p>
-                  <span className="review-date">{new Date(r.createdAt).toLocaleDateString()}</span>
+                  <span className='review-date'>
+                    {new Date(r.createdAt).toLocaleDateString()}
+                  </span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* RIGHT */}
-          <div className="detail-info">
-            <span className="category">{product.category?.name || "Chưa phân loại"}</span>
+          <div className='detail-info'>
+            <span className='category'>
+              {product.category?.name || 'Chưa phân loại'}
+            </span>
             <h1>{product.name}</h1>
 
-            <div className="rating">
-              <Rate disabled allowHalf defaultValue={5} />
-              <span className="review">4.9 (89 đánh giá)</span>
+            <div className='rating'>
+              <Rate
+                disabled
+                allowHalf
+                defaultValue={5}
+              />
+              <span className='review'>4.9 (89 đánh giá)</span>
             </div>
 
-            <div className="price">
-              {(product.price).toLocaleString("vi-VN")} VND <span style={{ fontSize: 16, color: '#6b7280' }}>/ {product.weight} {product.unit}</span>
-              <span className="stock" style={{ display: 'block', marginTop: 10, fontSize: 14 }}>Còn {product.stock_quantity || 0} sản phẩm</span>
+            <div className='price'>
+              {product.price.toLocaleString('vi-VN')} VND{' '}
+              <span style={{ fontSize: 16, color: '#6b7280' }}>
+                / {product.weight} {product.unit}
+              </span>
+              <span
+                className='stock'
+                style={{ display: 'block', fontSize: 14 }}
+              >
+                Còn {product.stock_quantity || 0} sản phẩm
+              </span>
             </div>
 
-            <p className="description">{product.description || "Không có mô tả sản phẩm."}</p>
+            <p className='description'>
+              {product.description || 'Không có mô tả sản phẩm.'}
+            </p>
 
-            <div className="info-box">
+            <div className='info-box'>
               <strong>Nguồn gốc xuất xứ</strong>
-              <p>{product.origin || "Không rõ"}</p>
+              <p>{product.origin || 'Không rõ'}</p>
             </div>
 
-            <h3>Thành phần dinh dưỡng</h3>
-            <div className="nutrition">
-              {(product.nutrition || [
-                { name: "Chất đạm (Protein)", value: "26g" },
-                { name: "Sắt (Iron)", value: "2.8mg" }
-              ]).map((n, i) => (
-                <div key={i}>
-                  <strong>{n.name}</strong>
-                  <span>{n.value}</span>
-                </div>
-              ))}
-            </div>
-
-            <Button type="primary" size="large" block onClick={() => addToCart(product, 1)}>
+            <Button
+              type='primary'
+              size='large'
+              block
+              onClick={() => addToCart(product, 1)}
+            >
               Thêm vào giỏ
             </Button>
           </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   Button,
@@ -17,36 +17,36 @@ import {
   Col,
   Upload,
   Spin,
-} from "antd";
+} from 'antd';
 import {
   EditOutlined,
   DeleteOutlined,
   PlusOutlined,
   UploadOutlined,
-} from "@ant-design/icons";
-import { API_URL } from "../../../config";
-import "./Products.css";
+} from '@ant-design/icons';
+import { API_URL } from '../../../config';
+import './Products.css';
 
 const { Search, TextArea } = Input;
 const { Option } = Select;
 
-const getToken = () => localStorage.getItem("accessToken");
+const getToken = () => localStorage.getItem('accessToken');
 
 const Products = () => {
   const [data, setData] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [fileList, setFileList] = useState([]);
   const [form] = Form.useForm();
 
   // ===== FETCH PRODUCTS =====
-  const fetchProducts = async (keyword = "") => {
+  const fetchProducts = async (keyword = '') => {
     setLoading(true);
     try {
-      const query = keyword ? `?keyword=${keyword}` : "";
+      const query = keyword ? `?keyword=${keyword}` : '';
       const res = await fetch(`${API_URL}/api/products${query}`);
       const json = await res.json();
       if (!res.ok) throw new Error(json.message);
@@ -56,7 +56,7 @@ const Products = () => {
       }));
       setData(normalized);
     } catch (err) {
-      message.error("Không thể tải sản phẩm: " + err.message);
+      message.error('Không thể tải sản phẩm: ' + err.message);
     } finally {
       setLoading(false);
     }
@@ -70,7 +70,7 @@ const Products = () => {
       if (!res.ok) throw new Error(json.message);
       setCategories(json.data || json);
     } catch (err) {
-      message.error("Không thể tải danh mục: " + err.message);
+      message.error('Không thể tải danh mục: ' + err.message);
     }
   };
 
@@ -93,6 +93,9 @@ const Products = () => {
     form.setFieldsValue({
       name: record.name,
       price: record.price,
+      weight: record.weight,
+      unit: record.unit,
+      origin: record.origin || '',
       description: record.description,
       category: record.category?._id || record.category,
       is_active: record.is_active !== false,
@@ -105,15 +108,15 @@ const Products = () => {
   const handleDelete = async (id) => {
     try {
       const res = await fetch(`${API_URL}/api/products/${id}`, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.message);
-      message.success("Đã xóa sản phẩm!");
+      message.success('Đã xóa sản phẩm!');
       fetchProducts();
     } catch (err) {
-      message.error("Xóa thất bại: " + err.message);
+      message.error('Xóa thất bại: ' + err.message);
     }
   };
 
@@ -130,7 +133,7 @@ const Products = () => {
         let finalVal = val;
 
         // Convert boolean to string explicitly for FormData
-        if (typeof finalVal === "boolean") {
+        if (typeof finalVal === 'boolean') {
           formData.append(key, finalVal.toString());
         } else {
           formData.append(key, finalVal);
@@ -139,14 +142,14 @@ const Products = () => {
 
       // Append images
       fileList.forEach((f) => {
-        if (f.originFileObj) formData.append("images", f.originFileObj);
+        if (f.originFileObj) formData.append('images', f.originFileObj);
       });
 
       const isEdit = !!editingProduct;
       const url = isEdit
         ? `${API_URL}/api/products/${editingProduct._id}`
         : `${API_URL}/api/products`;
-      const method = isEdit ? "PUT" : "POST";
+      const method = isEdit ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
         method,
@@ -155,31 +158,38 @@ const Products = () => {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.message);
-      message.success(isEdit ? "Cập nhật thành công!" : "Tạo sản phẩm thành công!");
+      message.success(
+        isEdit ? 'Cập nhật thành công!' : 'Tạo sản phẩm thành công!',
+      );
       setIsModalOpen(false);
       form.resetFields();
       setFileList([]);
       fetchProducts();
     } catch (err) {
-      message.error("Thao tác thất bại: " + err.message);
+      message.error('Thao tác thất bại: ' + err.message);
     }
   };
 
   const filteredData = data.filter((p) =>
-    (p.name || "").toLowerCase().includes(searchText.toLowerCase())
+    (p.name || '').toLowerCase().includes(searchText.toLowerCase()),
   );
 
   const columns = [
     {
-      title: "Tên sản phẩm",
-      dataIndex: "name",
+      title: 'Tên sản phẩm',
+      dataIndex: 'name',
       render: (name, record) => (
         <Space>
           {record.images?.[0] && (
             <img
               src={record.images[0]}
               alt={name}
-              style={{ width: 40, height: 40, objectFit: "cover", borderRadius: 6 }}
+              style={{
+                width: 40,
+                height: 40,
+                objectFit: 'cover',
+                borderRadius: 6,
+              }}
             />
           )}
           {name}
@@ -187,48 +197,61 @@ const Products = () => {
       ),
     },
     {
-      title: "Danh mục",
-      render: (_, r) => r.category?.name || r.category || "—",
+      title: 'Danh mục',
+      render: (_, r) => r.category?.name || r.category || '—',
     },
     {
-      title: "Giá bán (VND)",
-      dataIndex: "price",
-      render: (price) => (price || 0).toLocaleString("vi-VN"),
+      title: 'Nguồn gốc',
+      dataIndex: 'origin',
+      render: (origin) => origin || '—',
     },
     {
-      title: "Tồn kho",
-      dataIndex: "stock_quantity",
+      title: 'Giá bán (VND)',
+      dataIndex: 'price',
+      render: (price) => (price || 0).toLocaleString('vi-VN'),
     },
     {
-      title: "Trạng thái",
+      title: 'Tồn kho',
+      dataIndex: 'stock_quantity',
+    },
+    {
+      title: 'Trạng thái',
       render: (_, record) =>
         (record.stock_quantity || 0) < 10 ? (
-          <Tag color="red">Sắp hết hàng</Tag>
+          <Tag color='red'>Sắp hết hàng</Tag>
         ) : (
-          <Tag color="green">Còn hàng</Tag>
+          <Tag color='green'>Còn hàng</Tag>
         ),
     },
     {
-      title: "Hoạt động",
+      title: 'Hoạt động',
       render: (_, record) =>
         record.is_active ? (
-          <Tag color="blue">Hoạt động</Tag>
+          <Tag color='blue'>Hoạt động</Tag>
         ) : (
           <Tag>Ngừng hoạt động</Tag>
         ),
     },
     {
-      title: "Thao tác",
+      title: 'Thao tác',
       render: (_, record) => (
         <Space>
-          <Button icon={<EditOutlined />} size="small" onClick={() => handleEdit(record)}>
+          <Button
+            icon={<EditOutlined />}
+            size='small'
+            onClick={() => handleEdit(record)}
+          >
             Sửa
           </Button>
           <Popconfirm
-            title="Xóa sản phẩm này?"
+            title='Xóa sản phẩm này?'
             onConfirm={() => handleDelete(record._id)}
           >
-            <Button icon={<DeleteOutlined />} size="small" danger>
+            <Button
+              icon={<DeleteOutlined />}
+              size='small'
+              danger
+            >
               Xóa
             </Button>
           </Popconfirm>
@@ -240,30 +263,49 @@ const Products = () => {
   const lowStockProducts = data.filter((p) => (p.stock_quantity || 0) < 10);
 
   return (
-    <Card className="product-card">
-      <div className="product-header">
+    <Card className='product-card'>
+      <div className='product-header'>
         <Search
-          placeholder="Tìm kiếm sản phẩm..."
+          placeholder='Tìm kiếm sản phẩm...'
           style={{ width: 300 }}
           onChange={(e) => setSearchText(e.target.value)}
           onSearch={(val) => fetchProducts(val)}
           allowClear
         />
-        <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
+        <Button
+          type='primary'
+          icon={<PlusOutlined />}
+          onClick={handleAdd}
+        >
           Thêm sản phẩm
         </Button>
       </div>
 
       {lowStockProducts.length > 0 && (
-        <div style={{ marginBottom: 24, padding: '16px 20px', backgroundColor: '#fafafa', border: '1px solid #f0f0f0', borderRadius: 8 }}>
-          <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
+        <div
+          style={{
+            marginBottom: 24,
+            padding: '16px 20px',
+            backgroundColor: '#fafafa',
+            border: '1px solid #f0f0f0',
+            borderRadius: 8,
+          }}
+        >
+          <div
+            style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}
+          >
             <span style={{ color: '#595959', fontSize: 16, fontWeight: 500 }}>
               Sản phẩm sắp hết hàng ({lowStockProducts.length})
             </span>
           </div>
-          <div style={{ maxHeight: '180px', overflowY: 'auto', paddingRight: 8 }}>
-            <Space size={[8, 12]} wrap>
-              {lowStockProducts.map(p => (
+          <div
+            style={{ maxHeight: '180px', overflowY: 'auto', paddingRight: 8 }}
+          >
+            <Space
+              size={[8, 12]}
+              wrap
+            >
+              {lowStockProducts.map((p) => (
                 <div
                   key={p._id}
                   style={{
@@ -274,11 +316,16 @@ const Products = () => {
                     gap: 12,
                     backgroundColor: '#ffffff',
                     border: '1px solid #d9d9d9',
-                    borderRadius: 6
+                    borderRadius: 6,
                   }}
                 >
                   <span style={{ color: '#262626' }}>{p.name}</span>
-                  <Tag color="error" style={{ margin: 0 }}>Còn {p.stock_quantity || 0}</Tag>
+                  <Tag
+                    color='error'
+                    style={{ margin: 0 }}
+                  >
+                    Còn {p.stock_quantity || 0}
+                  </Tag>
                 </div>
               ))}
             </Space>
@@ -287,38 +334,47 @@ const Products = () => {
       )}
 
       <Spin spinning={loading}>
-        <Table columns={columns} dataSource={filteredData} />
+        <Table
+          columns={columns}
+          dataSource={filteredData}
+        />
       </Spin>
 
       {/* ===== MODAL ===== */}
       <Modal
-        title={editingProduct ? "Sửa sản phẩm" : "Thêm sản phẩm"}
+        title={editingProduct ? 'Sửa sản phẩm' : 'Thêm sản phẩm'}
         open={isModalOpen}
         onOk={handleSubmit}
         onCancel={() => setIsModalOpen(false)}
-        okText={editingProduct ? "Cập nhật" : "Tạo mới"}
+        okText={editingProduct ? 'Cập nhật' : 'Tạo mới'}
         width={700}
       >
-        <Form layout="vertical" form={form}>
+        <Form
+          layout='vertical'
+          form={form}
+        >
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="name"
-                label="Tên sản phẩm"
-                rules={[{ required: true, message: "Nhập tên sản phẩm" }]}
+                name='name'
+                label='Tên sản phẩm'
+                rules={[{ required: true, message: 'Nhập tên sản phẩm' }]}
               >
-                <Input placeholder="Nhập tên sản phẩm" />
+                <Input placeholder='Nhập tên sản phẩm' />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                name="category"
-                label="Danh mục"
-                rules={[{ required: true, message: "Chọn danh mục" }]}
+                name='category'
+                label='Danh mục'
+                rules={[{ required: true, message: 'Chọn danh mục' }]}
               >
-                <Select placeholder="Chọn danh mục">
+                <Select placeholder='Chọn danh mục'>
                   {categories.map((c) => (
-                    <Option key={c._id} value={c._id}>
+                    <Option
+                      key={c._id}
+                      value={c._id}
+                    >
                       {c.name}
                     </Option>
                   ))}
@@ -330,35 +386,82 @@ const Products = () => {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="price"
-                label="Giá bán (VND)"
-                rules={[{ required: true, message: "Nhập giá bán" }]}
+                name='price'
+                label='Giá bán (VND)'
+                rules={[{ required: true, message: 'Nhập giá bán' }]}
               >
-                <InputNumber style={{ width: "100%" }} min={0} />
+                <InputNumber
+                  style={{ width: '100%' }}
+                  min={0}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name='weight'
+                label='Trọng lượng'
+                rules={[{ required: true, message: 'Nhập trọng lượng' }]}
+              >
+                <InputNumber
+                  style={{ width: '100%' }}
+                  min={0}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name='unit'
+                label='Đơn vị'
+                rules={[{ required: true, message: 'Chọn đơn vị' }]}
+              >
+                <Select placeholder='Chọn đơn vị'>
+                  <Option value='kg'>kg</Option>
+                  <Option value='g'>g</Option>
+                  <Option value='liter'>liter</Option>
+                  <Option value='ml'>ml</Option>
+                  <Option value='cái'>cái</Option>
+                  <Option value='túi'>túi</Option>
+                  <Option value='hộp'>hộp</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name='origin'
+                label='Nguồn gốc'
+                rules={[{ required: true, message: 'Nhập nguồn gốc' }]}
+              >
+                <Input placeholder='VD: Hà Nội, Đà Lạt, ...' />
               </Form.Item>
             </Col>
           </Row>
 
           <Form.Item
-            name="description"
-            label="Mô tả"
-            rules={[{ required: true, message: "Nhập mô tả" }]}
+            name='description'
+            label='Mô tả'
+            rules={[{ required: true, message: 'Nhập mô tả' }]}
           >
-            <TextArea rows={4} placeholder="Mô tả sản phẩm..." />
+            <TextArea
+              rows={4}
+              placeholder='Mô tả sản phẩm...'
+            />
           </Form.Item>
 
           <Form.Item
-            name="is_active"
-            label="Trạng thái hoạt động"
-            valuePropName="checked"
+            name='is_active'
+            label='Trạng thái hoạt động'
+            valuePropName='checked'
             initialValue={true}
           >
             <Switch />
           </Form.Item>
 
-          <Form.Item label="Hình ảnh">
+          <Form.Item label='Hình ảnh'>
             <Upload
-              listType="picture"
+              listType='picture'
               fileList={fileList}
               onChange={({ fileList: fl }) => setFileList(fl)}
               beforeUpload={() => false}
@@ -369,8 +472,6 @@ const Products = () => {
           </Form.Item>
         </Form>
       </Modal>
-
-
     </Card>
   );
 };

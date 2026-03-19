@@ -62,7 +62,7 @@
 .user-info {
   display: flex;
   align-items: center; /* căn giữa avatar với tên */
-  gap: 14px;           /* cách avatar và tên */
+  gap: 14px; /* cách avatar và tên */
   margin-bottom: 12px;
 }
 
@@ -86,7 +86,7 @@
 
 /* FIX textarea tràn khung */
 .feedback-section textarea {
-  box-sizing: border-box;   /* 🔥 QUAN TRỌNG */
+  box-sizing: border-box; /* 🔥 QUAN TRỌNG */
   width: 100%;
   max-width: 100%;
   height: 110px;
@@ -100,7 +100,6 @@
   display: block;
   margin-bottom: 16px;
 }
-
 
 .feedback-section textarea:focus {
   outline: none;
@@ -197,7 +196,7 @@
 
 /* TITLE */
 .product-detail h1 {
-  font-family: "Playfair Display", serif;
+  font-family: 'Playfair Display', serif;
   font-size: 42px;
   font-weight: 700;
   margin: 4px 0 8px;
@@ -217,15 +216,15 @@
 
 /* PRICE */
 .price {
-  font-size: 36px;
+  font-size: 40px;
   font-weight: 700;
   margin: 12px 0;
+  color: #256728;
 }
 
 .price .stock {
   font-size: 14px;
   color: #2e7d32;
-  margin-left: 12px;
   font-weight: 500;
 }
 
