@@ -55,7 +55,7 @@ export default function RegisterScreen() {
 
   const handleRegister = async () => {
     if (!isFormValid) {
-      setError('Please fill all fields correctly');
+      setError('Vui lòng điền thông tin hợp lệ');
       return;
     }
 
@@ -83,17 +83,17 @@ export default function RegisterScreen() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data?.message || 'Register failed');
+        setError(data?.message || 'Đăng ký thất bại');
         return;
       }
 
-      setSuccess('Account created successfully!');
+      setSuccess('Tạo tài khoản thành công!');
       setTimeout(() => {
         router.replace('/login');
       }, 1500);
 
     } catch (err) {
-      setError('Cannot connect to server');
+      setError('Không thể kết nối đến máy chủ');
     } finally {
       setLoading(false);
     }
@@ -105,28 +105,28 @@ export default function RegisterScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>Create Account</Text>
+        <Text style={styles.title}>Đăng ký</Text>
         <Text style={styles.subtitle}>
-          Join Fresh Market and start shopping fresh
+          Tham gia Fresh Market và bắt đầu mua sắm
         </Text>
 
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
         {success ? <Text style={styles.successText}>{success}</Text> : null}
 
         <TextInput
-          placeholder="First Name"
+          placeholder="Tên"
           style={styles.input}
           onChangeText={(v) => handleChange('first_name', v)}
         />
 
         <TextInput
-          placeholder="Last Name"
+          placeholder="Họ"
           style={styles.input}
           onChangeText={(v) => handleChange('last_name', v)}
         />
 
         <TextInput
-          placeholder="Phone Number"
+          placeholder="Số điện thoại"
           keyboardType="phone-pad"
           style={[
             styles.input,
@@ -136,7 +136,7 @@ export default function RegisterScreen() {
         />
 
         <TextInput
-          placeholder="Email Address"
+          placeholder="Địa chỉ Email"
           keyboardType="email-address"
           style={[
             styles.input,
@@ -147,7 +147,7 @@ export default function RegisterScreen() {
 
         <View style={styles.passwordBox}>
           <TextInput
-            placeholder="Password"
+            placeholder="Mật khẩu"
             secureTextEntry={!showPassword}
             style={styles.passwordInput}
             onChangeText={(v) => handleChange('password', v)}
@@ -168,7 +168,7 @@ export default function RegisterScreen() {
           ]}
         >
           <TextInput
-            placeholder="Confirm Password"
+            placeholder="Xác nhận Mật khẩu"
             secureTextEntry={!showConfirm}
             style={styles.passwordInput}
             onChangeText={(v) => handleChange('confirmPassword', v)}
@@ -193,14 +193,14 @@ export default function RegisterScreen() {
           {loading ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.buttonText}>Create Account</Text>
+            <Text style={styles.buttonText}>Đăng ký Tài khoản</Text>
           )}
         </TouchableOpacity>
 
         <View style={styles.loginRow}>
-          <Text>Already have an account? </Text>
+          <Text>Đã có tài khoản? </Text>
           <TouchableOpacity onPress={() => router.push('/login')}>
-            <Text style={styles.loginLink}>Sign in</Text>
+            <Text style={styles.loginLink}>Đăng nhập</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

@@ -59,7 +59,7 @@ export default function ProductScreen() {
   if (!product) {
     return (
       <View style={styles.center}>
-        <Text style={styles.blackText}>Product not found</Text>
+        <Text style={styles.blackText}>Không tìm thấy sản phẩm</Text>
       </View>
     );
   }

@@ -71,45 +71,43 @@ export const vnpayCallback = async (req, res) => {
         const vnpayParams = req.query;
         const { vnp_TxnRef, vnp_ResponseCode } = vnpayParams;
 
-        // Ensure CLIENT_URL is a valid absolute URL
-        let clientUrl = process.env.CLIENT_URL || 'http://localhost:3000';
-        if (!clientUrl.startsWith('http://') && !clientUrl.startsWith('https://')) {
-            clientUrl = `https://${clientUrl}`;
-        }
-        // Remove trailing slash if present to avoid double slashes
-        clientUrl = clientUrl.replace(/\/$/, '');
-
         const verify = verifyReturnUrlService(vnpayParams);
 
         // Luôn cập nhật trạng thái giao dịch kể cả khi thất bại
         const transaction = await updateTransactionStatusService(vnp_TxnRef, vnp_ResponseCode);
 
+        // Determine the base redirect URL
+        // If client_url is provided by the client (e.g. mobile app exp://.../--/cart), use it exactly as is.
+        // Otherwise, use CLIENT_URL from env and append /cart
+        let baseUrl = transaction?.client_url || `${process.env.CLIENT_URL || 'http://localhost:3000'}/cart`;
+        
+        if (!baseUrl.includes('://')) {
+            baseUrl = `https://${baseUrl}`;
+        }
+
+        // Helper to append query parameters securely
+        const appendParams = (url, paramsStr) => {
+            return url.includes('?') ? `${url}&${paramsStr}` : `${url}?${paramsStr}`;
+        };
+
         if (!verify.isVerified) {
-            return res.redirect(
-                `${clientUrl}/payment/failure?message=Invalid signature`,
-            );
+            return res.redirect(appendParams(baseUrl, 'payment_failed=true&message=Invalid_signature'));
         }
 
         if (!verify.isSuccess) {
-            // Mã 24: Khách hàng hủy giao dịch
             if (vnp_ResponseCode === '24') {
-                return res.redirect(`${clientUrl}/cart`);
+                return res.redirect(baseUrl); // user canceled
             }
-            return res.redirect(
-                `${clientUrl}/payment/failure?message=${verify.message}`,
-            );
+            return res.redirect(appendParams(baseUrl, `payment_failed=true&message=${verify.message}`));
         }
 
         if (!transaction) {
-            return res.redirect(
-                `${clientUrl}/payment/failure?message=Transaction not found`,
-            );
+            return res.redirect(appendParams(baseUrl, 'payment_failed=true&message=Transaction_not_found'));
         }
 
-        const redirectUrl =
-            vnp_ResponseCode === '00'
-                ? `${clientUrl}/cart?payment_success=true&orderId=${transaction.order_id}`
-                : `${clientUrl}/cart?payment_failed=true&message=${verify.message}`;
+        const redirectUrl = vnp_ResponseCode === '00'
+            ? appendParams(baseUrl, `payment_success=true&orderId=${transaction.order_id}`)
+            : appendParams(baseUrl, `payment_failed=true&message=${verify.message}`);
 
         return res.redirect(redirectUrl);
     } catch (error) {

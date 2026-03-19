@@ -24,7 +24,7 @@ import { createPaymentUrlService } from '../payment/payment.service.js';
  * @returns {Promise<Object>} The created order result
  */
 export const createOrderService = async (orderData) => {
-	const { items, payment_method, shipping_address, user_id, total_amount } = orderData;
+	const { items, payment_method, shipping_address, user_id, total_amount, clientUrl } = orderData;
 	const Product = (await import('../../models/Product.js')).default;
 
 	// ==========================
@@ -126,7 +126,8 @@ export const createOrderService = async (orderData) => {
 			orderId: newOrder._id,
 			amount: total_amount,
 			orderInfo: `Pay for order ${newOrder._id}`,
-			ipAddr: '127.0.0.1'
+			ipAddr: '127.0.0.1',
+			clientUrl
 		});
 		paymentUrl = result.paymentUrl;
 	}

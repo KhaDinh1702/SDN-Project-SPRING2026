@@ -71,7 +71,7 @@ export default function OrdersScreen() {
         <View style={styles.orderCard}>
             <View style={styles.orderHeader}>
                 <View>
-                    <Text style={styles.orderNumber}>Order #{item._id.slice(-6).toUpperCase()}</Text>
+                    <Text style={styles.orderNumber}>Đơn hàng #{item._id.slice(-6).toUpperCase()}</Text>
                     <Text style={styles.orderDate}>{formatDate(item.createdAt)}</Text>
                 </View>
                 <View style={[styles.statusBadge, { backgroundColor: getStatusColor(item.order_status) + '20' }]}>
@@ -84,13 +84,13 @@ export default function OrdersScreen() {
             <View style={styles.itemsPreview}>
                 {(item.items || []).map((it: any, index: number) => (
                     <Text key={index} style={styles.itemText} numberOfLines={1}>
-                        • {it.product_id?.name || 'Product'} x{it.quantity}
+                        • {it.product_id?.name || 'Sản phẩm'} x{it.quantity}
                     </Text>
                 ))}
             </View>
 
             <View style={styles.orderFooter}>
-                <Text style={styles.totalLabel}>Total Amount:</Text>
+                <Text style={styles.totalLabel}>Tổng tiền:</Text>
                 <Text style={styles.totalValue}>{item.total_amount?.toLocaleString()}đ</Text>
             </View>
         </View>
@@ -110,7 +110,7 @@ export default function OrdersScreen() {
                 <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
                     <Ionicons name="arrow-back" size={24} color="#000" />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>My Orders</Text>
+                <Text style={styles.headerTitle}>Lịch sử đơn hàng</Text>
                 <TouchableOpacity onPress={loadOrders} style={styles.refreshBtn}>
                     <Ionicons name="refresh" size={22} color="#0a7ea4" />
                 </TouchableOpacity>
@@ -119,9 +119,9 @@ export default function OrdersScreen() {
             {orders.length === 0 ? (
                 <View style={styles.emptyContainer}>
                     <Ionicons name="receipt-outline" size={80} color="#ccc" />
-                    <Text style={styles.emptyText}>You haven't placed any orders yet.</Text>
+                    <Text style={styles.emptyText}>Bạn chưa có đơn hàng nào.</Text>
                     <TouchableOpacity style={styles.shopNowBtn} onPress={() => router.replace('/')}>
-                        <Text style={styles.shopNowText}>Shop Now</Text>
+                        <Text style={styles.shopNowText}>Mua ngay</Text>
                     </TouchableOpacity>
                 </View>
             ) : (

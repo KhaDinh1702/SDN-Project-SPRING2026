@@ -35,7 +35,7 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     if (!isFormValid) {
-      setError('Please enter valid email and password (min 6 characters)');
+      setError('Vui lòng nhập email hợp lệ và mật khẩu (ít nhất 6 ký tự)');
       return;
     }
 
@@ -59,7 +59,7 @@ export default function LoginScreen() {
       console.log("LOGIN RESPONSE:", data); // 👈 debug
 
       if (!res.ok) {
-        throw new Error(data.message || 'Invalid email or password');
+        throw new Error(data.message || 'Email hoặc mật khẩu không hợp lệ');
       }
 
       // 🔥 QUAN TRỌNG: dùng accessToken chứ không phải token
@@ -75,14 +75,14 @@ export default function LoginScreen() {
 
       await login(userData, data.accessToken);
 
-      setSuccess('Login successful 🎉');
+      setSuccess('Đăng nhập thành công 🎉');
 
       setTimeout(() => {
         router.replace('/');
       }, 800);
 
     } catch (err: any) {
-      setError(err.message || 'Login failed');
+      setError(err.message || 'Đăng nhập thất bại');
     } finally {
       setLoading(false);
     }
@@ -98,9 +98,9 @@ export default function LoginScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.card}>
-          <Text style={styles.title}>Welcome Back 👋</Text>
+          <Text style={styles.title}>Chào mừng trở lại 👋</Text>
           <Text style={styles.subtitle}>
-            Sign in to continue shopping fresh
+            Đăng nhập để tiếp tục mua sắm
           </Text>
 
           {/* 🔥 ERROR MESSAGE */}
@@ -126,7 +126,7 @@ export default function LoginScreen() {
           >
             <Ionicons name="mail-outline" size={20} color="#999" />
             <TextInput
-              placeholder="Email Address"
+              placeholder="Địa chỉ Email"
               keyboardType="email-address"
               value={email}
               onChangeText={setEmail}
@@ -144,7 +144,7 @@ export default function LoginScreen() {
           >
             <Ionicons name="lock-closed-outline" size={20} color="#999" />
             <TextInput
-              placeholder="Password"
+              placeholder="Mật khẩu"
               secureTextEntry={!showPassword}
               value={password}
               onChangeText={setPassword}
@@ -173,17 +173,17 @@ export default function LoginScreen() {
             {loading ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <Text style={styles.buttonText}>Sign In</Text>
+              <Text style={styles.buttonText}>Đăng nhập</Text>
             )}
           </TouchableOpacity>
 
           {/* REGISTER */}
           <View style={styles.footer}>
-            <Text>Don't have an account? </Text>
+            <Text>Chưa có tài khoản? </Text>
             <TouchableOpacity
               onPress={() => router.push('/register')}
             >
-              <Text style={styles.registerText}>Sign up</Text>
+              <Text style={styles.registerText}>Đăng ký ngay</Text>
             </TouchableOpacity>
           </View>
         </View>

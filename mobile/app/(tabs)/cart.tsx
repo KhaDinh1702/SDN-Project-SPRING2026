@@ -1,5 +1,5 @@
 // app/(tabs)/cart.tsx
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,21 +7,33 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import { CartContext } from '@/context/CartContext';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 
 export default function CartScreen() {
   const { cartItems, removeFromCart, updateQuantity, totalPrice, clearCart } = useContext(CartContext);
   const router = useRouter();
+  const params = useLocalSearchParams();
+
+  useEffect(() => {
+    if (params.payment_success === 'true') {
+      clearCart();
+      setTimeout(() => router.replace('/order-success'), 300);
+    } else if (params.payment_failed === 'true') {
+      const msg = (params.message as string) || 'Giao dịch đã bị huỷ hoặc thất bại.';
+      Alert.alert('Chưa thanh toán', msg);
+    }
+  }, [params.payment_success, params.payment_failed]);
 
   if (cartItems.length === 0) {
     return (
       <View style={styles.empty}>
         <Text style={styles.emptyIcon}>🛒</Text>
-        <Text style={styles.emptyText}>Your cart is empty</Text>
+        <Text style={styles.emptyText}>Giỏ hàng của bạn đang trống</Text>
         <TouchableOpacity style={styles.shopBtn} onPress={() => router.push('/')}>
-          <Text style={styles.shopBtnText}>Shop Now</Text>
+          <Text style={styles.shopBtnText}>Mua sắm ngay</Text>
         </TouchableOpacity>
       </View>
     );
@@ -29,7 +41,7 @@ export default function CartScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>My Cart ({cartItems.length})</Text>
+      <Text style={styles.title}>Giỏ hàng ({cartItems.length})</Text>
 
       <FlatList
         data={cartItems}
@@ -83,7 +95,7 @@ export default function CartScreen() {
       {/* Bottom Bar */}
       <View style={styles.bottomBar}>
         <View>
-          <Text style={styles.totalLabel}>Total</Text>
+          <Text style={styles.totalLabel}>Tổng cộng</Text>
           <Text style={styles.totalAmount}>{totalPrice.toLocaleString()}đ</Text>
         </View>
 
@@ -91,7 +103,7 @@ export default function CartScreen() {
           style={styles.checkoutBtn}
           onPress={() => router.push('/checkout')}
         >
-          <Text style={styles.checkoutBtnText}>Checkout →</Text>
+          <Text style={styles.checkoutBtnText}>Thanh toán →</Text>
         </TouchableOpacity>
       </View>
     </View>

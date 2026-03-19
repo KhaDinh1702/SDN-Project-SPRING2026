@@ -10,14 +10,14 @@ export default function OrderSuccess() {
       <View style={styles.successBox}>
         <Text style={styles.successIcon}>✓</Text>
 
-        <Text style={styles.successTitle}>Order Placed!</Text>
+        <Text style={styles.successTitle}>Đặt hàng thành công!</Text>
 
         <Text style={styles.successMessage}>
-          Thank you for your order. Your items will be delivered soon.
+          Cảm ơn bạn đã mua sắm. Đơn hàng sẽ được giao đến bạn sớm nhất.
         </Text>
 
         <Text style={styles.orderInfo}>
-          You will receive a confirmation email shortly with tracking details.
+          Bạn sẽ nhận được email xác nhận cùng với thông tin theo dõi chi tiết.
         </Text>
       </View>
 
@@ -26,14 +26,14 @@ export default function OrderSuccess() {
           style={styles.continueBtn}
           onPress={() => router.replace('/')}
         >
-          <Text style={styles.continueBtnText}>Continue Shopping</Text>
+          <Text style={styles.continueBtnText}>Tiếp tục mua sắm</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.ordersBtn}
           onPress={() => router.push('/orders')}
         >
-          <Text style={styles.ordersBtnText}>View My Orders</Text>
+          <Text style={styles.ordersBtnText}>Xem đơn hàng của tôi</Text>
         </TouchableOpacity>
       </View>
     </View>

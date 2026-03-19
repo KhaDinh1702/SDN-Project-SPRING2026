@@ -36,7 +36,7 @@ export default function CategoriesScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Shop by Category</Text>
+      <Text style={styles.title}>Danh mục sản phẩm</Text>
 
       <FlatList
         data={categories}
@@ -45,7 +45,7 @@ export default function CategoriesScreen() {
         showsVerticalScrollIndicator={false}
         columnWrapperStyle={{ justifyContent: 'space-between' }}
         renderItem={({ item }) => (
-          <Link href={`/category/${item._id}`} asChild>
+          <Link href={{ pathname: '/category/[id]', params: { id: item._id, name: item.name } }} asChild>
             <TouchableOpacity style={styles.card} activeOpacity={0.9}>
               {item.image ? (
                 <Image

@@ -11,6 +11,7 @@ const transactionSchema = new mongoose.Schema(
     amount: { type: Number, required: true },
     payment_status: { type: String, default: 'Pending' },
     transaction_code: { type: String, unique: true },
+    client_url: { type: String },
     // VNPay specific fields
     vnpay_response_code: { type: String },
     vnpay_transaction_no: { type: String },

@@ -21,7 +21,7 @@ export default function ForgotPasswordScreen() {
 
   const handleSubmit = async () => {
     if (!isEmailValid) {
-      Alert.alert('Error', 'Please enter a valid email');
+      Alert.alert('Lỗi', 'Vui lòng nhập một email hợp lệ');
       return;
     }
 
@@ -31,18 +31,18 @@ export default function ForgotPasswordScreen() {
       const message = await authService.forgotPassword(email);
 
       Alert.alert(
-        'Success',
-        message || 'Reset instructions sent if email exists',
+        'Thành công',
+        message || 'Hướng dẫn đặt lại mật khẩu đã được gửi đến email này',
         [{ text: 'OK', onPress: () => router.replace('/login') }]
       );
 
       setEmail('');
     } catch (error: any) {
       Alert.alert(
-        'Error',
+        'Lỗi',
         error?.response?.data?.message ||
         error?.message ||
-        'Something went wrong'
+        'Đã có lỗi xảy ra'
       );
     } finally {
       setLoading(false);
@@ -51,10 +51,10 @@ export default function ForgotPasswordScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Forgot Password</Text>
+      <Text style={styles.title}>Quên mật khẩu</Text>
 
       <Text style={styles.subtitle}>
-        Enter your email to receive reset link
+        Nhập email của bạn để nhận liên kết đặt lại
       </Text>
 
       <TextInput
@@ -75,7 +75,7 @@ export default function ForgotPasswordScreen() {
           <ActivityIndicator color="#fff" />
         ) : (
           <Text style={{ color: '#fff', fontWeight: '600' }}>
-            Send Reset Link
+            Gửi liên kết khôi phục
           </Text>
         )}
       </TouchableOpacity>
@@ -84,7 +84,7 @@ export default function ForgotPasswordScreen() {
         onPress={() => router.push('/login')}
         style={styles.backBtn}
       >
-        <Text style={styles.backText}>Back to Login</Text>
+        <Text style={styles.backText}>Quay lại đăng nhập</Text>
       </TouchableOpacity>
     </View>
   );
