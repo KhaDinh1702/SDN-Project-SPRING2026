@@ -6,7 +6,7 @@ import { ProductCode, VnpLocale } from 'vnpay';
 /**
  * Service to handle VNPay payment logic
  */
-export const createPaymentUrlService = async ({ orderId, amount, orderInfo, bankCode, ipAddr }) => {
+export const createPaymentUrlService = async ({ orderId, amount, orderInfo, bankCode, ipAddr, clientUrl }) => {
     // Generate unique transaction reference
     const txnRef = `${orderId}_${Date.now()}`;
 
@@ -29,6 +29,7 @@ export const createPaymentUrlService = async ({ orderId, amount, orderInfo, bank
         amount: amount,
         payment_status: 'Pending',
         transaction_code: txnRef,
+        client_url: clientUrl,
     });
 
     await transaction.save();

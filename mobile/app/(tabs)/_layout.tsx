@@ -19,7 +19,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: 'Trang chủ',
           tabBarIcon: ({ color }) => (
             <Ionicons name="home" size={26} color={color} />
           ),
@@ -29,7 +29,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="categories"
         options={{
-          title: 'Categories',
+          title: 'Danh mục',
           tabBarIcon: ({ color }) => (
             <Ionicons name="grid" size={26} color={color} />
           ),
@@ -39,7 +39,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="cart"
         options={{
-          title: 'Cart',
+          title: 'Giỏ hàng',
           tabBarIcon: ({ color }) => (
             <Ionicons name="cart" size={26} color={color} />
           ),

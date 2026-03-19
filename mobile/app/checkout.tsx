@@ -14,6 +14,7 @@ import { orderService } from '@/services/orderService';
 import { useRouter } from 'expo-router';
 import { AuthContext } from '@/context/AuthContext';
 import * as WebBrowser from 'expo-web-browser';
+import * as Linking from 'expo-linking';
 
 type PaymentMethod = 'COD' | 'VNPay';
 
@@ -45,12 +46,12 @@ export default function CheckoutScreen() {
 
   const placeOrder = async () => {
     if (!user?._id) {
-      Alert.alert('Error', 'You must login before placing order.');
+      Alert.alert('Lỗi', 'Bạn phải đăng nhập trước khi đặt hàng.');
       return;
     }
 
     if (!validateForm()) {
-      Alert.alert('Error', 'Please fill all required fields.');
+      Alert.alert('Lỗi', 'Vui lòng điền đầy đủ thông tin.');
       return;
     }
 
@@ -68,6 +69,7 @@ export default function CheckoutScreen() {
         payment_method: paymentMethod,
         shipping_address: shippingAddress,
         total_amount: totalPrice,
+        clientUrl: Linking.createURL('/cart'),
         items: cartItems.map((item) => ({
           product_id: item._id,
           quantity: item.quantity,
@@ -77,16 +79,16 @@ export default function CheckoutScreen() {
 
       const result = await orderService.create(orderData);
 
-      clearCart();
-
       // Nếu là VNPay và có paymentUrl → mở trình duyệt thanh toán
       if (paymentMethod === 'VNPay' && result?.paymentUrl) {
         await WebBrowser.openBrowserAsync(result.paymentUrl);
+        return; // Dừng xử lý tại đây, deep link callback sẽ xử lý tiếp
       }
 
+      clearCart();
       router.replace('/order-success');
     } catch (error: any) {
-      Alert.alert('Order Failed', error?.message || 'Something went wrong');
+      Alert.alert('Đặt hàng thất bại', error?.message || 'Có lỗi xảy ra');
     } finally {
       setLoading(false);
     }
@@ -95,9 +97,9 @@ export default function CheckoutScreen() {
   if (cartItems.length === 0) {
     return (
       <View style={styles.center}>
-        <Text style={styles.emptyText}>Your cart is empty</Text>
+        <Text style={styles.emptyText}>Giỏ hàng của bạn đang trống</Text>
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <Text style={styles.backBtnText}>Back to Cart</Text>
+          <Text style={styles.backBtnText}>Trở lại giỏ hàng</Text>
         </TouchableOpacity>
       </View>
     );
@@ -105,11 +107,11 @@ export default function CheckoutScreen() {
 
   return (
     <ScrollView style={styles.wrapper} contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Checkout</Text>
+      <Text style={styles.title}>Thanh toán</Text>
 
       {/* Order Summary */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Order Summary</Text>
+        <Text style={styles.sectionTitle}>Tóm tắt đơn hàng</Text>
 
         {cartItems.map((item) => (
           <View key={item._id} style={styles.summaryItem}>
@@ -124,25 +126,25 @@ export default function CheckoutScreen() {
 
         <View style={styles.totalSection}>
           <Text style={styles.totalText}>
-            Total: {totalPrice.toLocaleString()}đ
+            Tổng cộng: {totalPrice.toLocaleString()}đ
           </Text>
         </View>
       </View>
 
       {/* Shipping */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Shipping Address</Text>
+        <Text style={styles.sectionTitle}>Địa chỉ giao hàng</Text>
 
         <View style={styles.row}>
           <TextInput
-            placeholder="First Name *"
+            placeholder="Tên *"
             placeholderTextColor="#999"
             value={formData.firstName}
             onChangeText={(v) => handleInputChange('firstName', v)}
             style={[styles.input, styles.halfInput]}
           />
           <TextInput
-            placeholder="Last Name *"
+            placeholder="Họ *"
             placeholderTextColor="#999"
             value={formData.lastName}
             onChangeText={(v) => handleInputChange('lastName', v)}
@@ -151,7 +153,7 @@ export default function CheckoutScreen() {
         </View>
 
         <TextInput
-          placeholder="Phone *"
+          placeholder="Số điện thoại *"
           placeholderTextColor="#999"
           value={formData.phone}
           onChangeText={(v) => handleInputChange('phone', v)}
@@ -160,7 +162,7 @@ export default function CheckoutScreen() {
         />
 
         <TextInput
-          placeholder="Street Address *"
+          placeholder="Địa chỉ nhà *"
           placeholderTextColor="#999"
           value={formData.address}
           onChangeText={(v) => handleInputChange('address', v)}
@@ -168,7 +170,7 @@ export default function CheckoutScreen() {
         />
 
         <TextInput
-          placeholder="City *"
+          placeholder="Thành phố *"
           placeholderTextColor="#999"
           value={formData.city}
           onChangeText={(v) => handleInputChange('city', v)}
@@ -178,7 +180,7 @@ export default function CheckoutScreen() {
 
       {/* Payment Method */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Payment Method</Text>
+        <Text style={styles.sectionTitle}>Phương thức thanh toán</Text>
 
         <View style={styles.paymentRow}>
           <TouchableOpacity
@@ -196,7 +198,7 @@ export default function CheckoutScreen() {
             >
               💵 COD
             </Text>
-            <Text style={styles.paymentOptionSub}>Cash on Delivery</Text>
+            <Text style={styles.paymentOptionSub}>Thanh toán khi nhận hàng</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -214,7 +216,7 @@ export default function CheckoutScreen() {
             >
               🏦 VNPay
             </Text>
-            <Text style={styles.paymentOptionSub}>Online Payment</Text>
+            <Text style={styles.paymentOptionSub}>Thanh toán trực tuyến</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -226,7 +228,7 @@ export default function CheckoutScreen() {
           disabled={loading}
           onPress={() => router.back()}
         >
-          <Text style={styles.cancelBtnText}>Cancel</Text>
+          <Text style={styles.cancelBtnText}>Hủy</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -238,7 +240,7 @@ export default function CheckoutScreen() {
             <ActivityIndicator color="#fff" />
           ) : (
             <Text style={styles.submitBtnText}>
-              {paymentMethod === 'VNPay' ? 'Pay with VNPay' : 'Place Order'}
+              {paymentMethod === 'VNPay' ? 'Thanh toán bằng VNPay' : 'Đặt hàng'}
             </Text>
           )}
         </TouchableOpacity>

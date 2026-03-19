@@ -55,12 +55,12 @@ export default function ProfileScreen() {
   if (!user) {
     return (
       <View style={styles.center}>
-        <Text style={styles.notLoginText}>You are not logged in</Text>
+        <Text style={styles.notLoginText}>Bạn chưa đăng nhập</Text>
         <TouchableOpacity
           style={styles.primaryBtn}
           onPress={() => router.push('/login')}
         >
-          <Text style={styles.btnText}>Login</Text>
+          <Text style={styles.btnText}>Đăng nhập</Text>
         </TouchableOpacity>
       </View>
     );
@@ -94,10 +94,10 @@ export default function ProfileScreen() {
       </View>
 
       <View style={styles.card}>
-        <InfoRow label="User ID" value={displayUser.id} />
-        <InfoRow label="Phone" value={displayUser.phone || 'Not updated'} />
-        <InfoRow label="Username" value={displayUser.username} />
-        <InfoRow label="Role" value={displayUser.role} />
+        <InfoRow label="Khách hàng ID" value={displayUser.id} />
+        <InfoRow label="Số điện thoại" value={displayUser.phone || 'Chưa cập nhật'} />
+        <InfoRow label="Tên tài khoản" value={displayUser.username} />
+        <InfoRow label="Vai trò" value={displayUser.role} />
       </View>
 
       <TouchableOpacity
@@ -106,7 +106,7 @@ export default function ProfileScreen() {
       >
         <View style={styles.menuItemContent}>
           <Ionicons name="receipt-outline" size={24} color="#ff6b35" />
-          <Text style={styles.menuItemText}>My Orders</Text>
+          <Text style={styles.menuItemText}>Đơn hàng của tôi</Text>
         </View>
         <Ionicons name="chevron-forward" size={20} color="#ccc" />
       </TouchableOpacity>
@@ -118,7 +118,7 @@ export default function ProfileScreen() {
           router.replace('/');
         }}
       >
-        <Text style={styles.logoutText}>Logout</Text>
+        <Text style={styles.logoutText}>Đăng xuất</Text>
       </TouchableOpacity>
     </ScrollView>
   );

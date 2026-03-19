@@ -10,12 +10,12 @@ import {
   Text,
   RefreshControl,
 } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { productService } from '@/services/productService';
 import { CartContext } from '@/context/CartContext';
 
 export default function CategoryScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, name } = useLocalSearchParams<{ id: string; name: string }>();
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -60,8 +60,10 @@ export default function CategoryScreen() {
   }
 
   return (
-    <FlatList
-      style={{ backgroundColor: '#fff' }}
+    <>
+      <Stack.Screen options={{ title: name || 'Danh mục' }} />
+      <FlatList
+        style={{ backgroundColor: '#fff' }}
       data={filteredProducts}
       keyExtractor={(item) => item._id}
       contentContainerStyle={styles.list}
@@ -71,7 +73,7 @@ export default function CategoryScreen() {
       }
       ListHeaderComponent={
         <TextInput
-          placeholder="Search products..."
+          placeholder="Tìm kiếm sản phẩm..."
           placeholderTextColor="#666"
           value={searchTerm}
           onChangeText={setSearchTerm}
@@ -105,11 +107,12 @@ export default function CategoryScreen() {
             style={styles.addBtn}
             onPress={() => addToCart(item)}
           >
-            <Text style={styles.addBtnText}>Add</Text>
+            <Text style={styles.addBtnText}>Thêm</Text>
           </TouchableOpacity>
         </TouchableOpacity>
       )}
     />
+    </>
   );
 }
 

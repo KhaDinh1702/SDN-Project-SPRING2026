@@ -133,7 +133,7 @@ export default function HomeScreen() {
     >
 
       {/* ✅ HEADER COMPONENT */}
-      <Header title="Home" />
+      <Header title="Trang chủ" />
 
       {/* SEARCH BAR */}
       <View style={styles.searchContainer}>
@@ -141,7 +141,7 @@ export default function HomeScreen() {
           <Ionicons name="search-outline" size={20} color="#888" />
           <TextInput
             style={styles.searchInput}
-            placeholder="Search fresh products..."
+            placeholder="Tìm kiếm sản phẩm tươi sạch..."
             value={searchQuery}
             onChangeText={setSearchQuery}
             placeholderTextColor="#888"
@@ -157,22 +157,22 @@ export default function HomeScreen() {
       {/* BANNER */}
       <View style={styles.banner}>
         <Text style={styles.bannerTitle}>
-          Fresh from Farm to Your Table
+          Từ Nông Trại Đến Bàn Ăn
         </Text>
         <Text style={styles.bannerSubtitle}>
-          Quality food delivered fresh to your door
+          Thực phẩm chất lượng giao đến cửa nhà bạn
         </Text>
 
         <Link href="/categories" asChild>
           <TouchableOpacity style={styles.shopButton}>
-            <Text style={styles.shopButtonText}>Shop Now</Text>
+            <Text style={styles.shopButtonText}>Mua ngay</Text>
           </TouchableOpacity>
         </Link>
       </View>
 
       {/* CATEGORY */}
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Shop by Category</Text>
+        <Text style={styles.sectionTitle}>Danh mục sản phẩm</Text>
       </View>
       <ScrollView
         horizontal
@@ -182,7 +182,7 @@ export default function HomeScreen() {
         {categories.map((c) => (
           <Link
             key={c._id}
-            href={{ pathname: '/category/[id]', params: { id: c._id } }}
+            href={{ pathname: '/category/[id]', params: { id: c._id, name: c.name } }}
             asChild
           >
             <TouchableOpacity style={styles.categoryItem} activeOpacity={0.7}>
@@ -202,7 +202,7 @@ export default function HomeScreen() {
 
       {/* FEATURED */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Featured Products</Text>
+        <Text style={styles.sectionTitle}>Sản phẩm nổi bật</Text>
 
         <View style={styles.featureGrid}>
           {filteredProducts.map((p) => (
@@ -234,7 +234,7 @@ export default function HomeScreen() {
                 onPress={() => handleAdd(p)}
               >
                 <Text style={styles.addBtnText}>
-                  {addedId === p._id ? 'Added ✓' : 'Add to Cart'}
+                  {addedId === p._id ? 'Đã thêm ✓' : 'Thêm vào giỏ'}
                 </Text>
               </ScaleButton>
             </View>
@@ -242,7 +242,7 @@ export default function HomeScreen() {
         </View>
         {filteredProducts.length === 0 && searchQuery !== '' && (
           <View style={styles.noResults}>
-            <Text style={styles.noResultsText}>No products found for "{searchQuery}"</Text>
+            <Text style={styles.noResultsText}>Không tìm thấy kết quả cho "{searchQuery}"</Text>
           </View>
         )}
       </View>
