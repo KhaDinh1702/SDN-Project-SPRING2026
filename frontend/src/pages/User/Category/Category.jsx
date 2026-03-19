@@ -71,11 +71,6 @@ export default function Category() {
           ? `${API_URL}/api/products`
           : `${API_URL}/api/products?categoryId=${activeCategoryId}`;
 
-        if (keyword) {
-          const sep = url.includes("?") ? "&" : "?";
-          url += `${sep}keyword=${keyword}`;
-        }
-
         const res = await fetch(url);
         const data = await res.json();
 
@@ -90,16 +85,22 @@ export default function Category() {
     };
 
     fetchProducts();
-  }, [activeCategoryId, keyword]);
+  }, [activeCategoryId]);
 
   const sortedProducts = useMemo(() => {
-    const copied = [...products];
+    let copied = [...products];
+
+    if (keyword) {
+      copied = copied.filter((p) =>
+        (p.name || "").toLowerCase().includes(keyword.toLowerCase())
+      );
+    }
 
     if (sort === "low") return copied.sort((a, b) => a.price - b.price);
     if (sort === "high") return copied.sort((a, b) => b.price - a.price);
 
     return copied;
-  }, [products, sort]);
+  }, [products, sort, keyword]);
 
   if (loading) {
     return (
