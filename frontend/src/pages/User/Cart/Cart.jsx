@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { Button, Popconfirm, Modal, Form, Input, Radio, message } from "antd";
+import { Button, Popconfirm, Modal, Form, Input, Radio, message, Checkbox } from "antd";
 import { DeleteOutlined, ShoppingCartOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "./Cart.css";
@@ -28,6 +28,33 @@ export default function Cart() {
     const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false);
     const [checkoutLoading, setCheckoutLoading] = useState(false);
     const [form] = Form.useForm();
+    const [selectedItems, setSelectedItems] = useState([]);
+
+    const allSelected = selectedItems.length === cartItems.length && cartItems.length > 0;
+    const indeterminate = selectedItems.length > 0 && selectedItems.length < cartItems.length;
+
+    const handleSelectAll = (e) => {
+        if (e.target.checked) {
+            setSelectedItems(cartItems.map(item => item._id || item.id));
+        } else {
+            setSelectedItems([]);
+        }
+    };
+
+    const handleBulkDelete = () => {
+        if (selectedItems.length === 0) return;
+        selectedItems.forEach(id => removeFromCart(id));
+        setSelectedItems([]);
+        message.success("Đã xóa các sản phẩm được chọn!");
+    };
+
+    const toggleItemSelect = (id, checked) => {
+        if (checked) {
+            setSelectedItems([...selectedItems, id]);
+        } else {
+            setSelectedItems(selectedItems.filter(itemId => itemId !== id));
+        }
+    };
 
     const handleCheckoutClick = () => {
         const token = localStorage.getItem("accessToken");
@@ -103,7 +130,7 @@ export default function Cart() {
                 <Button
                     type="link"
                     icon={<ArrowLeftOutlined />}
-                    onClick={() => navigate(-1)}
+                    onClick={() => navigate('/category')}
                     style={{ marginBottom: 20, paddingLeft: 0, color: '#666' }}
                 >
                     Tiếp tục mua sắm
@@ -122,13 +149,37 @@ export default function Cart() {
                 ) : (
                     <div className="cart-layout">
                         <div className="cart-items">
+                            <div style={{ padding: "0 20px 15px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #f0f0f0", marginBottom: 20 }}>
+                                <Checkbox indeterminate={indeterminate} onChange={handleSelectAll} checked={allSelected}>
+                                    Chọn tất cả ({cartItems.length})
+                                </Checkbox>
+                                <Popconfirm
+                                    title="Xóa sản phẩm"
+                                    description="Bạn có chắc chắn muốn xóa các sản phẩm đã chọn không?"
+                                    onConfirm={handleBulkDelete}
+                                    okText="Có"
+                                    cancelText="Không"
+                                    disabled={selectedItems.length === 0}
+                                >
+                                    <Button danger disabled={selectedItems.length === 0}>
+                                        Xóa ({selectedItems.length})
+                                    </Button>
+                                </Popconfirm>
+                            </div>
+
                             {cartItems.map((item) => {
                                 const imgUrl = item.images?.[0]?.url || item.image || "https://via.placeholder.com/150";
                                 const itemName = item.name || item.title;
                                 const itemId = item._id || item.id;
+                                const isSelected = selectedItems.includes(itemId);
 
                                 return (
                                     <div key={itemId} className="cart-item">
+                                        <Checkbox 
+                                            checked={isSelected}
+                                            onChange={(e) => toggleItemSelect(itemId, e.target.checked)}
+                                            style={{ marginRight: 15 }}
+                                        />
                                         <img src={imgUrl} alt={itemName} className="cart-item-img" />
                                         <div className="cart-item-info">
                                             <h3>{itemName}</h3>
@@ -147,18 +198,6 @@ export default function Cart() {
                                         <div className="cart-item-total">
                                             {((item.price) * item.quantity).toLocaleString("vi-VN")} VND
                                         </div>
-
-                                        <Popconfirm
-                                            title="Xóa sản phẩm"
-                                            description="Bạn có chắc chắn muốn xóa sản phẩm này không?"
-                                            onConfirm={() => removeFromCart(itemId)}
-                                            okText="Có"
-                                            cancelText="Không"
-                                        >
-                                            <button className="cart-item-remove">
-                                                <DeleteOutlined />
-                                            </button>
-                                        </Popconfirm>
                                     </div>
                                 );
                             })}

@@ -42,11 +42,6 @@ const Products = () => {
   const [fileList, setFileList] = useState([]);
   const [form] = Form.useForm();
 
-  // Stock Add States
-  const [isStockModalOpen, setIsStockModalOpen] = useState(false);
-  const [selectedStockProduct, setSelectedStockProduct] = useState(null);
-  const [stockForm] = Form.useForm();
-
   // ===== FETCH PRODUCTS =====
   const fetchProducts = async (keyword = "") => {
     setLoading(true);
@@ -119,34 +114,6 @@ const Products = () => {
       fetchProducts();
     } catch (err) {
       message.error("Xóa thất bại: " + err.message);
-    }
-  };
-
-  // ===== QUICK ADD STOCK =====
-  const handleAddStock = (record) => {
-    setSelectedStockProduct(record);
-    stockForm.resetFields();
-    setIsStockModalOpen(true);
-  };
-
-  const handleStockSubmit = async () => {
-    try {
-      const values = await stockForm.validateFields();
-      const res = await fetch(`${API_URL}/api/products/${selectedStockProduct._id}/stock`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken()}`
-        },
-        body: JSON.stringify({ quantity: values.quantity, note: values.note })
-      });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.message);
-      message.success(`Đã thêm ${values.quantity} vào kho thành công!`);
-      setIsStockModalOpen(false);
-      fetchProducts();
-    } catch (err) {
-      message.error("Thêm kho thất bại: " + err.message);
     }
   };
 
@@ -252,37 +219,21 @@ const Products = () => {
     },
     {
       title: "Thao tác",
-      render: (_, record) => {
-        let role = "";
-        try {
-          const userStr = localStorage.getItem("user");
-          if (userStr) {
-            const user = JSON.parse(userStr);
-            role = user.role;
-          }
-        } catch (e) { }
-
-        return (
-          <Space>
-            {role === "manager" && (
-              <Button icon={<PlusOutlined />} size="small" type="primary" onClick={() => handleAddStock(record)}>
-                Nhập kho
-              </Button>
-            )}
-            <Button icon={<EditOutlined />} size="small" onClick={() => handleEdit(record)}>
-              Sửa
+      render: (_, record) => (
+        <Space>
+          <Button icon={<EditOutlined />} size="small" onClick={() => handleEdit(record)}>
+            Sửa
+          </Button>
+          <Popconfirm
+            title="Xóa sản phẩm này?"
+            onConfirm={() => handleDelete(record._id)}
+          >
+            <Button icon={<DeleteOutlined />} size="small" danger>
+              Xóa
             </Button>
-            <Popconfirm
-              title="Xóa sản phẩm này?"
-              onConfirm={() => handleDelete(record._id)}
-            >
-              <Button icon={<DeleteOutlined />} size="small" danger>
-                Xóa
-              </Button>
-            </Popconfirm>
-          </Space>
-        );
-      },
+          </Popconfirm>
+        </Space>
+      ),
     },
   ];
 
@@ -312,40 +263,24 @@ const Products = () => {
           </div>
           <div style={{ maxHeight: '180px', overflowY: 'auto', paddingRight: 8 }}>
             <Space size={[8, 12]} wrap>
-              {lowStockProducts.map(p => {
-                let role = "";
-                try {
-                  const userStr = localStorage.getItem("user");
-                  if (userStr) {
-                    const user = JSON.parse(userStr);
-                    role = user.role;
-                  }
-                } catch (e) { }
-
-                return (
-                  <div
-                    key={p._id}
-                    style={{
-                      padding: '6px 12px',
-                      fontSize: 14,
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 12,
-                      backgroundColor: '#ffffff',
-                      border: '1px solid #d9d9d9',
-                      borderRadius: 6
-                    }}
-                  >
-                    <span style={{ color: '#262626' }}>{p.name}</span>
-                    <Tag color="error" style={{ margin: 0 }}>Còn {p.stock_quantity || 0}</Tag>
-                    {role === "manager" && (
-                      <Button size="small" type="default" onClick={() => handleAddStock(p)}>
-                        Nhập kho
-                      </Button>
-                    )}
-                  </div>
-                );
-              })}
+              {lowStockProducts.map(p => (
+                <div
+                  key={p._id}
+                  style={{
+                    padding: '6px 12px',
+                    fontSize: 14,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 12,
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #d9d9d9',
+                    borderRadius: 6
+                  }}
+                >
+                  <span style={{ color: '#262626' }}>{p.name}</span>
+                  <Tag color="error" style={{ margin: 0 }}>Còn {p.stock_quantity || 0}</Tag>
+                </div>
+              ))}
             </Space>
           </div>
         </div>
@@ -435,31 +370,7 @@ const Products = () => {
         </Form>
       </Modal>
 
-      {/* ===== STOCK ADD MODAL ===== */}
-      <Modal
-        title={`Nhập kho: ${selectedStockProduct?.name || ''}`}
-        open={isStockModalOpen}
-        onOk={handleStockSubmit}
-        onCancel={() => setIsStockModalOpen(false)}
-        okText="Nhập kho"
-        width={400}
-      >
-        <Form layout="vertical" form={stockForm}>
-          <Form.Item
-            name="quantity"
-            label="Số lượng nhập"
-            rules={[{ required: true, message: "Nhập số lượng" }]}
-          >
-            <InputNumber style={{ width: "100%" }} min={1} />
-          </Form.Item>
-          <Form.Item
-            name="note"
-            label="Ghi chú (Không bắt buộc)"
-          >
-            <TextArea rows={2} placeholder="Lý do nhập kho..." />
-          </Form.Item>
-        </Form>
-      </Modal>
+
     </Card>
   );
 };

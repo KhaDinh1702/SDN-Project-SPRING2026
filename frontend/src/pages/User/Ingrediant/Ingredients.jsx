@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Layout, Card, Row, Col } from "antd";
+import { Layout, Card, Row, Col, Input } from "antd";
 import { ClockCircleOutlined, UserOutlined } from "@ant-design/icons";
 
 import "./Ingredients.css";
@@ -16,7 +16,12 @@ export default function Ingredients() {
   const [loading, setLoading] = useState(true);
   // "all" | "false" (mặn) | "true" (chay)
   const [dietFilter, setDietFilter] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const { addMultipleToCart, addToCart } = useContext(CartContext);
+
+  const filteredDishes = dishes.filter(dish =>
+    (dish.name || "").toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const fetchDishes = async (filter = "all") => {
     try {
@@ -100,8 +105,20 @@ export default function Ingredients() {
           <Row gutter={60}>
             <Col span={10}>
               <h3 className="browse-title">Khám phá món ăn</h3>
+              <Input.Search
+                placeholder="Tìm kiếm món ăn..."
+                allowClear
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{ marginBottom: 16 }}
+              />
 
-              {dishes.map((dish) => (
+              {filteredDishes.length === 0 && (
+                <div style={{ padding: "20px 0", color: "#595959", textAlign: "center" }}>
+                  Không tìm thấy món ăn phù hợp
+                </div>
+              )}
+
+              {filteredDishes.map((dish) => (
                 <Card
                   key={dish._id}
                   onClick={() => setSelectedDish(dish)}
@@ -126,7 +143,7 @@ export default function Ingredients() {
                             whiteSpace: 'nowrap'
                           }}
                         >
-                          {dish.is_vegetarian ? "🌿 Chay" : "🥩 Mặn"}
+                          {dish.is_vegetarian ? "Chay" : "Mặn"}
                         </span>
                       </div>
                       <p className="dish-desc" style={{ margin: 0, lineHeight: '1.4' }}>{dish.description}</p>
@@ -154,7 +171,7 @@ export default function Ingredients() {
                         border: `1px solid ${selectedDish.is_vegetarian ? "#b7eb8f" : "#ffd591"}`,
                       }}
                     >
-                      {selectedDish.is_vegetarian ? "🌿 Món Chay" : "🥩 Món Mặn"}
+                      {selectedDish.is_vegetarian ? "Món Chay" : "Món Mặn"}
                     </span>
                   </div>
                   <p className="main-desc">{selectedDish.description}</p>

@@ -42,10 +42,13 @@ export default function Category() {
             if (found) {
               setActiveCategoryId(found._id);
               setActiveCategoryName(found.name);
+            } else {
+              setActiveCategoryId("all");
+              setActiveCategoryName("Tất cả sản phẩm");
             }
-          } else if (data.data.length > 0) {
-            setActiveCategoryId(data.data[0]._id);
-            setActiveCategoryName(data.data[0].name);
+          } else {
+            setActiveCategoryId("all");
+            setActiveCategoryName("Tất cả sản phẩm");
           }
         }
       } catch (error) {
@@ -64,10 +67,13 @@ export default function Category() {
       try {
         setLoading(true);
 
-        let url = `${API_URL}/api/products?categoryId=${activeCategoryId}`;
+        let url = activeCategoryId === "all"
+          ? `${API_URL}/api/products`
+          : `${API_URL}/api/products?categoryId=${activeCategoryId}`;
 
         if (keyword) {
-          url += `&keyword=${keyword}`;
+          const sep = url.includes("?") ? "&" : "?";
+          url += `${sep}keyword=${keyword}`;
         }
 
         const res = await fetch(url);
@@ -115,18 +121,28 @@ export default function Category() {
 
           <h1>{activeCategoryName}</h1>
           <p>
-            Các sản phẩm{" "}
-            {activeCategoryName?.toLowerCase()} tươi ngon, giao tận nơi mỗi ngày
+            {activeCategoryId === "all" 
+              ? "Tất cả các sản phẩm tươi ngon, giao tận nơi mỗi ngày" 
+              : `Các sản phẩm ${activeCategoryName?.toLowerCase()} tươi ngon, giao tận nơi mỗi ngày`}
           </p>
         </div>
 
         <div className="category-top">
           <div className="filter-buttons">
+            <button
+              className={`filter-btn ${activeCategoryId === "all" ? "active-btn" : ""}`}
+              onClick={() => {
+                setActiveCategoryId("all");
+                setActiveCategoryName("Tất cả sản phẩm");
+                navigate(`/category`);
+              }}
+            >
+              Tất Cả
+            </button>
             {categories.map((cat) => (
               <button
                 key={cat._id}
-                className={`filter-btn ${activeCategoryId === cat._id ? "active-btn" : ""
-                  }`}
+                className={`filter-btn ${activeCategoryId === cat._id ? "active-btn" : ""}`}
                 onClick={() => {
                   setActiveCategoryId(cat._id);
                   setActiveCategoryName(cat.name);
@@ -140,6 +156,7 @@ export default function Category() {
 
           <Search
             placeholder="Tìm kiếm sản phẩm..."
+            onChange={(e) => setKeyword(e.target.value)}
             onSearch={(value) => setKeyword(value)}
             allowClear
             style={{ width: 200 }}
@@ -156,14 +173,19 @@ export default function Category() {
           </Select>
         </div>
 
-        <div className="product-grid">
+        <div className="category-product-grid">
           {sortedProducts.length === 0 ? (
             <p style={{ textAlign: "center", marginTop: 50 }}>
               Không tìm thấy sản phẩm nào.
             </p>
           ) : (
             sortedProducts.map((item) => (
-              <div key={item._id} className="product-card">
+              <div 
+                key={item._id} 
+                className="product-card"
+                onClick={() => navigate(`/products/${item._id}`)}
+                style={{ cursor: "pointer" }}
+              >
                 {item.images?.[0]?.isPrimary && (
                   <span className="badge">Mới</span>
                 )}
@@ -178,7 +200,7 @@ export default function Category() {
 
                 <div className="product-info">
                   <span className="category-label">
-                    {item.category?.name}
+                    {item.category?.name || "Sản phẩm"}
                   </span>
 
                   <h3>{item.name}</h3>
@@ -191,7 +213,15 @@ export default function Category() {
 
                   <div className="bottom">
                     <span className="price">{item.price.toLocaleString("vi-VN")} VND</span>
-                    <button className="add-btn" onClick={() => addToCart(item)}>Thêm</button>
+                    <button 
+                      className="add-btn" 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addToCart(item);
+                      }}
+                    >
+                      Thêm
+                    </button>
                   </div>
                 </div>
               </div>
