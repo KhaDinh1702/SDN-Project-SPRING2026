@@ -186,9 +186,9 @@ const Dishes = () => {
             title: "Loại",
             render: (_, record) =>
                 record.is_vegetarian ? (
-                    <Tag color="green">🌿 Chay</Tag>
+                    <Tag color="green">Chay</Tag>
                 ) : (
-                    <Tag color="orange">🥩 Mặn</Tag>
+                    <Tag color="orange">Mặn</Tag>
                 ),
         },
         {
@@ -311,9 +311,8 @@ const Dishes = () => {
                         label="Phân loại"
                         valuePropName="checked"
                         initialValue={false}
-                        extra="Bật = Món chay 🌿 | Tắt = Món mặn 🥩 (mặc định)"
                     >
-                        <Switch checkedChildren="🌿 Chay" unCheckedChildren="🥩 Mặn" />
+                        <Switch checkedChildren="Chay" unCheckedChildren="Mặn" />
                     </Form.Item>
 
                     <Form.Item

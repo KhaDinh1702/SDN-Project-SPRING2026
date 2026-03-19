@@ -90,11 +90,11 @@ export default function HomePage() {
                 // Fallback to hardcoded images if no dynamic image is set
                 if (!imagePath) {
                   const nameLower = c.name?.toLowerCase() || "";
-                  if (nameLower.includes("fish") || nameLower.includes("seafood")) imagePath = "/images/categories/ca.jpg";
-                  else if (nameLower.includes("meat")) imagePath = "/images/categories/thit.webp";
-                  else if (nameLower.includes("veg")) imagePath = "/images/categories/rau.jpg";
-                  else if (nameLower.includes("spice")) imagePath = "/images/categories/giavi.jpg";
-                  else if (nameLower.includes("fruit")) imagePath = "/images/categories/traicay.webp";
+                  if (nameLower.includes("Cá") || nameLower.includes("Cá")) imagePath = "/images/categories/ca.jpg";
+                  else if (nameLower.includes("Thịt")) imagePath = "/images/categories/thit.webp";
+                  else if (nameLower.includes("Rau Củ")) imagePath = "/images/categories/rau.jpg";
+                  else if (nameLower.includes("Gia Vị")) imagePath = "/images/categories/giavi.jpg";
+                  else if (nameLower.includes("Trái Cây")) imagePath = "/images/categories/traicay.webp";
                   else imagePath = "https://via.placeholder.com/300x200?text=" + encodeURIComponent(c.name);
                 }
 

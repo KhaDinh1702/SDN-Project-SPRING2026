@@ -91,11 +91,11 @@ const seedDatabase = async () => {
 
     // 4. Categories
     const categories = await Category.insertMany([
-      { name: 'Fish', image: 'https://cdn-icons-png.flaticon.com/512/2970/2970034.png' },
-      { name: 'Meat', image: 'https://cdn-icons-png.flaticon.com/512/3082/3082042.png' },
-      { name: 'Vegetables', image: 'https://cdn-icons-png.flaticon.com/512/2329/2329903.png' },
-      { name: 'Spices', image: 'https://cdn-icons-png.flaticon.com/512/3229/3229074.png' },
-      { name: 'Fruits', image: 'https://cdn-icons-png.flaticon.com/512/3194/3194766.png' },
+      { name: 'Cá', image: 'https://cdn-icons-png.flaticon.com/512/2970/2970034.png' },
+      { name: 'Thịt', image: 'https://cdn-icons-png.flaticon.com/512/3082/3082042.png' },
+      { name: 'Rau Củ', image: 'https://cdn-icons-png.flaticon.com/512/2329/2329903.png' },
+      { name: 'Gia Vị', image: 'https://cdn-icons-png.flaticon.com/512/3229/3229074.png' },
+      { name: 'Trái Cây', image: 'https://cdn-icons-png.flaticon.com/512/3194/3194766.png' },
     ]);
 
     const getCategoryId = (name) =>
@@ -103,13 +103,13 @@ const seedDatabase = async () => {
 
     // 5. Products
     const productsData = [
-      // 🐟 Fish
+      // 🐟 Cá
       {
         name: 'Cá Hồi Na Uy - Norwegian Salmon',
         price: 550000,
         weight: 1,
         unit: 'kg',
-        category: 'Fish',
+        category: 'Cá',
         images: [{ url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhJiwO6G8LKIVPH92P155Ec0yK5i1_p_4PXA&s', publicId: 'salmon_1', isPrimary: true }]
       },
       {
@@ -117,7 +117,7 @@ const seedDatabase = async () => {
         price: 90000,
         weight: 500,
         unit: 'g',
-        category: 'Fish',
+        category: 'Cá',
         images: [{ url: 'https://static.wixstatic.com/media/5eb9e1_f4f94207d34f4806b9920133250630bf~mv2.jpg/v1/fill/w_480,h_478,al_c,lg_1,q_80,enc_avif,quality_auto/5eb9e1_f4f94207d34f4806b9920133250630bf~mv2.jpg', publicId: 'basa_1', isPrimary: true }]
       },
       {
@@ -125,7 +125,7 @@ const seedDatabase = async () => {
         price: 240000,
         weight: 1,
         unit: 'kg',
-        category: 'Fish',
+        category: 'Cá',
         images: [{ url: 'https://nantucket-current.nyc3.cdn.digitaloceanspaces.com/assets/imager/mainuploads/404608/UTF-81-Mackerel_40753240154b642b79a8b14aaf2a86eb.jpg', publicId: 'mackerel_1', isPrimary: true }]
       },
       {
@@ -133,33 +133,33 @@ const seedDatabase = async () => {
         price: 85000,
         weight: 1,
         unit: 'kg',
-        category: 'Fish',
-        images: [{ url: 'https://vietnamfishes.com/wp-content/uploads/2019/03/Red-Tilapia.jpg', publicId: 'tilapia_1', isPrimary: true }]
+        category: 'Cá',
+        images: [{ url: 'https://vietnamCáes.com/wp-content/uploads/2019/03/Red-Tilapia.jpg', publicId: 'tilapia_1', isPrimary: true }]
       },
       {
-        name: 'Cá Lóc Đồng - Snakehead Fish',
+        name: 'Cá Lóc Đồng - Snakehead Cá',
         price: 130000,
         weight: 1,
         unit: 'kg',
-        category: 'Fish',
+        category: 'Cá',
         images: [{ url: 'https://blog.nature.org/wp-content/uploads/2025/02/original.jpg?w=1024', publicId: 'snakehead_1', isPrimary: true }]
       },
       {
-        name: 'Cá Nục Nguyên Con - Scad Fish',
+        name: 'Cá Nục Nguyên Con - Scad Cá',
         price: 65000,
         weight: 1,
         unit: 'kg',
-        category: 'Fish',
+        category: 'Cá',
         images: [{ url: 'https://upload.wikimedia.org/wikipedia/commons/d/d2/Finny_scad.JPG', publicId: 'scad_1', isPrimary: true }]
       },
 
-      // 🥩 Meat
+      // 🥩 Thịt
       {
         name: 'Thịt Ba Chỉ Heo - Pork Belly',
         price: 160000,
         weight: 1,
         unit: 'kg',
-        category: 'Meat',
+        category: 'Thịt',
         images: [{ url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROFs4Q3c6-lAFAevGgn1Ytps_9v1pB11-ebA&s', publicId: 'porkbelly_1', isPrimary: true }]
       },
       {
@@ -167,7 +167,7 @@ const seedDatabase = async () => {
         price: 190000,
         weight: 1,
         unit: 'kg',
-        category: 'Meat',
+        category: 'Thịt',
         images: [{ url: 'https://5.imimg.com/data5/VW/SX/DL/ANDROID-50103244/prod-20200404-2259145772696274866343732-jpg-500x500.jpg', publicId: 'porkribs_1', isPrimary: true }]
       },
       {
@@ -175,7 +175,7 @@ const seedDatabase = async () => {
         price: 320000,
         weight: 1,
         unit: 'kg',
-        category: 'Meat',
+        category: 'Thịt',
         images: [{ url: 'https://www.aussiebeefandlamb.co.uk/contentassets/db6d7ec044a14f2ca46276199e0c1e23/home-page-header-banner.jpg', publicId: 'beef_1', isPrimary: true }]
       },
       {
@@ -183,7 +183,7 @@ const seedDatabase = async () => {
         price: 85000,
         weight: 500,
         unit: 'g',
-        category: 'Meat',
+        category: 'Thịt',
         images: [{ url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsatbFzK_dfKtqQ3G9HvUR_DBdCfHmkOagug&s', publicId: 'chickenbreast_1', isPrimary: true }]
       },
       {
@@ -191,7 +191,7 @@ const seedDatabase = async () => {
         price: 75000,
         weight: 500,
         unit: 'g',
-        category: 'Meat',
+        category: 'Thịt',
         images: [{ url: 'https://primecutny.com/cdn/shop/files/DrumsticksFamilyPack.jpg?v=1740423079', publicId: 'drumsticks_1', isPrimary: true }]
       },
       {
@@ -199,17 +199,17 @@ const seedDatabase = async () => {
         price: 140000,
         weight: 1,
         unit: 'kg',
-        category: 'Meat',
+        category: 'Thịt',
         images: [{ url: 'https://www.ginginbeef.com/wp-content/uploads/2019/09/porkshoulder.webp', publicId: 'porkshoulder_1', isPrimary: true }]
       },
 
-      // 🥬 Vegetables
+      // 🥬 Rau Củ
       {
         name: 'Cà Chua Hữu Cơ - Organic Tomato',
         price: 35000,
         weight: 500,
         unit: 'g',
-        category: 'Vegetables',
+        category: 'Rau Củ',
         images: [{ url: 'https://attra.ncat.org/wp-content/uploads/2022/04/tomato.jpg', publicId: 'tomato_1', isPrimary: true }]
       },
       {
@@ -217,7 +217,7 @@ const seedDatabase = async () => {
         price: 25000,
         weight: 500,
         unit: 'g',
-        category: 'Vegetables',
+        category: 'Rau Củ',
         images: [{ url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRThwdpK3SufSguubRNkk3v9Yp8tbPRzUO3rg&s', publicId: 'carrot_1', isPrimary: true }]
       },
       {
@@ -225,7 +225,7 @@ const seedDatabase = async () => {
         price: 20000,
         weight: 1,
         unit: 'kg',
-        category: 'Vegetables',
+        category: 'Rau Củ',
         images: [{ url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1nHmlJ9yvJ6zJQxSsvn5sGAhTQvQnehG64g&s', publicId: 'cabbage_1', isPrimary: true }]
       },
       {
@@ -233,7 +233,7 @@ const seedDatabase = async () => {
         price: 30000,
         weight: 1,
         unit: 'kg',
-        category: 'Vegetables',
+        category: 'Rau Củ',
         images: [{ url: 'https://images.ctfassets.net/0dkgxhks0leg/RKiZ605RAV8kjDQnxFCWP/b03b8729817c90b29b88d536bfd37ac5/9-Unusual-Uses-For-Potatoes.jpg', publicId: 'potato_1', isPrimary: true }]
       },
       {
@@ -241,7 +241,7 @@ const seedDatabase = async () => {
         price: 22000,
         weight: 500,
         unit: 'g',
-        category: 'Vegetables',
+        category: 'Rau Củ',
         images: [{ url: 'https://natureandnurtureseeds.com/cdn/shop/files/Green-Finger-Cucumber-seeds_600x.jpg?v=1739910912', publicId: 'cucumber_1', isPrimary: true }]
       },
       {
@@ -249,17 +249,17 @@ const seedDatabase = async () => {
         price: 45000,
         weight: 500,
         unit: 'g',
-        category: 'Vegetables',
+        category: 'Rau Củ',
         images: [{ url: 'https://www.gettystewart.com/wp-content/uploads/2014/01/spinach-fresh-in-bowl-sq.jpg', publicId: 'spinach_1', isPrimary: true }]
       },
 
-      // 🌶 Spices
+      // 🌶 Gia Vị
       {
         name: 'Tỏi Bắc Lý Sơn - Garlic',
         price: 120000,
         weight: 500,
         unit: 'g',
-        category: 'Spices',
+        category: 'Gia Vị',
         images: [{ url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYXgFXOIhyfVoX7lZVxhxrgAG68R3JIogDIg&s', publicId: 'garlic_1', isPrimary: true }]
       },
       {
@@ -267,7 +267,7 @@ const seedDatabase = async () => {
         price: 40000,
         weight: 500,
         unit: 'g',
-        category: 'Spices',
+        category: 'Gia Vị',
         images: [{ url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToUa_HtBFrykuUsQlQBJv0qeK3Sx5d28Q1aQ&s', publicId: 'shallot_1', isPrimary: true }]
       },
       {
@@ -275,7 +275,7 @@ const seedDatabase = async () => {
         price: 15000,
         weight: 200,
         unit: 'g',
-        category: 'Spices',
+        category: 'Gia Vị',
         images: [{ url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJ_4umd4OJZ_nHTxncwbRlXBvNtc2GpFBVsg&s', publicId: 'chili_1', isPrimary: true }]
       },
       {
@@ -283,7 +283,7 @@ const seedDatabase = async () => {
         price: 85000,
         weight: 200,
         unit: 'g',
-        category: 'Spices',
+        category: 'Gia Vị',
         images: [{ url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFrGrByi-nsE10wLJna1BETboVZM8Q6SM5hg&s', publicId: 'blackpepper_1', isPrimary: true }]
       },
       {
@@ -291,7 +291,7 @@ const seedDatabase = async () => {
         price: 35000,
         weight: 500,
         unit: 'g',
-        category: 'Spices',
+        category: 'Gia Vị',
         images: [{ url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTo-79LWRzlfHS9ZQqhIEQv7ktUY-R2U_vBuQ&s', publicId: 'ginger_1', isPrimary: true }]
       },
       {
@@ -299,7 +299,7 @@ const seedDatabase = async () => {
         price: 15000,
         weight: 500,
         unit: 'g',
-        category: 'Spices',
+        category: 'Gia Vị',
         images: [{ url: 'https://media.post.rvohealth.io/wp-content/uploads/sites/2/2021/10/Screen-Shot-2021-10-07-at-11.08.27-PM.png', publicId: 'lemongrass_1', isPrimary: true }]
       },
 
