@@ -33,11 +33,11 @@
 
 .category-top {
   display: flex;
-  justify-content: center;   /* đổi từ space-between thành center */
+  justify-content: center; /* đổi từ space-between thành center */
   align-items: center;
-  gap: 40px;                 /* tạo khoảng cách giữa filter và sort */
+  gap: 40px; /* tạo khoảng cách giữa filter và sort */
   margin-bottom: 40px;
-  flex-wrap: wrap;           /* tránh bể layout khi màn hình nhỏ */
+  flex-wrap: wrap; /* tránh bể layout khi màn hình nhỏ */
 }
 
 .filter-buttons {
@@ -71,7 +71,6 @@
   width: 220px;
 }
 
-
 /* PRODUCT GRID */
 
 .category-product-grid {
@@ -83,73 +82,96 @@
 }
 
 .product-card {
-  background: white;
+  background: #ffffff;
   border-radius: 22px;
   overflow: hidden;
   position: relative;
-  transition: 0.35s ease;
-  border: 1px solid #eee;
+  transition: all 0.35s ease;
+  border: 1px solid #f0f0f0;
 }
 
 .product-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
+  transform: translateY(-10px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
 }
 
 .product-card img {
   width: 100%;
-  height: 230px;
+  height: 240px;
   object-fit: cover;
+  display: block;
+  transition: 0.4s ease;
+}
+
+.product-card:hover img {
+  transform: scale(1.08);
 }
 
 .product-info {
   padding: 22px;
+  background: white;
 }
 
 .category-label {
   font-size: 12px;
-  color: #14532d;
+  color: #2e7d32;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  display: block;
+}
+
+.product-info h3 {
+  color: #222;
+  font-size: 18px;
+  margin: 8px 0 12px;
+  padding: 0;
+  font-weight: 600;
 }
 
 .rating {
   color: #f59e0b;
   font-size: 14px;
-  margin: 6px 0;
+  margin: 8px 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .rating span {
-  color: #777;
-  margin-left: 6px;
+  color: #888;
+  margin-left: 0;
+  font-size: 13px;
 }
 
 .bottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 0;
 }
 
-.price {
-  font-size: 18px;
-  font-weight: 700;
-  color: #14532d;
+.product-price {
+  font-size: 30px;
+  font-weight: 500;
+  color: #0a3d00;
 }
 
 .add-btn {
-  padding: 8px 20px;
-  border-radius: 999px;
+  padding: 0 20px;
+  border-radius: 12px;
   border: none;
-  background: #14532d;
+  background: #0a3d00;
   color: white;
   cursor: pointer;
-  font-weight: 500;
-  transition: 0.3s;
+  font-weight: 600;
+  transition: 0.3s ease;
+  height: 38px;
 }
 
 .add-btn:hover {
-  background: #0f3e22;
+  background: #145c00;
+  transform: scale(1.05);
 }
 
 .badge {

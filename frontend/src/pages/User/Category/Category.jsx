@@ -1,13 +1,17 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { Layout, Select, Spin, Input } from "antd";
-import { ArrowLeftOutlined, StarFilled } from "@ant-design/icons";
-import { useNavigate, useParams } from "react-router-dom"; // 👈 thêm useParams
-import { useContext } from "react";
-import { CartContext } from "../../../context/CartContext";
-import "./Category.css";
-import Header from "../../../components/Header/Header";
-import Footer from "../../../components/Footer/Footer";
-import { API_URL } from "../../../config";
+import React, { useState, useEffect, useMemo } from 'react';
+import { Layout, Select, Spin, Input, Button } from 'antd';
+import {
+  ArrowLeftOutlined,
+  ShoppingCartOutlined,
+  StarFilled,
+} from '@ant-design/icons';
+import { useNavigate, useParams } from 'react-router-dom'; // 👈 thêm useParams
+import { useContext } from 'react';
+import { CartContext } from '../../../context/CartContext';
+import './Category.css';
+import Header from '../../../components/Header/Header';
+import Footer from '../../../components/Footer/Footer';
+import { API_URL } from '../../../config';
 
 const { Content } = Layout;
 const { Option } = Select;
@@ -19,11 +23,11 @@ export default function Category() {
   const { addToCart } = useContext(CartContext);
 
   const [categories, setCategories] = useState([]);
-  const [activeCategoryId, setActiveCategoryId] = useState("");
-  const [activeCategoryName, setActiveCategoryName] = useState("");
+  const [activeCategoryId, setActiveCategoryId] = useState('');
+  const [activeCategoryName, setActiveCategoryName] = useState('');
   const [products, setProducts] = useState([]);
-  const [sort, setSort] = useState("default");
-  const [keyword, setKeyword] = useState("");
+  const [sort, setSort] = useState('default');
+  const [keyword, setKeyword] = useState('');
   const [loading, setLoading] = useState(true);
 
   /* ================= FETCH CATEGORIES ================= */
@@ -43,16 +47,16 @@ export default function Category() {
               setActiveCategoryId(found._id);
               setActiveCategoryName(found.name);
             } else {
-              setActiveCategoryId("all");
-              setActiveCategoryName("Tất cả sản phẩm");
+              setActiveCategoryId('all');
+              setActiveCategoryName('Tất cả sản phẩm');
             }
           } else {
-            setActiveCategoryId("all");
-            setActiveCategoryName("Tất cả sản phẩm");
+            setActiveCategoryId('all');
+            setActiveCategoryName('Tất cả sản phẩm');
           }
         }
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        console.error('Error fetching categories:', error);
       }
     };
 
@@ -67,9 +71,10 @@ export default function Category() {
       try {
         setLoading(true);
 
-        let url = activeCategoryId === "all"
-          ? `${API_URL}/api/products`
-          : `${API_URL}/api/products?categoryId=${activeCategoryId}`;
+        let url =
+          activeCategoryId === 'all'
+            ? `${API_URL}/api/products`
+            : `${API_URL}/api/products?categoryId=${activeCategoryId}`;
 
         const res = await fetch(url);
         const data = await res.json();
@@ -78,7 +83,7 @@ export default function Category() {
           setProducts(data.data);
         }
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error('Error fetching products:', error);
       } finally {
         setLoading(false);
       }
@@ -92,20 +97,20 @@ export default function Category() {
 
     if (keyword) {
       copied = copied.filter((p) =>
-        (p.name || "").toLowerCase().includes(keyword.toLowerCase())
+        (p.name || '').toLowerCase().includes(keyword.toLowerCase()),
       );
     }
 
-    if (sort === "low") return copied.sort((a, b) => a.price - b.price);
-    if (sort === "high") return copied.sort((a, b) => b.price - a.price);
+    if (sort === 'low') return copied.sort((a, b) => a.price - b.price);
+    if (sort === 'high') return copied.sort((a, b) => b.price - a.price);
 
     return copied;
   }, [products, sort, keyword]);
 
   if (loading) {
     return (
-      <div style={{ textAlign: "center", padding: 100 }}>
-        <Spin size="large" />
+      <div style={{ textAlign: 'center', padding: 100 }}>
+        <Spin size='large' />
       </div>
     );
   }
@@ -114,27 +119,30 @@ export default function Category() {
     <Layout>
       <Header />
 
-      <Content className="category-container">
-        <div className="category-hero">
-          <div className="back" onClick={() => navigate("/")}>
+      <Content className='category-container'>
+        <div className='category-hero'>
+          <div
+            className='back'
+            onClick={() => navigate('/')}
+          >
             <ArrowLeftOutlined /> Về trang chủ
           </div>
 
           <h1>{activeCategoryName}</h1>
           <p>
-            {activeCategoryId === "all" 
-              ? "Tất cả các sản phẩm tươi ngon, giao tận nơi mỗi ngày" 
+            {activeCategoryId === 'all'
+              ? 'Tất cả các sản phẩm tươi ngon, giao tận nơi mỗi ngày'
               : `Các sản phẩm ${activeCategoryName?.toLowerCase()} tươi ngon, giao tận nơi mỗi ngày`}
           </p>
         </div>
 
-        <div className="category-top">
-          <div className="filter-buttons">
+        <div className='category-top'>
+          <div className='filter-buttons'>
             <button
-              className={`filter-btn ${activeCategoryId === "all" ? "active-btn" : ""}`}
+              className={`filter-btn ${activeCategoryId === 'all' ? 'active-btn' : ''}`}
               onClick={() => {
-                setActiveCategoryId("all");
-                setActiveCategoryName("Tất cả sản phẩm");
+                setActiveCategoryId('all');
+                setActiveCategoryName('Tất cả sản phẩm');
                 navigate(`/category`);
               }}
             >
@@ -143,7 +151,7 @@ export default function Category() {
             {categories.map((cat) => (
               <button
                 key={cat._id}
-                className={`filter-btn ${activeCategoryId === cat._id ? "active-btn" : ""}`}
+                className={`filter-btn ${activeCategoryId === cat._id ? 'active-btn' : ''}`}
                 onClick={() => {
                   setActiveCategoryId(cat._id);
                   setActiveCategoryName(cat.name);
@@ -156,7 +164,7 @@ export default function Category() {
           </div>
 
           <Search
-            placeholder="Tìm kiếm sản phẩm..."
+            placeholder='Tìm kiếm sản phẩm...'
             onChange={(e) => setKeyword(e.target.value)}
             onSearch={(value) => setKeyword(value)}
             allowClear
@@ -166,63 +174,72 @@ export default function Category() {
           <Select
             value={sort}
             onChange={(value) => setSort(value)}
-            className="sort-select"
+            className='sort-select'
           >
-            <Option value="default">Mặc định</Option>
-            <Option value="low">Giá: Thấp đến Cao</Option>
-            <Option value="high">Giá: Cao đến Thấp</Option>
+            <Option value='default'>Mặc định</Option>
+            <Option value='low'>Giá: Thấp đến Cao</Option>
+            <Option value='high'>Giá: Cao đến Thấp</Option>
           </Select>
         </div>
 
-        <div className="category-product-grid">
+        <div className='category-product-grid'>
           {sortedProducts.length === 0 ? (
-            <p style={{ textAlign: "center", marginTop: 50 }}>
+            <p style={{ textAlign: 'center', marginTop: 50 }}>
               Không tìm thấy sản phẩm nào.
             </p>
           ) : (
             sortedProducts.map((item) => (
-              <div 
-                key={item._id} 
-                className="product-card"
+              <div
+                key={item._id}
+                className='product-card'
                 onClick={() => navigate(`/products/${item._id}`)}
-                style={{ cursor: "pointer" }}
+                style={{ cursor: 'pointer' }}
               >
                 {item.images?.[0]?.isPrimary && (
-                  <span className="badge">Mới</span>
+                  <span className='badge'>Mới</span>
                 )}
 
                 <img
                   src={
-                    item.images?.[0]?.url ||
-                    "https://via.placeholder.com/300"
+                    item.images?.[0]?.url || 'https://via.placeholder.com/300'
                   }
                   alt={item.name}
                 />
 
-                <div className="product-info">
-                  <span className="category-label">
-                    {item.category?.name || "Sản phẩm"}
+                <div className='product-info'>
+                  <span className='category-label'>
+                    {item.category?.name || 'Sản phẩm'}
                   </span>
 
                   <h3>{item.name}</h3>
 
-                  <div className="rating">
+                  <div className='rating'>
                     {[...Array(5)].map((_, i) => (
                       <StarFilled key={i} />
                     ))}
                   </div>
 
-                  <div className="bottom">
-                    <span className="price">{item.price.toLocaleString("vi-VN")} VND</span>
-                    <button 
-                      className="add-btn" 
+                  <div className='bottom'>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <span className='product-price'>
+                        {item.price.toLocaleString('vi-VN')} VND
+                      </span>
+                      <span
+                        style={{ fontSize: 13, color: '#6b7280', marginTop: 2 }}
+                      >
+                        / {item.weight} {item.unit}
+                      </span>
+                    </div>
+                    <Button
+                      className='app-btn'
+                      icon={<ShoppingCartOutlined />}
                       onClick={(e) => {
                         e.stopPropagation();
                         addToCart(item);
                       }}
                     >
                       Thêm
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>

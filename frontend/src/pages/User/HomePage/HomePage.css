@@ -1,17 +1,7 @@
 /* ================= FONT ================= */
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
 
 /* ================= LAYOUT ================= */
-.layout {
-  font-family: "Inter", sans-serif;
-  background: #f5f1e6;   /* ✅ đổi từ #fff */
-}
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-/* ================= HEADER ================= */
 .fm-header {
   height: 64px;
   background: #fffaf3;
@@ -30,7 +20,7 @@
 }
 
 .fm-logo span {
-  font-family: "Playfair Display", serif;
+  font-family: 'Playfair Display', serif;
   font-size: 20px;
   letter-spacing: 0.5px;
 }
@@ -78,7 +68,7 @@
 }
 
 .hero-text h1 {
-  font-family: "Playfair Display", serif;
+  font-family: 'Playfair Display', serif;
   font-size: 56px;
   font-weight: 700;
   line-height: 1.15;
@@ -139,7 +129,7 @@
 }
 
 .section h2 {
-  font-family: "Playfair Display", serif;
+  font-family: 'Playfair Display', serif;
   font-size: 36px;
   margin-bottom: 8px;
 }
@@ -152,70 +142,70 @@
 /* ===== CATEGORY CENTER PAGE ===== */
 /* ===== CATEGORY SECTION WRAPPER ===== */
 .section-category {
-    background: #fdfaf6;
-    padding:90px 0px;
-  background: linear-gradient(
-    to bottom,
-    #f5f1e6 0%,
-    #fdfaf6 20%,
-    #fdfaf6 80%,
-    #fbf6ee 100%
-  );
+  background: #fff;
+  padding: 100px 80px;
+  margin-bottom: 0;
 }
 
 .category-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 👈 ít cột hơn → card to hơn */
+  grid-template-columns: repeat(4, 1fr);
   gap: 32px;
-  max-width: 1100px;     /* 👈 khối nằm giữa trang */
-  margin: 0 auto;
-  justify-items: center; /* 👈 card luôn ở giữa mỗi cột */
+  max-width: 1300px;
+  justify-items: center;
 }
 
 /* ===== CATEGORY CARD ===== */
 
 .category-card {
   position: relative;
-  border-radius: 20px;
-  overflow: hidden;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  cursor: pointer;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+  overflow: clip;
 }
 
-
 .category-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+  filter: drop-shadow(0 18px 48px rgba(0, 0, 0, 0.2));
 }
 
 /* IMAGE */
 .category-image {
-  height: 190px;
+  height: 320px;
   overflow: hidden;
   position: relative;
+  background: #f5f1e6;
+  width: 100%;
+  border-radius: 24px 24px 0 0;
 }
 
 .category-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 /* zoom effect */
 .category-card:hover .category-image img {
-  transform: scale(1.1);
+  transform: scale(1.12);
 }
 
 /* overlay nhẹ khi hover */
 .category-image::after {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0);
-  transition: 0.4s ease;
+  transition: 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .category-card:hover .category-image::after {
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 /* TITLE */
@@ -223,17 +213,21 @@
   position: absolute;
   bottom: 0;
   width: 100%;
-  padding: 16px;
+  padding: 20px 18px;
   margin: 0;
   text-align: center;
-  font-size: 17px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
   color: white;
-  background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.1));
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .category-card:hover h4 {
-  color: #00bfa5;
+  color: #00e5cc;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+  padding-bottom: 24px;
 }
 .section-category {
   margin-bottom: 0;
@@ -258,7 +252,7 @@
 /* ===== FEATURED SECTION BG ===== */
 .section-featured {
   background: #fbf6ee;
-  padding: 60px 120px;  /* 👈 thêm padding ngang */
+  padding: 60px 120px; /* 👈 thêm padding ngang */
   margin: 0;
 }
 
@@ -346,7 +340,7 @@
 
 /* PRICE */
 .product-price {
-  font-size: 22px;
+  font-size: 30px;
   font-weight: 700;
   color: #0a3d00;
 }
@@ -401,7 +395,6 @@
 /* ===== SECTION CHUNG ===== */
 .section {
   padding: 80px 120px;
-  
 }
 
 /* title center */
@@ -515,4 +508,119 @@
 
 .newsletter-form-modern button:hover {
   background: #f1f1f1;
+}
+
+/* ================= CAROUSEL STYLING ================= */
+.ant-carousel {
+  padding: 30px 20px;
+}
+
+.ant-carousel .slick-slide {
+  padding: 0 12px;
+}
+
+.ant-carousel .slick-arrow {
+  display: none !important;
+}
+
+/* Dots styling */
+.ant-carousel .slick-dots {
+  bottom: -60px !important;
+}
+
+.ant-carousel .slick-dots li button {
+  width: 20px !important;
+  height: 25px !important;
+  background: #0e460e !important;
+  border-radius: 50%;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+.ant-carousel .slick-dots li.slick-active button {
+  background: #0a3d00 !important;
+  opacity: 1;
+  transform: scale(1.4);
+  box-shadow: 0 0 6px rgba(10, 61, 0, 0.5);
+}
+
+/* Responsive for carousel */
+@media (max-width: 1024px) {
+  .section-category {
+    padding: 80px 40px;
+  }
+
+  .category-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .category-card {
+    max-width: 240px;
+  }
+
+  .category-image {
+    height: 260px;
+  }
+
+  .ant-carousel {
+    padding: 20px 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .section-category {
+    padding: 60px 20px;
+  }
+
+  .category-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .category-card {
+    max-width: 180px;
+  }
+
+  .category-image {
+    height: 200px;
+  }
+
+  .category-card h4 {
+    font-size: 16px;
+    padding: 14px 12px;
+  }
+
+  .ant-carousel .slick-arrow {
+    width: 40px;
+    height: 40px;
+  }
+
+  .ant-carousel .slick-arrow::before {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-category {
+    padding: 50px 15px;
+  }
+
+  .category-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .category-card {
+    max-width: 100%;
+  }
+
+  .category-image {
+    height: 180px;
+  }
+
+  .category-card h4 {
+    font-size: 14px;
+    padding: 12px 10px;
+  }
 }

@@ -1,4 +1,9 @@
-html, body, #root {
+/* ================= FONT ================= */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -6,4 +11,53 @@ html, body, #root {
 
 body {
   background: #f5f7fa;
+}
+
+* {
+  font-family: 'Inter', sans-serif;
+}
+
+/* ================= LAYOUT ================= */
+.layout {
+  font-family: 'Inter', sans-serif;
+  background: #f5f1e6;
+}
+
+/* ================= GLOBAL BUTTON ================= */
+
+.app-btn {
+  background: #166534 !important; /* xanh lá đậm */
+  border-color: #166534 !important;
+  color: #fff !important;
+  border-radius: 10px;
+  font-weight: 600;
+  height: 40px;
+  padding: 0 13px;
+  transition: all 0.25s ease;
+}
+
+/* hover */
+.app-btn:hover {
+  background: #14532d !important;
+  border-color: #14532d !important;
+  transform: translateY(-1px);
+}
+
+/* active */
+.app-btn:active {
+  background: #0f3d1f !important;
+  border-color: #0f3d1f !important;
+  transform: scale(0.98);
+}
+
+/* disabled */
+.app-btn[disabled] {
+  background: #9ca3af !important;
+  border-color: #9ca3af !important;
+  cursor: not-allowed;
+}
+
+/* icon spacing */
+.app-btn .anticon {
+  font-size: 16px;
 }
