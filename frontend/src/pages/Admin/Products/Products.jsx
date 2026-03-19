@@ -178,11 +178,15 @@ const Products = () => {
     {
       title: 'Tên sản phẩm',
       dataIndex: 'name',
-      render: (name, record) => (
-        <Space>
-          {record.images?.[0] && (
+      render: (name, record) => {
+        const imgUrl =
+          record.images?.[0]?.url ||
+          record.images?.[0] ||
+          'https://via.placeholder.com/40';
+        return (
+          <Space>
             <img
-              src={record.images[0]}
+              src={imgUrl}
               alt={name}
               style={{
                 width: 40,
@@ -191,10 +195,10 @@ const Products = () => {
                 borderRadius: 6,
               }}
             />
-          )}
-          {name}
-        </Space>
-      ),
+            {name}
+          </Space>
+        );
+      },
     },
     {
       title: 'Danh mục',
