@@ -111,16 +111,16 @@ export default function HomePage() {
 
                     // Fallback to hardcoded images if no dynamic image is set
                     if (!imagePath) {
-                      const nameLower = c.name?.toLowerCase() || '';
-                      if (nameLower.includes('Cá') || nameLower.includes('Cá'))
+                      const nameLower = c.name?.toLocaleLowerCase('vi-VN') || '';
+                      if (nameLower.includes('cá'))
                         imagePath = '/images/categories/ca.jpg';
-                      else if (nameLower.includes('Thịt'))
+                      else if (nameLower.includes('thịt'))
                         imagePath = '/images/categories/thit.webp';
-                      else if (nameLower.includes('Rau Củ'))
+                      else if (nameLower.includes('rau củ'))
                         imagePath = '/images/categories/rau.jpg';
-                      else if (nameLower.includes('Gia Vị'))
+                      else if (nameLower.includes('gia vị'))
                         imagePath = '/images/categories/giavi.jpg';
-                      else if (nameLower.includes('Trái Cây'))
+                      else if (nameLower.includes('trái cây'))
                         imagePath = '/images/categories/traicay.webp';
                       else
                         imagePath =
